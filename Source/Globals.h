@@ -8,7 +8,7 @@ The names should be self explanatory and if not, should be changed to be so
 #define SIN45 0.707f
 #define ASSET_DIR "Assets/"
 
-class Constants {
+class Globals {
 
 public:
 
@@ -40,6 +40,13 @@ public:
 	static const int SPECIAL_ATT_CD = 2;
 	static const int DASH_MOVE_CD = 0;
 	
-
+	enum Layers {
+		BACKGROUND0,
+		BACKGROUND1,
+		PLAYER,
+		FOREGROUND,
+		UI,
+		END_MARKER
+	};
 };
 

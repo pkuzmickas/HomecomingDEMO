@@ -1,6 +1,6 @@
 #pragma once
 #include <SDL.h>
-#include "Constants.h"
+#include "Globals.h"
 #include <string>
 
 
@@ -56,18 +56,11 @@ public:
 
 class Drawable : public Component {
 public:
-	enum Layers {
-		BACKGROUND0,
-		BACKGROUND1,
-		PLAYER,
-		FOREGROUND,
-		UI
-	};
 
 	SDL_Texture* image;
 	SDL_Rect* srcRect;
 	std::string ID;
-	Layers layer;
+	Globals::Layers layer;
 	SDL_RendererFlip flip;
 	Drawable(Entity* owner, SDL_Texture* image, std::string ID, Layers layer, SDL_Rect* srcRect = NULL, SDL_RendererFlip flip = SDL_FLIP_NONE) : Component(owner) {
 		this->image = image;
@@ -111,6 +104,11 @@ public:
 
 class Collider : public Component {
 public:
+	enum ColliderType {
+		NORMAL,
+		ONLY_BLOCK_WALKING
+	};
+	ColliderType colType;
 	SDL_Rect colBox;
 	Collider(Entity* owner) : Component(owner) {
 		type = COLLIDER;
