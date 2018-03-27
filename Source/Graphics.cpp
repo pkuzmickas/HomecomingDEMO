@@ -6,14 +6,14 @@ void Graphics::addToDraw(Entity * entity) {
 		std::cout << "Entity does not have a drawable component! Did not add to the draw queue." << std::endl;
 		return;
 	} 
-	drawQueue[drawableComponent->layer].push_back(entity);
+	entityDrawQueue[drawableComponent->layer].push_back(entity);
 }
 
 Graphics::Graphics(SDL_Renderer * renderer) {
 	this->renderer = renderer;
 	for (int i = 0; i < Globals::Layers::END_MARKER; i++) {
 		std::vector<Entity*> layer;
-		drawQueue.push_back(layer);
+		entityDrawQueue.push_back(layer);
 	}
 }
 
@@ -21,17 +21,19 @@ void Graphics::render()
 {
 	SDL_RenderClear(renderer);
 
-	for (int i = 0; i < drawQueue.size(); i++) {
-		for (int j = 0; j < drawQueue[i].size(); j++) {
-			Entity* curEntity = drawQueue[i][j];
-			Drawable* curDrawable;
-			/*if (drawQueue[i][j]->) {
+	for (int i = 0; i < entityDrawQueue.size(); i++) {
+		for (int j = 0; j < entityDrawQueue[i].size(); j++) {
+			Entity* curEntity = entityDrawQueue[i][j];
+			Drawable* curDrawable = (Drawable*)entityDrawQueue[i][j]->findComponent(ComponentType::DRAWABLE);  
+			Transform* curTransform = (Transform*)entityDrawQueue[i][j]->findComponent(ComponentType::TRANSFORM);
 
-				SDL_RenderCopyEx(renderer, drawQueue[i][j]->image, drawQueue[i][j]->srcRect, drawQueue[i][j]->posRect, drawQueue[i][j]->angle, drawQueue[i][j]->center, drawQueue[i][j]->flip);
+			if (curTransform->isRotated) {
+
+				SDL_RenderCopyEx(renderer, curDrawable->image, curDrawable->srcRect, &curTransform->transformRect, curTransform->rotationAngle, &curTransform->rotationCenter, curDrawable->flip);
 			}
 			else {
-				SDL_RenderCopy(renderer, drawQueue[i][j]->image, drawQueue[i][j]->srcRect, drawQueue[i][j]->posRect);
-			}*/
+				SDL_RenderCopy(renderer, curDrawable->image, curDrawable->srcRect, &curTransform->transformRect);
+			}
 
 		}
 	}

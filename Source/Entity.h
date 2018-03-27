@@ -1,14 +1,13 @@
 #pragma once
 #include "Component.h"
 #include <unordered_map>
+#include <iostream>
 class Entity {
 public:
-	Transform* transform;
 	int mask;
 	void addComponent(Component* comp);
-	virtual void update(float deltaTime);
 	Component* findComponent(ComponentType comp);
-
+	~Entity(); // Deletes all components 
 private:
 	std::unordered_map<ComponentType, Component*> components;
 };

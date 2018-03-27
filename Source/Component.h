@@ -2,8 +2,7 @@
 #include <SDL.h>
 #include "Globals.h"
 #include <string>
-
-
+#include "Camera.h"
 enum ComponentType {
 	NONE = 0,
 	INPUT = 1 << 0,
@@ -12,7 +11,8 @@ enum ComponentType {
 	COLLIDER = 1 << 3,
 	ANIMATION = 1 << 4,
 	ABILITIES = 1 << 5,
-	AI = 1 << 6
+	AI = 1 << 6,
+	TRANSFORM = 1 << 7
 };
 
 class Entity;
@@ -23,7 +23,6 @@ public:
 	bool enabled;
 	Entity* owner;
 	Component(Entity* owner) { this->owner = owner; enabled = true; }
-	virtual ~Component();
 };
 
 class Transform : public Component {
@@ -33,16 +32,24 @@ public:
 	float globalPosY;
 	bool isRotated;
 	double rotationAngle;
-	Transform(Entity* owner, int width = Constants::TILE_SIZE, int height = Constants::TILE_SIZE, float globalPosX = 0, float globalPosY = 0, float cameraPosX = 0, float cameraPosY = 0) : Component(owner) {
+	SDL_Point rotationCenter;
+	Transform(Entity* owner, Camera* camera, int width = Globals::TILE_SIZE, int height = Globals::TILE_SIZE, float globalPosX = 0, float globalPosY = 0) : Component(owner) {
 		this->globalPosX = globalPosX;
 		this->globalPosY = globalPosY;
 		isRotated = false;
 		rotationAngle = 0;
+		rotationCenter.x = 0;
+		rotationCenter.y = 0;
 		transformRect.w = width;
 		transformRect.h = height;
-		transformRect.x = globalPosX - cameraPosX;
-		transformRect.y = globalPosY - cameraPosY;
-		type = NONE;
+		transformRect.x = globalPosX - camera->posX;
+		transformRect.y = globalPosY - camera->posY;
+		type = TRANSFORM;
+	}
+	void rotate(double rotationAngle, SDL_Point* rotationCenter = NULL) {
+		isRotated = true;
+		this->rotationAngle = rotationAngle;
+		this->rotationCenter = *rotationCenter;
 	}
 };
 
@@ -62,13 +69,17 @@ public:
 	std::string ID;
 	Globals::Layers layer;
 	SDL_RendererFlip flip;
-	Drawable(Entity* owner, SDL_Texture* image, std::string ID, Layers layer, SDL_Rect* srcRect = NULL, SDL_RendererFlip flip = SDL_FLIP_NONE) : Component(owner) {
+	Drawable(Entity* owner, SDL_Texture* image, std::string ID, Globals::Layers layer, SDL_Rect* srcRect = NULL, SDL_RendererFlip flip = SDL_FLIP_NONE) : Component(owner) {
 		this->image = image;
 		this->ID = ID;
 		this->layer = layer;
 		this->srcRect = srcRect;
 		this->flip = flip;
 		type = DRAWABLE;
+	}
+	~Drawable() {
+		SDL_DestroyTexture(image);
+		if (srcRect) delete srcRect;
 	}
 
 };

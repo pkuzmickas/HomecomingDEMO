@@ -8,6 +8,6 @@ public:
 	Graphics(SDL_Renderer* renderer);
 	void render();
 private:
-	std::vector<std::vector<Entity*>> drawQueue;
+	std::vector<std::vector<Entity*>> entityDrawQueue;
 	SDL_Renderer* renderer;
 };
