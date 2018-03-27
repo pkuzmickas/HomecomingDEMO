@@ -117,15 +117,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Camera.cpp" />
     <ClCompile Include="Source\Director.cpp" />
+    <ClCompile Include="Source\Entity.cpp" />
+    <ClCompile Include="Source\Graphics.cpp" />
     <ClCompile Include="Source\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Component.h" />
-    <ClInclude Include="Source\Constants.h" />
+    <ClInclude Include="Source\Globals.h" />
     <ClInclude Include="Source\Director.h" />
     <ClInclude Include="Source\Entity.h" />
     <ClInclude Include="Source\Graphics.h" />
+    <ClInclude Include="Source\Camera.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

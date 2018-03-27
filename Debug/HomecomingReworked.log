@@ -1,3 +1,15 @@
-﻿  main.cpp
+﻿  Graphics.cpp
+u:\pacman\homecomingreworked\homecomingreworked\source\component.h(45): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+u:\pacman\homecomingreworked\homecomingreworked\source\component.h(46): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+u:\pacman\homecomingreworked\homecomingreworked\source\graphics.cpp(24): warning C4018: '<': signed/unsigned mismatch
+u:\pacman\homecomingreworked\homecomingreworked\source\graphics.cpp(25): warning C4018: '<': signed/unsigned mismatch
+  Generating Code...
+  Compiling...
+  Director.cpp
+u:\pacman\homecomingreworked\homecomingreworked\source\component.h(45): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+u:\pacman\homecomingreworked\homecomingreworked\source\component.h(46): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+  Generating Code...
+  Skipping... (no relevant changes detected)
+  main.cpp
   HomecomingReworked.vcxproj -> U:\pacman\HomecomingReworked\HomecomingReworked\Debug\HomecomingReworked.exe
   HomecomingReworked.vcxproj -> U:\pacman\HomecomingReworked\HomecomingReworked\Debug\HomecomingReworked.pdb (Partial PDB)
