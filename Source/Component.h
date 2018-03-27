@@ -42,8 +42,8 @@ public:
 		rotationCenter.y = 0;
 		transformRect.w = width;
 		transformRect.h = height;
-		transformRect.x = globalPosX - camera->posX;
-		transformRect.y = globalPosY - camera->posY;
+		transformRect.x = (int)(globalPosX - camera->posX);
+		transformRect.y = (int)(globalPosY - camera->posY);
 		type = TRANSFORM;
 	}
 	void rotate(double rotationAngle, SDL_Point* rotationCenter = NULL) {
@@ -117,7 +117,7 @@ class Collider : public Component {
 public:
 	enum ColliderType {
 		NORMAL,
-		ONLY_BLOCK_WALKING
+		LOW //attacks are not blocked
 	};
 	ColliderType colType;
 	SDL_Rect colBox;

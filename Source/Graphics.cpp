@@ -21,8 +21,8 @@ void Graphics::render()
 {
 	SDL_RenderClear(renderer);
 
-	for (int i = 0; i < entityDrawQueue.size(); i++) {
-		for (int j = 0; j < entityDrawQueue[i].size(); j++) {
+	for (int i = 0; i < (int)entityDrawQueue.size(); i++) {
+		for (int j = 0; j < (int)entityDrawQueue[i].size(); j++) {
 			Entity* curEntity = entityDrawQueue[i][j];
 			Drawable* curDrawable = (Drawable*)entityDrawQueue[i][j]->findComponent(ComponentType::DRAWABLE);  
 			Transform* curTransform = (Transform*)entityDrawQueue[i][j]->findComponent(ComponentType::TRANSFORM);
