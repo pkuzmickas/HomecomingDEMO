@@ -6,7 +6,7 @@
 #include <sstream>
 #include "Graphics.h"
 #include "Camera.h" // temp
-
+#include "Map.h" // temp
 class Director {
 public:
 	Director(SDL_Renderer* renderer);
@@ -20,7 +20,6 @@ private:
 	Graphics* graphics;
 	void getInput();
 	void update();
-	Camera camera;
 	Entity* player;
 
 };

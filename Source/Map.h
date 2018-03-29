@@ -6,8 +6,10 @@
 #include <vector>
 #include <SDL.h>
 #include <SDL_image.h>
+#include <sstream>
 #include "Globals.h"
 #include "Entity.h"
+
 class Map {
 public:
 	bool readFile(std::string path, std::vector<char> &buffer);
@@ -23,9 +25,10 @@ private:
 	std::string spriteSheetPath;
 	int ssWidth;
 	int ssHeight;
-	xml_node<>* root_node;
-	xml_document<> doc;
+	rapidxml::xml_node<>* root_node;
+	rapidxml::xml_document<> doc;
 	SDL_Renderer* gRenderer;
 	SDL_Texture* spriteSheet;
+	std::vector<std::vector<std::vector<Entity*>>> mapMatrix; // [ROW] [COLUMN] [WHICH ENTITY in that pos]
 
 };

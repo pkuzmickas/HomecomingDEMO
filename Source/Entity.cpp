@@ -1,8 +1,9 @@
 #include "Entity.h"
 
 void Entity::addComponent(Component * comp) {
-	if (components.find(comp->type) != components.end()) {
-		std::cout << "Component already exists! Overriding the old one." << std::endl;
+	if (hasComponent(comp->type)) {
+		std::cout << "Component already exists! Overriding the old one. TYPE: " <<comp->type<< std::endl;
+
 		delete components[comp->type];
 	}
 	components[comp->type] = comp;	
@@ -11,7 +12,7 @@ void Entity::addComponent(Component * comp) {
 
 Component * Entity::findComponent(ComponentType comp) {
 
-	if (comp != (mask & comp)) {
+	if (!hasComponent(comp)) {
 		std::cout << "Component could not be found!" << std::endl;
 		return NULL;
 	}
@@ -19,6 +20,14 @@ Component * Entity::findComponent(ComponentType comp) {
 		return components[comp];
 	}
 
+}
+
+bool Entity::hasComponent(ComponentType comp)
+{
+	if (comp != (mask & comp)) {
+		return false;
+	}
+	return true;
 }
 
 Entity::~Entity() {

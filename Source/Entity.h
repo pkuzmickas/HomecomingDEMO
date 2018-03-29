@@ -7,6 +7,7 @@ public:
 	int mask;
 	void addComponent(Component* comp);
 	Component* findComponent(ComponentType comp);
+	bool hasComponent(ComponentType comp);
 	~Entity(); // Deletes all components 
 private:
 	std::unordered_map<ComponentType, Component*> components;

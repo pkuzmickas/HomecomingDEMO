@@ -33,7 +33,7 @@ public:
 	bool isRotated;
 	double rotationAngle;
 	SDL_Point rotationCenter;
-	Transform(Entity* owner, Camera* camera, int width = Globals::TILE_SIZE, int height = Globals::TILE_SIZE, float globalPosX = 0, float globalPosY = 0) : Component(owner) {
+	Transform(Entity* owner, int width = Globals::TILE_SIZE, int height = Globals::TILE_SIZE, float globalPosX = 0, float globalPosY = 0) : Component(owner) {
 		this->globalPosX = globalPosX;
 		this->globalPosY = globalPosY;
 		isRotated = false;
@@ -42,8 +42,8 @@ public:
 		rotationCenter.y = 0;
 		transformRect.w = width;
 		transformRect.h = height;
-		transformRect.x = (int)(globalPosX - camera->posX);
-		transformRect.y = (int)(globalPosY - camera->posY);
+		transformRect.x = (int)(globalPosX - Camera::posX);
+		transformRect.y = (int)(globalPosY - Camera::posY);
 		type = TRANSFORM;
 	}
 	void rotate(double rotationAngle, SDL_Point* rotationCenter = NULL) {
@@ -123,7 +123,6 @@ public:
 	SDL_Rect colBox;
 	Collider(Entity* owner) : Component(owner) {
 		type = COLLIDER;
-		
 	}
 };
 
