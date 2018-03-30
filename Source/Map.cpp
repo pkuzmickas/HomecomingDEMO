@@ -60,10 +60,12 @@ Map::Map(SDL_Renderer* renderer, std::string path) {
 
 	xml_node<> * tile_gid = root_node->first_node("layer")->first_node("data")->first_node("tile");
 	for (int i = 0; i < height; i++) {
-		std::vector<Entity*> row;
+		std::vector<vector<Entity*>> row;
 		for (int j = 0; j < width; j++) {
+			std::vector<Entity*> col;
 			Entity* tile = new Entity();
-			row.push_back(tile);
+			col.push_back(tile); // push it onto the Entity list in the location (list is required if there are couple of entities on top of each other representing layers)
+			row.push_back(col); // push the list into the map position 
 			Transform* tileTransform = new Transform(tile, Globals::TILE_SIZE, Globals::TILE_SIZE, (int)(j * Globals::TILE_SIZE), (int)(i * Globals::TILE_SIZE));
 			tile->addComponent(tileTransform);
 
@@ -83,6 +85,9 @@ Map::Map(SDL_Renderer* renderer, std::string path) {
 		mapMatrix.push_back(row);
 	}
 
+	
+
+
 	// loading normal collision map
 
 	tile_gid = root_node->first_node("layer")->next_sibling()->first_node("data")->first_node("tile");
@@ -93,7 +98,7 @@ Map::Map(SDL_Renderer* renderer, std::string path) {
 
 			int gidValue = stoi((string)tile_gid->first_attribute("gid")->value());
 			if (gidValue != 0) {
-				Entity* tile = mapMatrix[i][j];
+				Entity* tile = mapMatrix[i][j][0]; // We just get the first element of the list of entities since there aren't any layers yet
 				Transform* tileTransform = (Transform*)tile->findComponent(ComponentType::TRANSFORM);
 				Collider* tileCollider = new Collider(tile);
 				tileCollider->colType = Collider::ColliderType::NORMAL;
@@ -107,35 +112,51 @@ Map::Map(SDL_Renderer* renderer, std::string path) {
 
 		}  
 	}
+	/*for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			cout << mapMatrix[i][j][0]->hasComponent(ComponentType::COLLIDER) ? "yes" : "no";
+		}
+		cout << endl;
+	}*/
 
 	// loading tile drawable component (how a tile looks like)
 
 	layer = root_node->first_node("layer")->next_sibling()->next_sibling();
 	int layerNr = 0;
-
+	
 	while (layer) {
 		layerNr = stoi((string)layer->first_attribute("name")->value());
 		tile_gid = layer->first_node("data")->first_node("tile");
 		for (int i = 0; i < height; i++) {
+			int curListEnt = 0;
+
 			for (int j = 0; j < width; j++) {
 				int spriteNr = stoi((string)tile_gid->first_attribute("gid")->value());
 				if (spriteNr != 0) {
-					Entity* tile = mapMatrix[i][j];
-					if (!tile->hasComponent(ComponentType::DRAWABLE)) {
-						std::ostringstream oss;
-						oss << "tile " << i << " " << j;
-						std::string tileID = oss.str();
-						SDL_Rect* srcRect = new SDL_Rect();
-						srcRect->h = Globals::TILE_SIZE;
-						srcRect->w = Globals::TILE_SIZE;
-						srcRect->x = (spriteNr % width) * Globals::TILE_SIZE;
-						srcRect->y = (spriteNr / width) * Globals::TILE_SIZE;
-						Drawable* tileDrawable = new Drawable(tile, spriteSheet, tileID, (Globals::Layers)layerNr, srcRect);
-						tile->addComponent(tileDrawable);
-					}
-					else {
-						Entity* tileOnTop = new Entity();
-
+					while (true) { // in case there already is a drawable and we need to create a new tile on top of all others in the specific coordinate
+						Entity* tile = mapMatrix[i][j][curListEnt];
+						if (!tile->hasComponent(ComponentType::DRAWABLE)) {
+							std::ostringstream oss;
+							oss << "tile " << i << " " << j << " " << curListEnt;
+							std::string tileID = oss.str();
+							SDL_Rect* srcRect = new SDL_Rect();
+							srcRect->h = Globals::TILE_SIZE;
+							srcRect->w = Globals::TILE_SIZE;
+							srcRect->x = (spriteNr % width) * Globals::TILE_SIZE;
+							srcRect->y = (spriteNr / width) * Globals::TILE_SIZE;
+							Drawable* tileDrawable = new Drawable(tile, spriteSheet, tileID, (Globals::Layers)layerNr, srcRect);
+							tile->addComponent(tileDrawable);
+							curListEnt = 0;
+							break;
+						}
+						else { // if there is already a tile with DRAWABLE in the location, create another entity on top of it to represent layers
+							curListEnt++;
+							Entity* tileOnTop = new Entity();
+							mapMatrix[i][j].push_back(tileOnTop);
+							Transform* tileTransform = new Transform(tileOnTop, Globals::TILE_SIZE, Globals::TILE_SIZE, (int)(j * Globals::TILE_SIZE), (int)(i * Globals::TILE_SIZE));
+							tileOnTop->addComponent(tileTransform);
+							
+						}
 					}
 				}
 
