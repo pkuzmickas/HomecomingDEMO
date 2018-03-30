@@ -10,21 +10,20 @@ void Graphics::addToDraw(Entity * entity) {
 }
 
 void Graphics::addMap(std::vector<std::vector<std::vector<Entity*>>> mapMatrix) {
-	std::vector<std::vector<Entity*>> map;
+	
 	for (int i = 0; i < Globals::Layers::END_MARKER; i++) {
 		std::vector<Entity*> layer;
-		map.push_back(layer);
+		mapDrawQueue.push_back(layer);
 	}
 	for (auto row : mapMatrix) {
 		for (auto col : row) {
 			for (auto entity : col) {
 				Drawable* curDrawable = (Drawable*)entity->findComponent(ComponentType::DRAWABLE);
-				map[(int)(curDrawable->layer)].push_back(entity);
+				mapDrawQueue[(int)(curDrawable->layer)].push_back(entity);
 			}
 		}
 	}
 
-	mapDrawQueue = map;
 }
 
 Graphics::Graphics(SDL_Renderer * renderer) {

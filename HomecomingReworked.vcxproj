@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{EE62B015-87B2-4F4B-A985-155ECD6CC9C8}</ProjectGuid>
     <RootNamespace>HomecomingReworked</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -77,6 +77,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)\TMXLoader\RapidXML;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -122,6 +123,7 @@
     <ClCompile Include="Source\Entity.cpp" />
     <ClCompile Include="Source\Graphics.cpp" />
     <ClCompile Include="Source\main.cpp" />
+    <ClCompile Include="Source\Map.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Component.h" />
@@ -130,6 +132,7 @@
     <ClInclude Include="Source\Entity.h" />
     <ClInclude Include="Source\Graphics.h" />
     <ClInclude Include="Source\Camera.h" />
+    <ClInclude Include="Source\Map.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

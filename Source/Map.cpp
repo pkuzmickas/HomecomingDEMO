@@ -151,10 +151,12 @@ Map::Map(SDL_Renderer* renderer, std::string path) {
 						}
 						else { // if there is already a tile with DRAWABLE in the location, create another entity on top of it to represent layers
 							curListEnt++;
-							Entity* tileOnTop = new Entity();
-							mapMatrix[i][j].push_back(tileOnTop);
-							Transform* tileTransform = new Transform(tileOnTop, Globals::TILE_SIZE, Globals::TILE_SIZE, (int)(j * Globals::TILE_SIZE), (int)(i * Globals::TILE_SIZE));
-							tileOnTop->addComponent(tileTransform);
+							if (curListEnt == mapMatrix[i][j].size()) {
+								Entity* tileOnTop = new Entity();
+								mapMatrix[i][j].push_back(tileOnTop);
+								Transform* tileTransform = new Transform(tileOnTop, Globals::TILE_SIZE, Globals::TILE_SIZE, (int)(j * Globals::TILE_SIZE), (int)(i * Globals::TILE_SIZE));
+								tileOnTop->addComponent(tileTransform);
+							}
 							
 						}
 					}
