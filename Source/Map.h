@@ -15,6 +15,8 @@ public:
 	bool readFile(std::string path, std::vector<char> &buffer);
 	std::vector<char> Map::loadMap(std::string path);
 	Map(SDL_Renderer* renderer, std::string path);
+	std::vector<std::vector<std::vector<Entity*>>> getMap() { return mapMatrix; }
+	~Map();
 private:
 	int width; //how many tiles are in the X axis
 	int height; //how many tiles are in the Y axis

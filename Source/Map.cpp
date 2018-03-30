@@ -167,3 +167,13 @@ Map::Map(SDL_Renderer* renderer, std::string path) {
 		layer = layer->next_sibling();
 	}
 }
+
+Map::~Map() {
+	for (auto row : mapMatrix) {
+		for (auto col : row) {
+			for (auto entity : col) {
+				delete entity;
+			}
+		}
+	}
+}

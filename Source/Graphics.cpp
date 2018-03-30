@@ -6,14 +6,32 @@ void Graphics::addToDraw(Entity * entity) {
 		std::cout << "Entity does not have a drawable component! Did not add to the draw queue." << std::endl;
 		return;
 	} 
-	entityDrawQueue[drawableComponent->layer].push_back(entity);
+	objectDrawQueue[drawableComponent->layer].push_back(entity);
+}
+
+void Graphics::addMap(std::vector<std::vector<std::vector<Entity*>>> mapMatrix) {
+	std::vector<std::vector<Entity*>> map;
+	for (int i = 0; i < Globals::Layers::END_MARKER; i++) {
+		std::vector<Entity*> layer;
+		map.push_back(layer);
+	}
+	for (auto row : mapMatrix) {
+		for (auto col : row) {
+			for (auto entity : col) {
+				Drawable* curDrawable = (Drawable*)entity->findComponent(ComponentType::DRAWABLE);
+				map[(int)(curDrawable->layer)].push_back(entity);
+			}
+		}
+	}
+
+	mapDrawQueue = map;
 }
 
 Graphics::Graphics(SDL_Renderer * renderer) {
 	this->renderer = renderer;
 	for (int i = 0; i < Globals::Layers::END_MARKER; i++) {
 		std::vector<Entity*> layer;
-		entityDrawQueue.push_back(layer);
+		objectDrawQueue.push_back(layer);
 	}
 }
 
@@ -21,11 +39,23 @@ void Graphics::render()
 {
 	SDL_RenderClear(renderer);
 
-	for (int i = 0; i < (int)entityDrawQueue.size(); i++) {
-		for (int j = 0; j < (int)entityDrawQueue[i].size(); j++) {
-			Entity* curEntity = entityDrawQueue[i][j];
-			Drawable* curDrawable = (Drawable*)entityDrawQueue[i][j]->findComponent(ComponentType::DRAWABLE);  
-			Transform* curTransform = (Transform*)entityDrawQueue[i][j]->findComponent(ComponentType::TRANSFORM);
+	// RENDERS MAP
+
+	renderDrawQueue(mapDrawQueue);
+
+	// RENDERS GAME OBJECTS
+
+	renderDrawQueue(objectDrawQueue);
+
+	SDL_RenderPresent(renderer);
+}
+
+void Graphics::renderDrawQueue(std::vector<std::vector<Entity*>> drawQueue) {
+	for (int i = 0; i < (int)drawQueue.size(); i++) {
+		for (int j = 0; j < (int)drawQueue[i].size(); j++) {
+			Entity* curEntity = drawQueue[i][j];
+			Drawable* curDrawable = (Drawable*)drawQueue[i][j]->findComponent(ComponentType::DRAWABLE);
+			Transform* curTransform = (Transform*)drawQueue[i][j]->findComponent(ComponentType::TRANSFORM);
 
 			if (curTransform->isRotated) {
 
@@ -37,6 +67,4 @@ void Graphics::render()
 
 		}
 	}
-
-	SDL_RenderPresent(renderer);
 }

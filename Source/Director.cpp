@@ -6,6 +6,7 @@ Director::Director(SDL_Renderer* renderer) {
 	this->renderer = renderer;
 	graphics = new Graphics(renderer);
 	Map test(renderer, "demoMap.tmx");
+	graphics->addMap(test.getMap());
 	player = new Entity();
 	
 	Transform* playerTransform = new Transform(player, 48, 48, 100, 100);
