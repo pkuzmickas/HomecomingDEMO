@@ -5,8 +5,7 @@
 #include <SDL_ttf.h>
 #include <sstream>
 #include "Graphics.h"
-#include "Camera.h" // temp
-#include "Map.h" // temp
+#include "EncounterScene.h"
 class Director {
 public:
 	Director(SDL_Renderer* renderer);
@@ -20,7 +19,6 @@ private:
 	Graphics* graphics;
 	void getInput();
 	void update();
-	Entity* player;
-	Map* map; //temp
+	Scene* curScene;
 };
 

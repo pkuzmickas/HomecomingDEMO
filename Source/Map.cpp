@@ -75,8 +75,8 @@ Map::Map(SDL_Renderer* renderer, std::string path) {
 				tileCollider->colType = Collider::ColliderType::LOW;
 				tileCollider->colBox.x = (int)tileTransform->globalPosX;
 				tileCollider->colBox.y = (int)tileTransform->globalPosY;
-				tileCollider->colBox.h = tileTransform->transformRect.h;
-				tileCollider->colBox.w = tileTransform->transformRect.w;
+				tileCollider->colBox.h = tileTransform->height;
+				tileCollider->colBox.w = tileTransform->width;
 				tile->addComponent(tileCollider);
 			}
 			tile_gid = tile_gid->next_sibling();
@@ -104,8 +104,8 @@ Map::Map(SDL_Renderer* renderer, std::string path) {
 				tileCollider->colType = Collider::ColliderType::NORMAL;
 				tileCollider->colBox.x = (int)tileTransform->globalPosX;
 				tileCollider->colBox.y = (int)tileTransform->globalPosY;
-				tileCollider->colBox.h = tileTransform->transformRect.h;
-				tileCollider->colBox.w = tileTransform->transformRect.w;
+				tileCollider->colBox.h = tileTransform->height;
+				tileCollider->colBox.w = tileTransform->width;
 				tile->addComponent(tileCollider);
 			}
 			tile_gid = tile_gid->next_sibling();

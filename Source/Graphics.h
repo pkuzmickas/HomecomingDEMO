@@ -2,6 +2,8 @@
 #include "Entity.h"
 #include <vector>
 #include <iostream>
+#include <sstream>
+#include <iterator>
 class Graphics {
 public:
 	void addToDraw(Entity* entity); // for game objects

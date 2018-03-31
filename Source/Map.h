@@ -12,12 +12,15 @@
 
 class Map {
 public:
-	bool readFile(std::string path, std::vector<char> &buffer);
-	std::vector<char> Map::loadMap(std::string path);
+	
 	Map(SDL_Renderer* renderer, std::string path);
 	std::vector<std::vector<std::vector<Entity*>>> getMap() { return mapMatrix; }
+	int getWidth() { return levelWidth; }
+	int getHeight() { return levelHeight; }
 	~Map();
 private:
+	bool readFile(std::string path, std::vector<char> &buffer);
+	std::vector<char> Map::loadMap(std::string path);
 	int width; //how many tiles are in the X axis
 	int height; //how many tiles are in the Y axis
 	int levelWidth; //in pixels

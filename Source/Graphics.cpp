@@ -55,14 +55,28 @@ void Graphics::renderDrawQueue(std::vector<std::vector<Entity*>> drawQueue) {
 			Entity* curEntity = drawQueue[i][j];
 			Drawable* curDrawable = (Drawable*)drawQueue[i][j]->findComponent(ComponentType::DRAWABLE);
 			Transform* curTransform = (Transform*)drawQueue[i][j]->findComponent(ComponentType::TRANSFORM);
+			
+			// Checks whether something is outside the camera and does not draw it
+			if (curTransform->globalPosX + Globals::TILE_SIZE < Camera::posX || curTransform->globalPosY + Globals::TILE_SIZE < Camera::posY || curTransform->globalPosX > Camera::posX + Globals::SCREEN_WIDTH || curTransform->globalPosY > Camera::posY + Globals::SCREEN_HEIGHT) continue;
+			
+			
+
+			SDL_Rect localPos;
+			localPos.h = curTransform->height;
+			localPos.w = curTransform->width;
+			localPos.x = curTransform->globalPosX - Camera::posX;
+			localPos.y = curTransform->globalPosY - Camera::posY;
+			
+			
 
 			if (curTransform->isRotated) {
-
-				SDL_RenderCopyEx(renderer, curDrawable->image, curDrawable->srcRect, &curTransform->transformRect, curTransform->rotationAngle, &curTransform->rotationCenter, curDrawable->flip);
+				SDL_RenderCopyEx(renderer, curDrawable->image, curDrawable->srcRect, &localPos, curTransform->rotationAngle, &curTransform->rotationCenter, curDrawable->flip);
 			}
 			else {
-				SDL_RenderCopy(renderer, curDrawable->image, curDrawable->srcRect, &curTransform->transformRect);
+				SDL_RenderCopy(renderer, curDrawable->image, curDrawable->srcRect, &localPos);
 			}
+
+			
 
 			if (debug) {
 				if (curEntity->hasComponent(ComponentType::COLLIDER)) {

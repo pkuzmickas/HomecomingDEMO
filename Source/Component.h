@@ -27,9 +27,10 @@ public:
 
 class Transform : public Component {
 public:
-	SDL_Rect transformRect;
 	float globalPosX;
 	float globalPosY;
+	int width;
+	int height;
 	bool isRotated;
 	double rotationAngle;
 	SDL_Point rotationCenter;
@@ -40,10 +41,8 @@ public:
 		rotationAngle = 0;
 		rotationCenter.x = 0;
 		rotationCenter.y = 0;
-		transformRect.w = width;
-		transformRect.h = height;
-		transformRect.x = (int)(globalPosX - Camera::posX);
-		transformRect.y = (int)(globalPosY - Camera::posY);
+		this->width = width;
+		this->height = height;
 		type = TRANSFORM;
 	}
 	void rotate(double rotationAngle, SDL_Point* rotationCenter = NULL) {
@@ -51,6 +50,7 @@ public:
 		this->rotationAngle = rotationAngle;
 		this->rotationCenter = *rotationCenter;
 	}
+	
 };
 
 class Input : public Component {
