@@ -125,6 +125,7 @@
     <ClCompile Include="Source\Graphics.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Map.cpp" />
+    <ClCompile Include="Source\PlayerInput.cpp" />
     <ClCompile Include="Source\Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -136,6 +137,7 @@
     <ClInclude Include="Source\Graphics.h" />
     <ClInclude Include="Source\Camera.h" />
     <ClInclude Include="Source\Map.h" />
+    <ClInclude Include="Source\PlayerInput.h" />
     <ClInclude Include="Source\Scene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

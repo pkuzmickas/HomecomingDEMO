@@ -24,7 +24,7 @@ void Scene::createPlayer(int globalPosX, int globalPosY) {
 	Camera::centerAround(globalPosX, globalPosY, map->getWidth(), map->getHeight());
 	Transform* playerTransform = new Transform(player, 48, 48, globalPosX, globalPosY);
 	Drawable* playerDrawable = new Drawable(player, IMG_LoadTexture(renderer, ASSET_DIR"player.png"), "player", Globals::Layers::PLAYER);
-
+	
 	player->addComponent(playerTransform);
 	player->addComponent(playerDrawable);
 	graphics->addToDraw(player);
