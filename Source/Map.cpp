@@ -112,12 +112,6 @@ Map::Map(SDL_Renderer* renderer, std::string path) {
 
 		}  
 	}
-	/*for (int i = 0; i < height; i++) {
-		for (int j = 0; j < width; j++) {
-			cout << mapMatrix[i][j][0]->hasComponent(ComponentType::COLLIDER) ? "yes" : "no";
-		}
-		cout << endl;
-	}*/
 
 	// loading tile drawable component (how a tile looks like)
 
@@ -142,8 +136,8 @@ Map::Map(SDL_Renderer* renderer, std::string path) {
 							SDL_Rect* srcRect = new SDL_Rect();
 							srcRect->h = Globals::TILE_SIZE;
 							srcRect->w = Globals::TILE_SIZE;
-							srcRect->x = (spriteNr % width) * Globals::TILE_SIZE;
-							srcRect->y = (spriteNr / width) * Globals::TILE_SIZE;
+							srcRect->x = ((spriteNr-1) % (int)(ssWidth/Globals::TILE_SIZE)) * Globals::TILE_SIZE; //SpriteNr-1 because spritenr is starts from 1 initialy and we need to start from 0
+							srcRect->y = ((spriteNr-1) / (int)(ssWidth/Globals::TILE_SIZE)) * Globals::TILE_SIZE;
 							Drawable* tileDrawable = new Drawable(tile, spriteSheet, tileID, (Globals::Layers)layerNr, srcRect);
 							tile->addComponent(tileDrawable);
 							curListEnt = 0;

@@ -32,5 +32,6 @@ private:
 	SDL_Renderer* gRenderer;
 	SDL_Texture* spriteSheet;
 	std::vector<std::vector<std::vector<Entity*>>> mapMatrix; // [ROW] [COLUMN] [WHICH ENTITY in that pos]
+	
 
 };

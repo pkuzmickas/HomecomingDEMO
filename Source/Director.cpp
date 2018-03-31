@@ -5,8 +5,9 @@ using namespace std;
 Director::Director(SDL_Renderer* renderer) {
 	this->renderer = renderer;
 	graphics = new Graphics(renderer);
-	Map test(renderer, "demoMap.tmx");
-	graphics->addMap(test.getMap());
+	//Map test(renderer, "demoMap.tmx");
+	map = new Map(renderer, "demoMap.tmx");
+	graphics->addMap(map->getMap());
 	player = new Entity();
 	
 	Transform* playerTransform = new Transform(player, 48, 48, 100, 100);
@@ -20,6 +21,7 @@ Director::Director(SDL_Renderer* renderer) {
 Director::~Director() {
 	delete graphics;
 	delete player;
+	delete map;
 }
 
 void Director::startGame() {

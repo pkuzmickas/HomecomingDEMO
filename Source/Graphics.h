@@ -13,4 +13,5 @@ private:
 	std::vector<std::vector<Entity*>> objectDrawQueue; // [LAYER] [ENTITY]
 	SDL_Renderer* renderer;
 	void renderDrawQueue(std::vector<std::vector<Entity*>> drawQueue);
+	bool debug = true;
 };

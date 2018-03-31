@@ -64,6 +64,20 @@ void Graphics::renderDrawQueue(std::vector<std::vector<Entity*>> drawQueue) {
 				SDL_RenderCopy(renderer, curDrawable->image, curDrawable->srcRect, &curTransform->transformRect);
 			}
 
+			if (debug) {
+				if (curEntity->hasComponent(ComponentType::COLLIDER)) {
+					Collider* col = (Collider*)curEntity->findComponent(ComponentType::COLLIDER);
+					SDL_Rect collider;
+					collider.h = col->colBox.h;
+					collider.w = col->colBox.w;
+					collider.x = col->colBox.x;
+					collider.y = col->colBox.y;
+					SDL_SetRenderDrawColor(renderer, 255, 0, 0, 0xFF);
+					SDL_RenderDrawRect(renderer, &collider);
+					SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
+				}
+			}
+
 		}
 	}
 }

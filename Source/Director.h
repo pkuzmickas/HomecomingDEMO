@@ -21,6 +21,6 @@ private:
 	void getInput();
 	void update();
 	Entity* player;
-
+	Map* map; //temp
 };
 
