@@ -3,6 +3,8 @@
 #include "Globals.h"
 #include <string>
 #include "Camera.h"
+#include <iostream>
+
 enum ComponentType {
 	NONE = 0,
 	INPUT = 1 << 0,
@@ -12,7 +14,8 @@ enum ComponentType {
 	ANIMATION = 1 << 4,
 	ABILITIES = 1 << 5,
 	AI = 1 << 6,
-	TRANSFORM = 1 << 7
+	TRANSFORM = 1 << 7,
+	STATS = 1 << 8
 };
 
 class Entity;
@@ -21,8 +24,11 @@ class Component {
 public:
 	ComponentType type;
 	bool enabled;
+	bool updatable;
+	virtual void update(float deltaTime) { std::cout << "Component's update function was not defined! TYPE:" << type << std::endl; };
 	Entity* owner;
-	Component(Entity* owner) { this->owner = owner; enabled = true; }
+	Component(Entity* owner, bool updatable = false) { this->owner = owner; enabled = true; this->updatable = updatable; }
+
 };
 
 class Transform : public Component {
@@ -34,9 +40,9 @@ public:
 	bool isRotated;
 	double rotationAngle;
 	SDL_Point rotationCenter;
-	Transform(Entity* owner, int width = Globals::TILE_SIZE, int height = Globals::TILE_SIZE, float globalPosX = 0, float globalPosY = 0) : Component(owner) {
-		this->globalPosX = globalPosX;
-		this->globalPosY = globalPosY;
+	Transform(Entity* owner, int width = Globals::TILE_SIZE, int height = Globals::TILE_SIZE, int globalPosX = 0, int globalPosY = 0) : Component(owner) {
+		this->globalPosX = (float)globalPosX;
+		this->globalPosY = (float)globalPosY;
 		isRotated = false;
 		rotationAngle = 0;
 		rotationCenter.x = 0;
@@ -56,14 +62,13 @@ public:
 class Input : public Component {
 public:
 	virtual void update(float deltaTime) = 0;
-	Input(Entity* owner) : Component(owner) {
+	Input(Entity* owner) : Component(owner, true) {
 		type = INPUT;
 	}
 };
 
 class Drawable : public Component {
 public:
-
 	SDL_Texture* image;
 	SDL_Rect* srcRect;
 	std::string ID;
@@ -88,7 +93,6 @@ class Movement : public Component {
 public:
 	float velX;
 	float velY;
-	virtual void update(float deltaTime) = 0;
 	Movement(Entity* owner, float velX = 0, float velY = 0) : Component(owner) {
 		this->velX = velX;
 		this->velY = velY;
@@ -127,8 +131,16 @@ public:
 };
 
 class Abilities : public Component {
+public:
 	virtual void update(float deltaTime) = 0;
 	Abilities(Entity* owner) : Component(owner) {
 		type = ABILITIES;
+	}
+};
+
+class Stats : public Component {
+public:
+	Stats(Entity* owner) : Component(owner) {
+		type = STATS;
 	}
 };

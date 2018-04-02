@@ -1,5 +1,6 @@
 #pragma once
-
+#include <vector>
+#include <SDL.h>
 /*
 Class for holding the constant global values for the game
 The names should be self explanatory and if not, should be changed to be so
@@ -48,5 +49,11 @@ public:
 		UI,
 		END_MARKER
 	};
+
+	static std::vector<SDL_Event>& GetFrameEvents() {
+		static std::vector<SDL_Event> frame_events;
+		return frame_events;
+	}
+
 };
 

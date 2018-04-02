@@ -74,5 +74,8 @@
     <ClInclude Include="Source\PlayerInput.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\PlayerStats.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

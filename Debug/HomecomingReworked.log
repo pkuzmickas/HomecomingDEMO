@@ -1,6 +1,3 @@
-﻿  Map.cpp
-c:\users\pauliuskuzmickas\desktop\programming\homecomingdemo\source\map.cpp(27): warning C4102: 'std': unreferenced label
-c:\users\pauliuskuzmickas\desktop\programming\homecomingdemo\source\map.cpp(69): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\pauliuskuzmickas\desktop\programming\homecomingdemo\source\map.cpp(151): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  HomecomingReworked.vcxproj -> C:\Users\pauliuskuzmickas\Desktop\programming\homecomingDEMO\Debug\HomecomingReworked.exe
-  HomecomingReworked.vcxproj -> C:\Users\pauliuskuzmickas\Desktop\programming\homecomingDEMO\Debug\HomecomingReworked.pdb (Partial PDB)
+﻿  PlayerInput.cpp
+  HomecomingReworked.vcxproj -> C:\Users\pauliuskuzmickas.COMPUTING\Desktop\programming\HomecomingDEMO\Debug\HomecomingReworked.exe
+  HomecomingReworked.vcxproj -> C:\Users\pauliuskuzmickas.COMPUTING\Desktop\programming\HomecomingDEMO\Debug\HomecomingReworked.pdb (Partial PDB)

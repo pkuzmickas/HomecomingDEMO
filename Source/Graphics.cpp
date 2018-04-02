@@ -64,8 +64,8 @@ void Graphics::renderDrawQueue(std::vector<std::vector<Entity*>> drawQueue) {
 			SDL_Rect localPos;
 			localPos.h = curTransform->height;
 			localPos.w = curTransform->width;
-			localPos.x = curTransform->globalPosX - Camera::posX;
-			localPos.y = curTransform->globalPosY - Camera::posY;
+			localPos.x = (int)(curTransform->globalPosX - Camera::posX);
+			localPos.y = (int)(curTransform->globalPosY - Camera::posY);
 			
 			
 

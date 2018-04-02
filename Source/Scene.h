@@ -3,6 +3,7 @@
 #include <SDL_image.h>
 #include "Graphics.h"
 #include "Map.h"
+#include "PlayerInput.h"
 
 class Scene {
 public:

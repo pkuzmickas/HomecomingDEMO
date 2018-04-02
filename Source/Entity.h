@@ -8,7 +8,9 @@ public:
 	void addComponent(Component* comp);
 	Component* findComponent(ComponentType comp);
 	bool hasComponent(ComponentType comp);
+	void update(float deltaTime);
 	~Entity(); // Deletes all components 
 private:
 	std::unordered_map<ComponentType, Component*> components;
+	
 };

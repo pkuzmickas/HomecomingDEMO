@@ -138,6 +138,7 @@
     <ClInclude Include="Source\Camera.h" />
     <ClInclude Include="Source\Map.h" />
     <ClInclude Include="Source\PlayerInput.h" />
+    <ClInclude Include="Source\PlayerStats.h" />
     <ClInclude Include="Source\Scene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

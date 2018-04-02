@@ -14,7 +14,9 @@ public:
 	
 private:
 	bool gameRunning = true;
-	float deltaTime; // time since last frame
+	Uint32 runTime;
+	Uint32 deltaTime; // time since last frame
+	float deltaTimeInSeconds;
 	SDL_Renderer* renderer;
 	Graphics* graphics;
 	void getInput();

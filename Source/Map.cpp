@@ -6,7 +6,7 @@ using namespace std;
 Method to read a file and store the data into a vector buffer.
 Returns true if successful
 */
-bool Map::readFile(std::string path, std::vector<char> &buffer) {
+bool Map::readFile(string path, vector<char> &buffer) {
 
 	ifstream theFile(path);
 	vector<char> buffer1((istreambuf_iterator<char>(theFile)), istreambuf_iterator<char>());
@@ -20,11 +20,11 @@ bool Map::readFile(std::string path, std::vector<char> &buffer) {
 /*
 Returns a buffer with the data for the map.
 */
-std::vector<char> Map::loadMap(std::string path) {
-	std::vector<char> buffer;
+vector<char> Map::loadMap(string path) {
+	vector<char> buffer;
 	if (!readFile(path, buffer)) { 
-		std::cout << "Failed to read the map!" << std::endl;
-		std:vector<char> empty;
+		cout << "Failed to read the map!" << endl;
+		vector<char> empty;
 		return empty;
 	}
 	return buffer;
