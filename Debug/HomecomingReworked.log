@@ -1,3 +1,20 @@
-﻿  PlayerInput.cpp
+﻿  Scene.cpp
+  PlayerInput.cpp
+  Map.cpp
+  main.cpp
+  Graphics.cpp
+c:\users\pauliuskuzmickas.computing\desktop\programming\homecomingdemo\source\graphics.cpp(14): warning C4018: '<': signed/unsigned mismatch
+c:\users\pauliuskuzmickas.computing\desktop\programming\homecomingdemo\source\graphics.cpp(16): warning C4018: '<': signed/unsigned mismatch
+c:\users\pauliuskuzmickas.computing\desktop\programming\homecomingdemo\source\graphics.cpp(23): warning C4018: '<': signed/unsigned mismatch
+c:\users\pauliuskuzmickas.computing\desktop\programming\homecomingdemo\source\graphics.cpp(24): warning C4018: '<': signed/unsigned mismatch
+c:\users\pauliuskuzmickas.computing\desktop\programming\homecomingdemo\source\graphics.cpp(101): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\pauliuskuzmickas.computing\desktop\programming\homecomingdemo\source\graphics.cpp(102): warning C4018: '>=': signed/unsigned mismatch
+c:\users\pauliuskuzmickas.computing\desktop\programming\homecomingdemo\source\graphics.cpp(103): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\pauliuskuzmickas.computing\desktop\programming\homecomingdemo\source\graphics.cpp(104): warning C4018: '>=': signed/unsigned mismatch
+  EncounterScene.cpp
+  Entity.cpp
+  Director.cpp
+  Camera.cpp
+  Generating Code...
   HomecomingReworked.vcxproj -> C:\Users\pauliuskuzmickas.COMPUTING\Desktop\programming\HomecomingDEMO\Debug\HomecomingReworked.exe
   HomecomingReworked.vcxproj -> C:\Users\pauliuskuzmickas.COMPUTING\Desktop\programming\HomecomingDEMO\Debug\HomecomingReworked.pdb (Partial PDB)
