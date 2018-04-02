@@ -12,15 +12,19 @@ void Graphics::addToDraw(Entity * entity) {
 void Graphics::addMap(std::vector<std::vector<std::vector<Entity*>>> mapMatrix) {
 	
 	for (int i = 0; i < Globals::Layers::END_MARKER; i++) {
-		std::vector<Entity*> layer;
+		std::vector<std::vector<Entity*>> layer;
 		mapDrawQueue.push_back(layer);
 	}
-	for (auto row : mapMatrix) {
-		for (auto col : row) {
-			for (auto entity : col) {
+
+	for (int i = 0; i < mapMatrix.size(); i++) {
+		std::vector<Entity*> row;
+		for (int j = 0; j < mapMatrix[i].size(); j++) {
+			for (auto entity : mapMatrix[i][j]) {
 				Drawable* curDrawable = (Drawable*)entity->findComponent(ComponentType::DRAWABLE);
-				mapDrawQueue[(int)(curDrawable->layer)].push_back(entity);
+				mapDrawQueue[curDrawable->layer][i][j] = entity;
+				// ^ TEST IF ABOVE WORKS //TODO
 			}
+
 		}
 	}
 
@@ -40,21 +44,24 @@ void Graphics::render()
 
 	// RENDERS MAP
 
-	renderDrawQueue(mapDrawQueue);
+	renderMap();
 
 	// RENDERS GAME OBJECTS
 
-	renderDrawQueue(objectDrawQueue);
+	renderObjects();
 
 	SDL_RenderPresent(renderer);
 }
 
-void Graphics::renderDrawQueue(std::vector<std::vector<Entity*>> drawQueue) {
-	for (int i = 0; i < (int)drawQueue.size(); i++) {
-		for (int j = 0; j < (int)drawQueue[i].size(); j++) {
-			Entity* curEntity = drawQueue[i][j];
-			Drawable* curDrawable = (Drawable*)drawQueue[i][j]->findComponent(ComponentType::DRAWABLE);
-			Transform* curTransform = (Transform*)drawQueue[i][j]->findComponent(ComponentType::TRANSFORM);
+void Graphics::renderObjects() {
+	int numOfRows = (int)objectDrawQueue.size();
+	for (int i = 0; i < numOfRows; i++) {
+		int numOfColumns = (int)objectDrawQueue[i].size();
+		for (int j = 0; j < numOfColumns; j++) {
+			
+			Entity* curEntity = objectDrawQueue[i][j];
+			Drawable* curDrawable = (Drawable*)objectDrawQueue[i][j]->findComponent(ComponentType::DRAWABLE);
+			Transform* curTransform = (Transform*)objectDrawQueue[i][j]->findComponent(ComponentType::TRANSFORM);
 			
 			// Checks whether something is outside the camera and does not draw it
 			if (curTransform->globalPosX + Globals::TILE_SIZE < Camera::posX || curTransform->globalPosY + Globals::TILE_SIZE < Camera::posY || curTransform->globalPosX > Camera::posX + Globals::SCREEN_WIDTH || curTransform->globalPosY > Camera::posY + Globals::SCREEN_HEIGHT) continue;
@@ -94,4 +101,8 @@ void Graphics::renderDrawQueue(std::vector<std::vector<Entity*>> drawQueue) {
 
 		}
 	}
+}
+
+void Graphics::renderMap() {
+
 }

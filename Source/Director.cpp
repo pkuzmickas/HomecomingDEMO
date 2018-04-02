@@ -45,7 +45,7 @@ void Director::getInput() {
 void Director::update() {
 	deltaTime = SDL_GetTicks() - runTime;
 	deltaTimeInSeconds = (float)deltaTime / 1000;
-	//cout << deltaTimeInSeconds << endl;
+	cout << deltaTimeInSeconds << endl;
 	runTime += deltaTime;
 
 	curScene->update(deltaTimeInSeconds);

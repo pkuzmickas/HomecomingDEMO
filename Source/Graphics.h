@@ -11,9 +11,11 @@ public:
 	Graphics(SDL_Renderer* renderer);
 	void render();
 private:
-	std::vector<std::vector<Entity*>> mapDrawQueue;
+	// Map is drawn in a separate way to increase performance
+	std::vector<std::vector<std::vector<Entity*>>> mapDrawQueue; // [LAYER] [ROW] [COL]
 	std::vector<std::vector<Entity*>> objectDrawQueue; // [LAYER] [ENTITY]
 	SDL_Renderer* renderer;
-	void renderDrawQueue(std::vector<std::vector<Entity*>> drawQueue);
+	void renderObjects();
+	void renderMap();
 	bool debug = true;
 };
