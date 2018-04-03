@@ -12,11 +12,17 @@ public:
 	Graphics(SDL_Renderer* renderer);
 	void render();
 private:
+	struct Sprite {
+		Transform* transform;
+		Drawable* drawable;
+	};
+
 	// Map is drawn in a separate way to increase performance
-	std::vector<std::vector<std::map<Globals::Layers, Entity*>>> mapDrawQueue; // [ROW] [COL] [LAYER]
-	std::vector<std::vector<Entity*>> objectDrawQueue; // [LAYER] [ENTITY]
+	std::vector<std::vector<Sprite>> mapDrawQueue; // [LAYER] [ENTITY]
+	std::vector<std::vector<Sprite>> objectDrawQueue; // [LAYER] [ENTITY]
 	SDL_Renderer* renderer;
-	void renderObjects();
-	void renderMap();
 	bool debug = true;
+	int mapRows = 0;
+	int mapCols = 0;
+
 };

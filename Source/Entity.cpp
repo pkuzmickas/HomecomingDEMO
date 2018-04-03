@@ -12,13 +12,13 @@ void Entity::addComponent(Component * comp) {
 
 Component * Entity::findComponent(ComponentType comp) {
 
-	if (!hasComponent(comp)) {
+	/*if (!hasComponent(comp)) {
 		std::cout << "Component could not be found! TYPE:" <<comp<< std::endl;
 		return NULL;
 	}
-	else {
+	else {*/
 		return components[comp];
-	}
+	//}
 
 }
 
