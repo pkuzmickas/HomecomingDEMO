@@ -91,12 +91,20 @@ public:
 
 class Movement : public Component {
 public:
-	float velX;
-	float velY;
-	Movement(Entity* owner, float velX = 0, float velY = 0) : Component(owner) {
-		this->velX = velX;
-		this->velY = velY;
+	enum Directions {
+		LEFT,
+		RIGHT,
+		UP,
+		DOWN
+	};
+
+	std::vector<bool> moving = { false, false, false, false };
+	int speed;
+	Movement(Entity* owner, std::vector<bool>* moving = NULL) : Component(owner) {
+		
+		if(moving) this->moving = *moving;
 		type = MOVEMENT;
+
 	}
 };
 

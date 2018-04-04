@@ -29,6 +29,7 @@ void Scene::createPlayer(int globalPosX, int globalPosY) {
 	Drawable* playerDrawable = new Drawable(player, IMG_LoadTexture(renderer, ASSET_DIR"player.png"), "player", Globals::Layers::PLAYER);
 	player->addComponent(playerDrawable);
 	Movement* playerMovement = new Movement(player);
+	playerMovement->speed = 200;
 	player->addComponent(playerMovement);
 	PlayerInput* playerInput = new PlayerInput(player);
 	player->addComponent(playerInput);

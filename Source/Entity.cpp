@@ -12,13 +12,13 @@ void Entity::addComponent(Component * comp) {
 
 Component * Entity::findComponent(ComponentType comp) {
 
-	/*if (!hasComponent(comp)) {
+	if (!hasComponent(comp)) {
 		std::cout << "Component could not be found! TYPE:" <<comp<< std::endl;
 		return NULL;
 	}
-	else {*/
+	else {
 		return components[comp];
-	//}
+	}
 
 }
 
@@ -44,16 +44,27 @@ void Entity::update(float deltaTime) {
 	if (ComponentType::MOVEMENT == (mask & ComponentType::MOVEMENT)) {
 		Transform* transform = (Transform*)findComponent(ComponentType::TRANSFORM);
 		Movement* movement = (Movement*)findComponent(ComponentType::MOVEMENT);
-		//std::cout << "DOING IT "<< ((Drawable*)components[ComponentType::DRAWABLE])->ID<<" SPEED:"<< movement->velX<< std::endl;
-		if (movement->velX != 0 && movement->velY != 0) {
-			movement->velX *= SIN45;
-			movement->velY *= SIN45;
-			
+		
+		int numOfDirs = 0;
+		for (bool dir : movement->moving) if (dir) numOfDirs++;
+		float velocity = movement->speed * deltaTime;
+		if (numOfDirs == 2) {
+			velocity *= SIN45;
 		}
-		//std::cout << "WAS POSITION: " << transform->globalPosX;
-		transform->globalPosX += movement->velX * deltaTime; // 0.1f - speed modifier
-		transform->globalPosY += movement->velY * deltaTime;
-		//std::cout << " NEW POS:" << transform->globalPosX << " VEL WAS:"<< movement->velX <<" DT WAS:"<<deltaTime<< std::endl;
+		
+		if (movement->moving[movement->DOWN]) {
+			transform->globalPosY += velocity;
+		}
+		if (movement->moving[movement->UP]) {
+			transform->globalPosY -= velocity;
+		}
+		if (movement->moving[movement->LEFT]) {
+			transform->globalPosX -= velocity;
+		}
+		if (movement->moving[movement->RIGHT]) {
+			transform->globalPosX += velocity;
+		}
+
 
 	}
 	
