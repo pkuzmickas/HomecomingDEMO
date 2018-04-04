@@ -18,20 +18,24 @@ void Graphics::addToDraw(Entity * entity) {
 }
 
 void Graphics::addMap(std::vector<std::vector<std::vector<Entity*>>> mapMatrix) {
-	
+
 	mapRows = mapMatrix.size();
 	mapCols = mapMatrix[0].size();
 	for (int i = 0; i < mapMatrix.size(); i++) {
+		std::vector<std::vector<Sprite>> row;
 		for (int j = 0; j < mapMatrix[i].size(); j++) {
+			std::vector<Sprite > col;
 			for (auto entity : mapMatrix[i][j]) {
 				Drawable* curDrawable = (Drawable*)entity->findComponent(ComponentType::DRAWABLE);
 				Transform* curTransform = (Transform*)entity->findComponent(ComponentType::TRANSFORM);
 				Sprite sprite;
 				sprite.drawable = curDrawable;
 				sprite.transform = curTransform;
-				mapDrawQueue[curDrawable->layer].push_back(sprite);
+				col.push_back(sprite);
 			}
+			row.push_back(col);
 		}
+		mapMatrixWSprites.push_back(row);
 	}
 
 }
@@ -51,106 +55,57 @@ void Graphics::render()
 {
 	SDL_RenderClear(renderer);
 
-	for (int layer = 0; layer < Globals::Layers::END_MARKER; layer++) {
-		// RENDERS MAP
-		if (layer < 1) { // now need to add exceptions for other layers
-			// Wild algorithm to reduce number of loops and draws. Copyright Paulius is awesome.
-			int xBound = Camera::posX / Globals::TILE_SIZE + Globals::SCREEN_WIDTH/Globals::TILE_SIZE +1;
-			int yBound = Camera::posY / Globals::TILE_SIZE + Globals::SCREEN_HEIGHT / Globals::TILE_SIZE+1;
-			int xStart = Camera::posX / Globals::TILE_SIZE;
-			int yStart = Camera::posY / Globals::TILE_SIZE;
-			int startLoopX = xStart + mapCols * yStart;
-			int stopLoopX = xBound + mapCols * yStart;
-			int stopLoopAt = xStart + mapCols * yBound;
-
-			int curSpriteNr = startLoopX;
-			int curY = yStart;
-			int sum = 0;
-			while (curSpriteNr!= stopLoopAt) {
-
-				Transform* curTransform = mapDrawQueue[layer][curSpriteNr].transform;
-				Drawable* curDrawable = mapDrawQueue[layer][curSpriteNr].drawable;
-				sum++;
-				SDL_Rect localPos;
-				localPos.h = curTransform->height;
-				localPos.w = curTransform->width;
-				localPos.x = (int)(curTransform->globalPosX - Camera::posX);
-				localPos.y = (int)(curTransform->globalPosY - Camera::posY);
-
-				SDL_RenderCopy(renderer, curDrawable->image, curDrawable->srcRect, &localPos);
-
-				curSpriteNr++;
-				if (curSpriteNr == stopLoopX) {
-					curSpriteNr = xStart + mapCols * ++curY;
-					stopLoopX += mapCols;
-				}
-				
+	int xBound = Camera::posX / Globals::TILE_SIZE + Globals::SCREEN_WIDTH / Globals::TILE_SIZE + 1;
+	int yBound = Camera::posY / Globals::TILE_SIZE + Globals::SCREEN_HEIGHT / Globals::TILE_SIZE + 1;
+	int xStart = Camera::posX / Globals::TILE_SIZE;
+	int yStart = Camera::posY / Globals::TILE_SIZE;
+	
+	// Checks the tiles needed to be drawn in regards to the camera and adds them to the vector
+	for (int row = yStart; row < yBound; row++) {
+		for (int col = xStart; col < xBound; col++) {
+			for (auto sprite : mapMatrixWSprites[row][col]) {
+				mapDrawQueue[sprite.drawable->layer].push_back(sprite);
 			}
 		}
-		/*
-		SDL_Rect localPos;
-		localPos.h = curTransform->height;
-		localPos.w = curTransform->width;
-		localPos.x = (int)(curTransform->globalPosX - Camera::posX);
-		localPos.y = (int)(curTransform->globalPosY - Camera::posY);
-
-		SDL_RenderCopy(renderer, curDrawable->image, curDrawable->srcRect, &localPos);
-
-		/*if (debug) {
-		if (curEntity->hasComponent(ComponentType::COLLIDER)) {
-		Collider* col = (Collider*)curEntity->findComponent(ComponentType::COLLIDER);
-		SDL_Rect collider;
-		collider.h = col->colBox.h;
-		collider.w = col->colBox.w;
-		collider.x = col->colBox.x;
-		collider.y = col->colBox.y;
-		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 0xFF);
-		SDL_RenderDrawRect(renderer, &collider);
-		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
-		}
-		}*/
-		// DRAW OBJECTS
-
-		/*for (int j = 0; j < (int)objectDrawQueue[layer].size(); j++) {
-
-			Entity* curEntity = objectDrawQueue[layer][j];
-			Drawable* curDrawable = (Drawable*)curEntity->findComponent(ComponentType::DRAWABLE);
-			Transform* curTransform = (Transform*)curEntity->findComponent(ComponentType::TRANSFORM);
-
-			// Checks whether something is outside the camera and does not draw it
-			if (curTransform->globalPosX + Globals::TILE_SIZE < Camera::posX || curTransform->globalPosY + Globals::TILE_SIZE < Camera::posY || curTransform->globalPosX > Camera::posX + Globals::SCREEN_WIDTH || curTransform->globalPosY > Camera::posY + Globals::SCREEN_HEIGHT) continue;
-
-			SDL_Rect localPos;
-			localPos.h = curTransform->height;
-			localPos.w = curTransform->width;
-			localPos.x = (int)(curTransform->globalPosX - Camera::posX);
-			localPos.y = (int)(curTransform->globalPosY - Camera::posY);
-
-			if (curTransform->isRotated) {
-				SDL_RenderCopyEx(renderer, curDrawable->image, curDrawable->srcRect, &localPos, curTransform->rotationAngle, &curTransform->rotationCenter, curDrawable->flip);
-			}
-			else {
-				SDL_RenderCopy(renderer, curDrawable->image, curDrawable->srcRect, &localPos);
-			}
-
-			if (debug) {
-				if (curEntity->hasComponent(ComponentType::COLLIDER)) {
-					Collider* col = (Collider*)curEntity->findComponent(ComponentType::COLLIDER);
-					SDL_Rect collider;
-					collider.h = col->colBox.h;
-					collider.w = col->colBox.w;
-					collider.x = col->colBox.x;
-					collider.y = col->colBox.y;
-					SDL_SetRenderDrawColor(renderer, 255, 0, 0, 0xFF);
-					SDL_RenderDrawRect(renderer, &collider);
-					SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
-				}
-			}
-
-		}*/
-
-
 	}
+
+	// Renders the tiles and game objects
+	for (int layer = 0; layer < Globals::Layers::END_MARKER; layer++) {
+		if (layer < Globals::Layers::UI) {
+			for (auto tileSprite : mapDrawQueue[layer]) {
+				draw(tileSprite);
+			}
+			mapDrawQueue[layer].clear();
+		}
+		for (auto gameObject : objectDrawQueue[layer]) {
+			draw(gameObject);
+		}
+	}
+
+
 
 	SDL_RenderPresent(renderer);
 }
+
+void Graphics::draw(Sprite sprite) {
+	SDL_Rect localPos;
+	localPos.h = sprite.transform->height;
+	localPos.w = sprite.transform->width;
+	localPos.x = (int)(sprite.transform->globalPosX - Camera::posX);
+	localPos.y = (int)(sprite.transform->globalPosY - Camera::posY);
+	SDL_RenderCopy(renderer, sprite.drawable->image, sprite.drawable->srcRect, &localPos);
+}
+
+/*if (debug) {
+if (curEntity->hasComponent(ComponentType::COLLIDER)) {
+Collider* col = (Collider*)curEntity->findComponent(ComponentType::COLLIDER);
+SDL_Rect collider;
+collider.h = col->colBox.h;
+collider.w = col->colBox.w;
+collider.x = col->colBox.x;
+collider.y = col->colBox.y;
+SDL_SetRenderDrawColor(renderer, 255, 0, 0, 0xFF);
+SDL_RenderDrawRect(renderer, &collider);
+SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
+}
+}*/
