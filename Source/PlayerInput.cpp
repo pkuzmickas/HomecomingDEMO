@@ -1,7 +1,7 @@
 #include "PlayerInput.h"
 #include <iostream>
 PlayerInput::PlayerInput(Entity* owner) : Input(owner) {
-	playerMovement = (Movement*)owner->findComponent(ComponentType::MOVEMENT);
+	playerMovement = (PlayerMovement*)owner->findComponent(ComponentType::MOVEMENT);
 	playerStats = (PlayerStats*)owner->findComponent(ComponentType::STATS);
 
 }

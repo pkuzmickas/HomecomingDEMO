@@ -89,24 +89,6 @@ public:
 
 };
 
-class Movement : public Component {
-public:
-	enum Directions {
-		LEFT,
-		RIGHT,
-		UP,
-		DOWN
-	};
-
-	std::vector<bool> moving = { false, false, false, false };
-	int speed;
-	Movement(Entity* owner, std::vector<bool>* moving = NULL) : Component(owner) {
-		
-		if(moving) this->moving = *moving;
-		type = MOVEMENT;
-
-	}
-};
 
 class Animation : public Component {
 public:

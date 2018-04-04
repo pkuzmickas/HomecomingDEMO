@@ -3,7 +3,10 @@
 #include <SDL_image.h>
 #include "Graphics.h"
 #include "Map.h"
+#include "Movement.h"
+#include "PlayerStats.h"
 #include "PlayerInput.h"
+#include "PlayerMovement.h"
 
 class Scene {
 public:

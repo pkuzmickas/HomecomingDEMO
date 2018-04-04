@@ -1,10 +1,11 @@
 #pragma once
 #include "Entity.h"
 #include "PlayerStats.h"
+#include "PlayerMovement.h"
 #include <vector>
 class PlayerInput : public Input {
 private:
-	Movement* playerMovement;
+	PlayerMovement* playerMovement;
 	PlayerStats* playerStats;
 public:
 	PlayerInput(Entity* owner);

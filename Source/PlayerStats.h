@@ -3,6 +3,6 @@
 
 class PlayerStats : public Stats {
 public:
-	int SPEED = 100;
+	int SPEED = 150;
 	PlayerStats(Entity* owner) : Stats(owner) {	}
 };

@@ -35,39 +35,7 @@ void Entity::update(float deltaTime) {
 		if (comp.second->updatable) {
 			comp.second->update(deltaTime);
 		}
-	}
-
-	// General updates
-
-	// If there is a movement component, update the movement each frame
-	// This is in Entity since it is general and would apply to all movements
-	if (ComponentType::MOVEMENT == (mask & ComponentType::MOVEMENT)) {
-		Transform* transform = (Transform*)findComponent(ComponentType::TRANSFORM);
-		Movement* movement = (Movement*)findComponent(ComponentType::MOVEMENT);
-		
-		int numOfDirs = 0;
-		for (bool dir : movement->moving) if (dir) numOfDirs++;
-		float velocity = movement->speed * deltaTime;
-		if (numOfDirs == 2) {
-			velocity *= SIN45;
-		}
-		
-		if (movement->moving[movement->DOWN]) {
-			transform->globalPosY += velocity;
-		}
-		if (movement->moving[movement->UP]) {
-			transform->globalPosY -= velocity;
-		}
-		if (movement->moving[movement->LEFT]) {
-			transform->globalPosX -= velocity;
-		}
-		if (movement->moving[movement->RIGHT]) {
-			transform->globalPosX += velocity;
-		}
-
-
-	}
-	
+	}	
 }
 
 Entity::~Entity() {

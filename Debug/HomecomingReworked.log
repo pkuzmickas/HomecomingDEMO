@@ -1,8 +1,9 @@
-﻿  Graphics.cpp
-p:\programming\homecomingdemo\source\graphics.cpp(24): warning C4018: '<': signed/unsigned mismatch
-p:\programming\homecomingdemo\source\graphics.cpp(25): warning C4018: '<': signed/unsigned mismatch
-p:\programming\homecomingdemo\source\graphics.cpp(58): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-p:\programming\homecomingdemo\source\graphics.cpp(59): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-p:\programming\homecomingdemo\source\graphics.cpp(60): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-p:\programming\homecomingdemo\source\graphics.cpp(61): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-  HomecomingReworked.vcxproj -> P:\Programming\HomecomingDEMO\Debug\HomecomingReworked.exe
+﻿  Scene.cpp
+  Generating Code...
+  Compiling...
+  main.cpp
+  EncounterScene.cpp
+  Director.cpp
+  Generating Code...
+  HomecomingReworked.vcxproj -> C:\Users\pauliuskuzmickas\Desktop\Programming\HomecomingDEMO\Debug\HomecomingReworked.exe
+  HomecomingReworked.vcxproj -> C:\Users\pauliuskuzmickas\Desktop\Programming\HomecomingDEMO\Debug\HomecomingReworked.pdb (Partial PDB)

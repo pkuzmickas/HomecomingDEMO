@@ -13,4 +13,5 @@ public:
 private:
 	std::unordered_map<ComponentType, Component*> components;
 	
+	
 };
