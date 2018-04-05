@@ -89,24 +89,6 @@ public:
 
 };
 
-
-class Animation : public Component {
-public:
-	bool animating;
-	SDL_Texture* spritesheet;
-	SDL_Rect srcRect;
-	int elapsedTime;
-	int requiredTime;
-	virtual void update(float deltaTime) = 0;
-	Animation(Entity* owner, SDL_Texture* spritesheet) : Component(owner) {
-		srcRect = { 0, 0, 0, 0 };
-		elapsedTime = 0;
-		requiredTime = 100;
-		type = ANIMATION;
-		this->spritesheet = spritesheet;
-	}
-};
-
 class Collider : public Component {
 public:
 	enum ColliderType {

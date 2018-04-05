@@ -12,6 +12,4 @@ public:
 	~Entity(); // Deletes all components 
 private:
 	std::unordered_map<ComponentType, Component*> components;
-	
-	
 };
