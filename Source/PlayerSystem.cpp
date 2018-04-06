@@ -1,13 +1,10 @@
 #include "PlayerSystem.h"
 
-PlayerSystem::PlayerSystem(SDL_Renderer* renderer) {
-	this->renderer = renderer;
 
-}
 
-Entity * PlayerSystem::createPlayer(int globalPosX, int globalPosY) {
+Entity * PlayerSystem::createPlayer(int globalPosX, int globalPosY, SDL_Texture* texture) {
 
-	player = new Entity();
+	Entity* player = new Entity();
 	Transform* playerTransform = new Transform(player, 48, 48, globalPosX, globalPosY);
 	player->addComponent(playerTransform);
 	PlayerStats* playerStats = new PlayerStats(player);
@@ -17,7 +14,7 @@ Entity * PlayerSystem::createPlayer(int globalPosX, int globalPosY) {
 	srcRect->w = 48;
 	srcRect->x = 0;
 	srcRect->y = 0;
-	Drawable* playerDrawable = new Drawable(player, IMG_LoadTexture(renderer, ASSET_DIR"player.png"), "player", Globals::Layers::PLAYER, srcRect);
+	Drawable* playerDrawable = new Drawable(player, texture, "player", Globals::Layers::PLAYER, srcRect);
 	player->addComponent(playerDrawable);
 	Movement* playerMovement = new PlayerMovement(player);
 	player->addComponent(playerMovement);
@@ -34,6 +31,5 @@ Entity * PlayerSystem::createPlayer(int globalPosX, int globalPosY) {
 	animator->addAnimation(walkingu);
 	PlayerInput* playerInput = new PlayerInput(player);
 	player->addComponent(playerInput);
-	this->player = player;
 	return player;
 }

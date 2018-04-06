@@ -10,9 +10,8 @@
 
 class PlayerSystem {
 public:
-	PlayerSystem(SDL_Renderer* renderer);
-	Entity* createPlayer(int globalPosX, int globalPosY);
+	static Entity* createPlayer(int globalPosX, int globalPosY, SDL_Texture* texture);
 private:
-	Entity* player;
-	SDL_Renderer* renderer;
+	PlayerSystem();
+
 };
