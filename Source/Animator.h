@@ -16,14 +16,16 @@ public:
 			this->loop = loop;
 		}
 	};
-	bool animating;
+	bool isAnimating() { return animating; }
+	std::string curAnimName() { return curAnim.name; }
 	void addAnimation(Animation animation);
-	void playAnimation(std::string name);
+	void playAnimation(std::string name, bool loop = false);
+	void stopAnimation();
 	virtual void update(float deltaTime);
 	Animator(Entity* owner) : Component(owner, true) {
 		Drawable* drawable = (Drawable*)owner->findComponent(ComponentType::DRAWABLE);
 		curSrcRect = drawable->srcRect;
-		SDL_QueryTexture(drawable->image, NULL, NULL, &curSSH, &curSSW);
+		SDL_QueryTexture(drawable->image, NULL, NULL, &curSSW, &curSSH);
 		type = ANIMATOR;
 	}
 protected:
@@ -35,4 +37,5 @@ private:
 	int nextSeqID;
 	int curSSW = 0;
 	int curSSH = 0;
+	bool animating;
 };

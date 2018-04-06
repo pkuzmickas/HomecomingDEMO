@@ -24,13 +24,13 @@ Entity * PlayerSystem::createPlayer(int globalPosX, int globalPosY) {
 	PlayerAnimator* animator = new PlayerAnimator(player);
 	player->addComponent(animator);
 	int walkAnimSpeed = 150;
-	Animator::Animation walkingd("walkingDown", { 0, 1, 2, 1 }, walkAnimSpeed, false);
+	Animator::Animation walkingd("walking0", { 0, 1, 2, 1 }, walkAnimSpeed, false);
 	animator->addAnimation(walkingd);
-	Animator::Animation walkingl("walkingLeft", { 3, 4, 5, 4 }, walkAnimSpeed, false);
+	Animator::Animation walkingl("walking1", { 3, 4, 5, 4 }, walkAnimSpeed, false);
 	animator->addAnimation(walkingl);
-	Animator::Animation walkingr("walkingRight", { 6, 7, 8, 7 }, walkAnimSpeed, false);
+	Animator::Animation walkingr("walking2", { 6, 7, 8, 7 }, walkAnimSpeed, false);
 	animator->addAnimation(walkingr);
-	Animator::Animation walkingu("walkingUp", { 9, 10, 11, 10 }, walkAnimSpeed, false);
+	Animator::Animation walkingu("walking3", { 9, 10, 11, 10 }, walkAnimSpeed, false);
 	animator->addAnimation(walkingu);
 	PlayerInput* playerInput = new PlayerInput(player);
 	player->addComponent(playerInput);

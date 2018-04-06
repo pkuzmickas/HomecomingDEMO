@@ -1,5 +1,12 @@
 #include "PlayerMovement.h"
 
+bool PlayerMovement::isMoving() {
+	for (bool val : moving) {
+		if (val) return true;
+	}
+	return false;
+}
+
 void PlayerMovement::update(float deltaTime) {
 	Transform* transform = (Transform*)owner->findComponent(ComponentType::TRANSFORM);
 	Movement* movement = (Movement*)owner->findComponent(ComponentType::MOVEMENT);

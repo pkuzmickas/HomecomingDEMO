@@ -7,15 +7,21 @@ void Animator::addAnimation(Animation animation) {
 	animations[animation.name] = animation;
 }
 
-void Animator::playAnimation(std::string name) {
+void Animator::playAnimation(std::string name, bool loop) {
 	if (animations.find(name) != animations.end()) {
 		curAnim = animations[name];
 		animating = true;
 		nextSeqID = 0;
+		curAnim.loop = loop;
 	}
 	else {
 		std::cout << "Animation '"<<name<<"' does not exist!" << std::endl;
 	}
+}
+
+void Animator::stopAnimation() {
+	animating = false;
+	curAnim.name = "";
 }
 
 void Animator::update(float deltaTime) {
@@ -24,7 +30,7 @@ void Animator::update(float deltaTime) {
 
 			if (nextSeqID == curAnim.spriteSequence.size()) {
 				if (!curAnim.loop) {
-					animating = false;
+					stopAnimation();
 				}
 				else {
 					nextSeqID = 0;

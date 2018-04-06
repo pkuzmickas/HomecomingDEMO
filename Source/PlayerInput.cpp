@@ -20,15 +20,19 @@ void PlayerInput::update(float deltaTime) {
 			// Handles the movement keys
 			if (e.key.keysym.sym == SDLK_d || e.key.keysym.sym == SDLK_RIGHT) {
 				playerMovement->moving[playerMovement->RIGHT] = true;
+				playerAnimator->animateMovement();
 			}
 			if (e.key.keysym.sym == SDLK_a || e.key.keysym.sym == SDLK_LEFT) {
 				playerMovement->moving[playerMovement->LEFT] = true;
+				playerAnimator->animateMovement();
 			}
 			if (e.key.keysym.sym == SDLK_w || e.key.keysym.sym == SDLK_UP) {
 				playerMovement->moving[playerMovement->UP] = true;
+				playerAnimator->animateMovement();
 			}
 			if (e.key.keysym.sym == SDLK_s || e.key.keysym.sym == SDLK_DOWN) {
 				playerMovement->moving[playerMovement->DOWN] = true;
+				playerAnimator->animateMovement();
 			}
 
 		}
@@ -37,15 +41,27 @@ void PlayerInput::update(float deltaTime) {
 		case SDL_KEYUP: {
 			if (e.key.keysym.sym == SDLK_d || e.key.keysym.sym == SDLK_RIGHT) {
 				playerMovement->moving[playerMovement->RIGHT] = false;
+				if (!playerMovement->isMoving()) {
+					playerAnimator->stopAnimation();
+				}
 			}
 			if (e.key.keysym.sym == SDLK_a || e.key.keysym.sym == SDLK_LEFT) {
 				playerMovement->moving[playerMovement->LEFT] = false;
+				if (!playerMovement->isMoving()) {
+					playerAnimator->stopAnimation();
+				}
 			}
 			if (e.key.keysym.sym == SDLK_w || e.key.keysym.sym == SDLK_UP) {
 				playerMovement->moving[playerMovement->UP] = false;
+				if (!playerMovement->isMoving()) {
+					playerAnimator->stopAnimation();
+				}
 			}
 			if (e.key.keysym.sym == SDLK_s || e.key.keysym.sym == SDLK_DOWN) {
 				playerMovement->moving[playerMovement->DOWN] = false;
+				if (!playerMovement->isMoving()) {
+					playerAnimator->stopAnimation();
+				}
 			}
 			break;
 		}
@@ -94,32 +110,35 @@ void PlayerInput::animateByMouse() {
 	end.x = middle.x + Globals::SCREEN_WIDTH / 2;
 	end.y = middle.y - Globals::SCREEN_HEIGHT / 2;
 	if (pointInTriangle(mouse, middle, beginning, end)) {
-		std::cout << "UP" << std::endl;
 		playerAnimator->direction = PlayerAnimator::LookDirection::UP;
-
+		if(playerMovement->isMoving())
+		playerAnimator->animateMovement();
 	}
 	beginning.x = middle.x + Globals::SCREEN_WIDTH / 2;
 	beginning.y = middle.y - Globals::SCREEN_HEIGHT / 2;
 	end.x = middle.x + Globals::SCREEN_WIDTH / 2;
 	end.y = middle.y + Globals::SCREEN_HEIGHT / 2;
 	if (pointInTriangle(mouse, middle, beginning, end)) {
-		std::cout << "RIGHT" << std::endl;
 		playerAnimator->direction = PlayerAnimator::LookDirection::RIGHT;
+		if (playerMovement->isMoving())
+		playerAnimator->animateMovement();
 	}
 	beginning.x = middle.x - Globals::SCREEN_WIDTH / 2;
 	beginning.y = middle.y + Globals::SCREEN_HEIGHT / 2;
 	end.x = middle.x + Globals::SCREEN_WIDTH / 2;
 	end.y = middle.y + Globals::SCREEN_HEIGHT / 2;
 	if (pointInTriangle(mouse, middle, beginning, end)) {
-		std::cout << "DOWN" << std::endl;
 		playerAnimator->direction = PlayerAnimator::LookDirection::DOWN;
+		if (playerMovement->isMoving())
+		playerAnimator->animateMovement();
 	}
 	beginning.x = middle.x - Globals::SCREEN_WIDTH / 2;
 	beginning.y = middle.y + Globals::SCREEN_HEIGHT / 2;
 	end.x = middle.x - Globals::SCREEN_WIDTH / 2;
 	end.y = middle.y - Globals::SCREEN_HEIGHT / 2;
 	if (pointInTriangle(mouse, middle, beginning, end)) {
-		std::cout << "LEFT" << std::endl;
 		playerAnimator->direction = PlayerAnimator::LookDirection::LEFT;
+		if (playerMovement->isMoving())
+		playerAnimator->animateMovement();
 	}
 }
