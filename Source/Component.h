@@ -11,7 +11,7 @@ enum ComponentType {
 	DRAWABLE = 1 << 1,
 	MOVEMENT = 1 << 2,
 	COLLIDER = 1 << 3,
-	ANIMATION = 1 << 4,
+	ANIMATOR = 1 << 4,
 	ABILITIES = 1 << 5,
 	AI = 1 << 6,
 	TRANSFORM = 1 << 7,

@@ -24,7 +24,6 @@ void Animator::update(float deltaTime) {
 
 			if (nextSeqID == curAnim.spriteSequence.size()) {
 				if (!curAnim.loop) {
-					curSrcRect = NULL;
 					animating = false;
 				}
 				else {
@@ -35,11 +34,6 @@ void Animator::update(float deltaTime) {
 			if (nextSeqID < curAnim.spriteSequence.size()) {
 				elapsedTime = SDL_GetTicks();
 				int spriteNr = curAnim.spriteSequence[nextSeqID++];
-				if (!curSrcRect) {
-					Drawable* drawable = (Drawable*)owner->findComponent(ComponentType::DRAWABLE);
-					curSrcRect = drawable->srcRect;
-					SDL_QueryTexture(drawable->image, NULL, NULL, &curSSH, &curSSW);
-				}
 				int spritesInRow = curSSW / curSrcRect->w;
 				curSrcRect->x = (spriteNr % spritesInRow) * curSrcRect->w;
 				curSrcRect->y = (spriteNr / spritesInRow) * curSrcRect->h;

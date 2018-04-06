@@ -21,8 +21,13 @@ public:
 	void playAnimation(std::string name);
 	virtual void update(float deltaTime);
 	Animator(Entity* owner) : Component(owner, true) {
-		type = ANIMATION;
+		Drawable* drawable = (Drawable*)owner->findComponent(ComponentType::DRAWABLE);
+		curSrcRect = drawable->srcRect;
+		SDL_QueryTexture(drawable->image, NULL, NULL, &curSSH, &curSSW);
+		type = ANIMATOR;
 	}
+protected:
+	SDL_Rect * curSrcRect;
 private:
 	int elapsedTime;
 	std::unordered_map<std::string, Animation> animations;
@@ -30,5 +35,4 @@ private:
 	int nextSeqID;
 	int curSSW = 0;
 	int curSSH = 0;
-	SDL_Rect* curSrcRect;
 };

@@ -4,9 +4,9 @@
 #include "PlayerStats.h"
 #include "PlayerInput.h"
 #include "PlayerMovement.h"
+#include "PlayerAnimator.h"
 #include "Map.h"
 #include "Graphics.h"
-#include "Animator.h"
 
 class PlayerSystem {
 public:

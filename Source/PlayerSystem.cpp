@@ -21,14 +21,19 @@ Entity * PlayerSystem::createPlayer(int globalPosX, int globalPosY) {
 	player->addComponent(playerDrawable);
 	Movement* playerMovement = new PlayerMovement(player);
 	player->addComponent(playerMovement);
+	PlayerAnimator* animator = new PlayerAnimator(player);
+	player->addComponent(animator);
+	int walkAnimSpeed = 150;
+	Animator::Animation walkingd("walkingDown", { 0, 1, 2, 1 }, walkAnimSpeed, false);
+	animator->addAnimation(walkingd);
+	Animator::Animation walkingl("walkingLeft", { 3, 4, 5, 4 }, walkAnimSpeed, false);
+	animator->addAnimation(walkingl);
+	Animator::Animation walkingr("walkingRight", { 6, 7, 8, 7 }, walkAnimSpeed, false);
+	animator->addAnimation(walkingr);
+	Animator::Animation walkingu("walkingUp", { 9, 10, 11, 10 }, walkAnimSpeed, false);
+	animator->addAnimation(walkingu);
 	PlayerInput* playerInput = new PlayerInput(player);
 	player->addComponent(playerInput);
-	Animator* animator = new Animator(player);
-	player->addComponent(animator);
-	Animator::Animation walking("walking0", { 0, 1, 2, 1 }, 200, true);
-	animator->addAnimation(walking);
-	animator->playAnimation("walking0");
-
 	this->player = player;
 	return player;
 }
