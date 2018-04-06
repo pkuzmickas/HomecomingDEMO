@@ -125,5 +125,8 @@
     <ClInclude Include="Source\Animator.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
+    <ClInclude Include="Source\PlayerAnimator.h">
+      <Filter>Header Files\Components\Player</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

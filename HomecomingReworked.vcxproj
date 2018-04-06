@@ -143,6 +143,7 @@
     <ClInclude Include="Source\Camera.h" />
     <ClInclude Include="Source\Map.h" />
     <ClInclude Include="Source\Movement.h" />
+    <ClInclude Include="Source\PlayerAnimator.h" />
     <ClInclude Include="Source\PlayerInput.h" />
     <ClInclude Include="Source\PlayerMovement.h" />
     <ClInclude Include="Source\PlayerStats.h" />
