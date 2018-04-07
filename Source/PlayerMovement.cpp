@@ -8,9 +8,7 @@ bool PlayerMovement::isMoving() {
 }
 
 void PlayerMovement::update(float deltaTime) {
-	Transform* transform = (Transform*)owner->findComponent(ComponentType::TRANSFORM);
-	Movement* movement = (Movement*)owner->findComponent(ComponentType::MOVEMENT);
-	PlayerStats* stats = (PlayerStats*)owner->findComponent(ComponentType::STATS);
+	
 	int numOfDirs = 0;
 	for (bool dir : moving) if (dir) numOfDirs++;
 	float velocity = stats->SPEED * deltaTime;
@@ -19,6 +17,8 @@ void PlayerMovement::update(float deltaTime) {
 	}
 
 	if (moving[DOWN]) {
+		float estimateLoc = transform->globalPosY + velocity;
+
 		transform->globalPosY += velocity;
 	}
 	if (moving[UP]) {

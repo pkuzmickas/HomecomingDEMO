@@ -2,7 +2,7 @@
 
 Scene::~Scene() {
 	if(player) delete player;
-	if(map) delete map;
+	MapSystem::deleteMap();
 }
 
 void Scene::update(float deltaTime) {
@@ -17,6 +17,6 @@ Scene::Scene(SDL_Renderer * renderer, Graphics * graphics) {
 
 void Scene::createPlayer(int globalPosX, int globalPosY) {
 	player = PlayerSystem::createPlayer(globalPosX, globalPosY, IMG_LoadTexture(renderer, ASSET_DIR"player.png"));
-	Camera::centerAround(globalPosX, globalPosY, map->getWidth(), map->getHeight());
+	Camera::centerAround(globalPosX, globalPosY, MapSystem::getWidth(), MapSystem::getHeight());
 	graphics->addToDraw(player);
 }

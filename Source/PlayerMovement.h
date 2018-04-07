@@ -17,9 +17,15 @@ public:
 	void update(float deltaTime);
 
 	PlayerMovement(Entity* owner, std::vector<bool>* moving = NULL) : Movement(owner) {
-
+		Transform* transform = (Transform*)owner->findComponent(ComponentType::TRANSFORM);
+		Movement* movement = (Movement*)owner->findComponent(ComponentType::MOVEMENT);
+		PlayerStats* stats = (PlayerStats*)owner->findComponent(ComponentType::STATS);
 		if (moving) this->moving = *moving;
 		type = MOVEMENT;
 
 	}
+private:
+	Transform* transform;
+	Movement* movement;
+	PlayerStats* stats;
 };

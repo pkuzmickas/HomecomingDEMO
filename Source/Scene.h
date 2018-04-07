@@ -11,7 +11,6 @@ public:
 protected:
 	SDL_Renderer* renderer;
 	Graphics* graphics;
-	Map* map;
 	Entity* player;
 	
 	explicit Scene(SDL_Renderer* renderer, Graphics* graphics);

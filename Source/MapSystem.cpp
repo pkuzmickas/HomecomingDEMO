@@ -1,12 +1,15 @@
-#include "Map.h"
+#include "MapSystem.h"
 
 using namespace rapidxml;
 using namespace std;
+
+int MapSystem::levelHeight = 0;
+int MapSystem::levelWidth = 0;
 /*
 Method to read a file and store the data into a vector buffer.
 Returns true if successful
 */
-bool Map::readFile(string path, vector<char> &buffer) {
+bool MapSystem::readFile(string path, vector<char> &buffer) {
 
 	ifstream theFile(path);
 	vector<char> buffer1((istreambuf_iterator<char>(theFile)), istreambuf_iterator<char>());
@@ -20,7 +23,7 @@ bool Map::readFile(string path, vector<char> &buffer) {
 /*
 Returns a buffer with the data for the map.
 */
-vector<char> Map::loadMap(string path) {
+vector<char> MapSystem::loadMap(string path) {
 	vector<char> buffer;
 	if (!readFile(path, buffer)) { 
 		cout << "Failed to read the map!" << endl;
@@ -30,31 +33,32 @@ vector<char> Map::loadMap(string path) {
 	return buffer;
 }
 
-Map::Map(SDL_Renderer* renderer, std::string path) {
-	gRenderer = renderer;
+void MapSystem::createMap(SDL_Renderer* renderer, std::string path) {
 	path = (string)ASSET_DIR + path;
 	std::vector<char> map = loadMap(path);
 	if (map.empty()) return;
 
+	rapidxml::xml_node<>* root_node;
+	rapidxml::xml_document<> doc;
 	doc.parse<0>(&map[0]);
 	root_node = doc.first_node("map");
 
-	width = stoi((string)root_node->first_attribute("width")->value());
-	height = stoi((string)root_node->first_attribute("height")->value());
+	int width = stoi((string)root_node->first_attribute("width")->value());
+	int height = stoi((string)root_node->first_attribute("height")->value());
 	levelWidth = Globals::TILE_SIZE * width;
 	levelHeight = Globals::TILE_SIZE * height;
 
 	xml_node<>* layer = root_node->first_node("tileset");
-	tilecount = stoi((string)layer->first_attribute("tilecount")->value());
-	columns = stoi((string)layer->first_attribute("columns")->value());
+	int tilecount = stoi((string)layer->first_attribute("tilecount")->value());
+	int columns = stoi((string)layer->first_attribute("columns")->value());
 
 	layer = root_node->first_node("tileset")->first_node("image");
-	spriteSheetPath = (string)layer->first_attribute("source")->value();
-	ssWidth = stoi((string)layer->first_attribute("width")->value());
-	ssHeight = stoi((string)layer->first_attribute("height")->value());
+	std::string spriteSheetPath = (string)layer->first_attribute("source")->value();
+	int ssWidth = stoi((string)layer->first_attribute("width")->value());
+	int ssHeight = stoi((string)layer->first_attribute("height")->value());
 
 	string temp = ASSET_DIR;
-	spriteSheet = IMG_LoadTexture(gRenderer, (((string)ASSET_DIR) + spriteSheetPath).c_str());
+	SDL_Texture* spriteSheet = IMG_LoadTexture(renderer, (((string)ASSET_DIR) + spriteSheetPath).c_str());
 
 	// loading low collision map AND the map matrix for the tile entities
 
@@ -164,7 +168,7 @@ Map::Map(SDL_Renderer* renderer, std::string path) {
 	}
 }
 
-Map::~Map() {
+void MapSystem::deleteMap() {
 	for (auto row : mapMatrix) {
 		for (auto col : row) {
 			for (auto entity : col) {

@@ -2,8 +2,8 @@
 #pragma once
 
 EncounterScene::EncounterScene(SDL_Renderer * renderer, Graphics * graphics) : Scene(renderer, graphics) {
-	map = new Map(renderer, "demoMap.tmx");
-	graphics->addMap(map->getMap());
+	MapSystem::createMap(renderer, "demoMap.tmx");
+	graphics->addMap(MapSystem::getMap());
 	createPlayer(100, 700);
 }
 
