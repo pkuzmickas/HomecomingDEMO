@@ -1,4 +1,2 @@
-﻿  PlayerInput.cpp
-p:\programming\homecomingdemo\source\playerinput.cpp(101): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-p:\programming\homecomingdemo\source\playerinput.cpp(102): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+﻿  PlayerSystem.cpp
   HomecomingReworked.vcxproj -> P:\Programming\HomecomingDEMO\Debug\HomecomingReworked.exe

@@ -15,7 +15,8 @@ void PlayerMovement::update(float deltaTime) {
 	if (numOfDirs == 2) {
 		velocity *= SIN45;
 	}
-
+	std::cout << CollisionSystem::isCollidingWithEnv(collider->colBox) << std::endl;
+	// ABOVE DOES NOT WORK SINCE U NEED TO UPDATE ENTITIES COLBOX ON MOVEMENT OR CAMERA MOVEMENT, CREATE AN UPDATE FOR THE COLLIDER COMPONENT?
 	if (moving[DOWN]) {
 		float estimateLoc = transform->globalPosY + velocity;
 

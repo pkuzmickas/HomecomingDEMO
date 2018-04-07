@@ -16,6 +16,8 @@ Entity * PlayerSystem::createPlayer(int globalPosX, int globalPosY, SDL_Texture*
 	srcRect->y = 0;
 	Drawable* playerDrawable = new Drawable(player, texture, "player", Globals::Layers::PLAYER, srcRect);
 	player->addComponent(playerDrawable);
+	Collider* playerCollider = new Collider(player);
+	player->addComponent(playerCollider);
 	Movement* playerMovement = new PlayerMovement(player);
 	player->addComponent(playerMovement);
 	PlayerAnimator* animator = new PlayerAnimator(player);

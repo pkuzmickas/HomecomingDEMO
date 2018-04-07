@@ -51,9 +51,6 @@
     <ClCompile Include="Source\Graphics.cpp">
       <Filter>Source Files\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Map.cpp">
-      <Filter>Source Files\Systems</Filter>
-    </ClCompile>
     <ClCompile Include="Source\main.cpp">
       <Filter>Source Files\Systems</Filter>
     </ClCompile>
@@ -78,6 +75,12 @@
     <ClCompile Include="Source\Animator.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
+    <ClCompile Include="Source\MapSystem.cpp">
+      <Filter>Source Files\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CollisionSystem.cpp">
+      <Filter>Source Files\Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Entity.h">
@@ -93,9 +96,6 @@
       <Filter>Header Files\Systems</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics.h">
-      <Filter>Header Files\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Map.h">
       <Filter>Header Files\Systems</Filter>
     </ClInclude>
     <ClInclude Include="Source\Component.h">
@@ -127,6 +127,12 @@
     </ClInclude>
     <ClInclude Include="Source\PlayerAnimator.h">
       <Filter>Header Files\Components\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CollisionSystem.h">
+      <Filter>Header Files\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MapSystem.h">
+      <Filter>Header Files\Systems</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

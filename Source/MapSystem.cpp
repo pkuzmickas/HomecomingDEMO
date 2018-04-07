@@ -5,6 +5,8 @@ using namespace std;
 
 int MapSystem::levelHeight = 0;
 int MapSystem::levelWidth = 0;
+
+std::vector<std::vector<std::vector<Entity*>>> MapSystem::mapMatrix;
 /*
 Method to read a file and store the data into a vector buffer.
 Returns true if successful

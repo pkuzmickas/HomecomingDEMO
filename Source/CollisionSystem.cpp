@@ -12,7 +12,7 @@ bool CollisionSystem::isColliding(SDL_Rect object1, SDL_Rect object2) {
 	return false;
 }
 
-CollisionSystem::CollisionType CollisionSystem::isCollidingWithEnv(SDL_Rect object)
+Collider::ColliderType CollisionSystem::isCollidingWithEnv(SDL_Rect object)
 {
 	int col1 = object.x / Globals::TILE_SIZE;
 	int col2 = (object.x + object.w) / Globals::TILE_SIZE;
@@ -20,6 +20,18 @@ CollisionSystem::CollisionType CollisionSystem::isCollidingWithEnv(SDL_Rect obje
 	int row2 = (object.y + object.h) / Globals::TILE_SIZE;
 
 	auto map = MapSystem::getMap();
+	for (auto ent : map[row1][col1]) {
+		Collider* col = (Collider*) ent->findComponent(ComponentType::COLLIDER);
+		if (col) {
+			return col->colType;
+		}
+	}
+	for (auto ent : map[row2][col2]) {
+		Collider* col = (Collider*)ent->findComponent(ComponentType::COLLIDER);
+		if (col) {
+			return col->colType;
+		}
+	}
 	// write a sick alg to check whether the object is colliding with the environment and if it is with what type of collider :)
 	/*if (row1 >= colMap.size() || col1 >= colMap[row1].size() || row2 >= colMap.size() || col2 >= colMap[row2].size()) {
 		return 1;
@@ -32,5 +44,5 @@ CollisionSystem::CollisionType CollisionSystem::isCollidingWithEnv(SDL_Rect obje
 	return 0;
 	}*/
 
-	return CollisionType::NONE;
+	return Collider::ColliderType::NONE;
 }

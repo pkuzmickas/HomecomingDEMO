@@ -92,8 +92,9 @@ public:
 class Collider : public Component {
 public:
 	enum ColliderType {
-		NORMAL,
-		LOW //attacks are not blocked
+		NONE,
+		LOW,//attacks are not blocked
+		NORMAL 
 	};
 	ColliderType colType;
 	SDL_Rect colBox;
