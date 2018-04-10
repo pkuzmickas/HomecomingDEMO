@@ -1,5 +1,6 @@
 #pragma once
 #include "Entity.h"
+#include "Collider.h"
 #include <vector>
 #include <iostream>
 #include <sstream>
@@ -15,6 +16,7 @@ private:
 	struct Sprite {
 		Transform* transform;
 		Drawable* drawable;
+		Entity* entity;
 	};
 
 	// Map is drawn in a separate way to increase performance
@@ -22,7 +24,7 @@ private:
 	std::vector<std::vector<Sprite>> objectDrawQueue; // [LAYER] [ENTITY]
 	std::vector<std::vector<std::vector<Sprite>>> mapMatrixWSprites;
 	SDL_Renderer* renderer;
-	bool debug = true;
+	bool debug = false;
 	int mapRows = 0;
 	int mapCols = 0;
 	void draw(Sprite sprite);

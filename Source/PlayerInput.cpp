@@ -101,8 +101,8 @@ void PlayerInput::animateByMouse() {
 	mouse.x = mouseX;
 	mouse.y = mouseY;
 	fPoint middle;
-	middle.x = playerTransform->globalPosX - Camera::posX + playerTransform->width/2;
-	middle.y = playerTransform->globalPosY - Camera::posY + playerTransform->height / 2;
+	middle.x = playerTransform->globalPosX - CameraSystem::posX + playerTransform->width/2;
+	middle.y = playerTransform->globalPosY - CameraSystem::posY + playerTransform->height / 2;
 	fPoint beginning;
 	beginning.x = middle.x - Globals::SCREEN_WIDTH / 2;
 	beginning.y = middle.y - Globals::SCREEN_HEIGHT / 2;

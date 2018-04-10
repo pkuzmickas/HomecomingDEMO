@@ -9,12 +9,13 @@
 #include <sstream>
 #include "Globals.h"
 #include "Entity.h"
+#include "Collider.h"
 
 class MapSystem {
 public:
 	
 	static void createMap(SDL_Renderer* renderer, std::string path);
-	static std::vector<std::vector<std::vector<Entity*>>> getMap() { return mapMatrix; }
+	static std::vector<std::vector<std::vector<Entity*>>>* getMap() { return &mapMatrix; }
 	static int getWidth() { return levelWidth; }
 	static int getHeight() { return levelHeight; }
 	static void deleteMap();

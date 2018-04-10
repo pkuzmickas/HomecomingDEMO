@@ -1,6 +1,6 @@
 #pragma once
 #include "Entity.h"
-
+#include "Collider.h"
 class Animator : public Component {
 public:
 	struct Animation {

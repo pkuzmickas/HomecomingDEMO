@@ -31,6 +31,7 @@ void Graphics::addMap(std::vector<std::vector<std::vector<Entity*>>> mapMatrix) 
 				Sprite sprite;
 				sprite.drawable = curDrawable;
 				sprite.transform = curTransform;
+				sprite.entity = entity;
 				col.push_back(sprite);
 			}
 			row.push_back(col);
@@ -55,10 +56,10 @@ void Graphics::render()
 {
 	SDL_RenderClear(renderer);
 
-	int xBound = Camera::posX / Globals::TILE_SIZE + Globals::SCREEN_WIDTH / Globals::TILE_SIZE + 1;
-	int yBound = Camera::posY / Globals::TILE_SIZE + Globals::SCREEN_HEIGHT / Globals::TILE_SIZE + 1;
-	int xStart = Camera::posX / Globals::TILE_SIZE;
-	int yStart = Camera::posY / Globals::TILE_SIZE;
+	int xBound = CameraSystem::posX / Globals::TILE_SIZE + Globals::SCREEN_WIDTH / Globals::TILE_SIZE + 1;
+	int yBound = CameraSystem::posY / Globals::TILE_SIZE + Globals::SCREEN_HEIGHT / Globals::TILE_SIZE + 1;
+	int xStart = CameraSystem::posX / Globals::TILE_SIZE;
+	int yStart = CameraSystem::posY / Globals::TILE_SIZE;
 	
 	// Checks the tiles needed to be drawn in regards to the camera and adds them to the vector
 	for (int row = yStart; row < yBound; row++) {
@@ -74,11 +75,43 @@ void Graphics::render()
 		if (layer < Globals::Layers::UI) {
 			for (auto tileSprite : mapDrawQueue[layer]) {
 				draw(tileSprite);
+				tileSprite.entity->update(0); // need to update all of the  visible tiles in case the camera moves
+			}
+			if (debug) {
+				for (auto tileSprite : mapDrawQueue[layer]) {
+					if (tileSprite.drawable->owner->hasComponent(ComponentType::COLLIDER)) {
+						Collider* col = (Collider*)tileSprite.drawable->owner->findComponent(ComponentType::COLLIDER);
+						SDL_Rect collider;
+						collider.h = col->colBox.h;
+						collider.w = col->colBox.w;
+						collider.x = col->colBox.x;
+						collider.y = col->colBox.y;
+						SDL_SetRenderDrawColor(renderer, 255, 0, 0, 0xFF);
+						SDL_RenderDrawRect(renderer, &collider);
+						SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
+					}
+				}
 			}
 			mapDrawQueue[layer].clear();
+			
 		}
 		for (auto gameObject : objectDrawQueue[layer]) {
 			draw(gameObject);
+			if (debug) {
+				for (auto gameObject : objectDrawQueue[layer]) {
+					if (gameObject.drawable->owner->hasComponent(ComponentType::COLLIDER)) {
+						Collider* col = (Collider*)gameObject.drawable->owner->findComponent(ComponentType::COLLIDER);
+						SDL_Rect collider;
+						collider.h = col->colBox.h;
+						collider.w = col->colBox.w;
+						collider.x = col->colBox.x;
+						collider.y = col->colBox.y;
+						SDL_SetRenderDrawColor(renderer, 255, 0, 0, 0xFF);
+						SDL_RenderDrawRect(renderer, &collider);
+						SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
+					}
+				}
+			}
 		}
 	}
 
@@ -91,8 +124,8 @@ void Graphics::draw(Sprite sprite) {
 	SDL_Rect localPos;
 	localPos.h = sprite.transform->height;
 	localPos.w = sprite.transform->width;
-	localPos.x = (int)(sprite.transform->globalPosX - Camera::posX);
-	localPos.y = (int)(sprite.transform->globalPosY - Camera::posY);
+	localPos.x = (int)(sprite.transform->globalPosX - CameraSystem::posX);
+	localPos.y = (int)(sprite.transform->globalPosY - CameraSystem::posY);
 	SDL_RenderCopy(renderer, sprite.drawable->image, sprite.drawable->srcRect, &localPos);
 }
 

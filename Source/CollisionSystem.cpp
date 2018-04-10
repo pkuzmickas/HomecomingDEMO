@@ -14,22 +14,26 @@ bool CollisionSystem::isColliding(SDL_Rect object1, SDL_Rect object2) {
 
 Collider::ColliderType CollisionSystem::isCollidingWithEnv(SDL_Rect object)
 {
-	int col1 = object.x / Globals::TILE_SIZE;
-	int col2 = (object.x + object.w) / Globals::TILE_SIZE;
-	int row1 = object.y / Globals::TILE_SIZE;
-	int row2 = (object.y + object.h) / Globals::TILE_SIZE;
+	int col1 = (object.x + CameraSystem::posX) / Globals::TILE_SIZE;
+	int col2 = (object.x + object.w + CameraSystem::posX) / Globals::TILE_SIZE;
+	int row1 = (object.y + CameraSystem::posY) / Globals::TILE_SIZE;
+	int row2 = (object.y + object.h + CameraSystem::posY) / Globals::TILE_SIZE;
 
 	auto map = MapSystem::getMap();
-	for (auto ent : map[row1][col1]) {
-		Collider* col = (Collider*) ent->findComponent(ComponentType::COLLIDER);
-		if (col) {
-			return col->colType;
+	for (Entity* ent : map->at(row1).at(col1)) {
+		if (ent->hasComponent(ComponentType::COLLIDER)) {
+			Collider* col = (Collider*)ent->findComponent(ComponentType::COLLIDER);
+			if (col) {
+				return col->colType;
+			}
 		}
 	}
-	for (auto ent : map[row2][col2]) {
-		Collider* col = (Collider*)ent->findComponent(ComponentType::COLLIDER);
-		if (col) {
-			return col->colType;
+	for (auto ent : map->at(row2).at(col2)) {
+		if (ent->hasComponent(ComponentType::COLLIDER)) {
+			Collider* col = (Collider*)ent->findComponent(ComponentType::COLLIDER);
+			if (col) {
+				return col->colType;
+			}
 		}
 	}
 	// write a sick alg to check whether the object is colliding with the environment and if it is with what type of collider :)

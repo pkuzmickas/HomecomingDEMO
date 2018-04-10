@@ -79,10 +79,6 @@ void MapSystem::createMap(SDL_Renderer* renderer, std::string path) {
 			if (gidValue != 0) {
 				Collider* tileCollider = new Collider(tile);
 				tileCollider->colType = Collider::ColliderType::LOW;
-				tileCollider->colBox.x = (int)tileTransform->globalPosX;
-				tileCollider->colBox.y = (int)tileTransform->globalPosY;
-				tileCollider->colBox.h = tileTransform->height;
-				tileCollider->colBox.w = tileTransform->width;
 				tile->addComponent(tileCollider);
 			}
 			tile_gid = tile_gid->next_sibling();
@@ -107,11 +103,6 @@ void MapSystem::createMap(SDL_Renderer* renderer, std::string path) {
 				Entity* tile = mapMatrix[i][j][0]; // We just get the first element of the list of entities since there aren't any layers yet
 				Transform* tileTransform = (Transform*)tile->findComponent(ComponentType::TRANSFORM);
 				Collider* tileCollider = new Collider(tile);
-				tileCollider->colType = Collider::ColliderType::NORMAL;
-				tileCollider->colBox.x = (int)tileTransform->globalPosX;
-				tileCollider->colBox.y = (int)tileTransform->globalPosY;
-				tileCollider->colBox.h = tileTransform->height;
-				tileCollider->colBox.w = tileTransform->width;
 				tile->addComponent(tileCollider);
 			}
 			tile_gid = tile_gid->next_sibling();

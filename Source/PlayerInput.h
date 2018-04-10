@@ -3,6 +3,7 @@
 #include "PlayerStats.h"
 #include "PlayerMovement.h"
 #include "PlayerAnimator.h"
+#include "Collider.h"
 #include <vector>
 class PlayerInput : public Input {
 private:

@@ -2,7 +2,7 @@
 #include <SDL.h>
 #include "Globals.h"
 #include <string>
-#include "Camera.h"
+#include "CameraSystem.h"
 #include <iostream>
 
 enum ComponentType {
@@ -89,19 +89,7 @@ public:
 
 };
 
-class Collider : public Component {
-public:
-	enum ColliderType {
-		NONE,
-		LOW,//attacks are not blocked
-		NORMAL 
-	};
-	ColliderType colType;
-	SDL_Rect colBox;
-	Collider(Entity* owner) : Component(owner) {
-		type = COLLIDER;
-	}
-};
+
 
 class Abilities : public Component {
 public:

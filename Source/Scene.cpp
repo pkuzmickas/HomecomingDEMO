@@ -17,6 +17,6 @@ Scene::Scene(SDL_Renderer * renderer, Graphics * graphics) {
 
 void Scene::createPlayer(int globalPosX, int globalPosY) {
 	player = PlayerSystem::createPlayer(globalPosX, globalPosY, IMG_LoadTexture(renderer, ASSET_DIR"player.png"));
-	Camera::centerAround(globalPosX, globalPosY, MapSystem::getWidth(), MapSystem::getHeight());
+	CameraSystem::centerAround(globalPosX, globalPosY, MapSystem::getWidth(), MapSystem::getHeight());
 	graphics->addToDraw(player);
 }

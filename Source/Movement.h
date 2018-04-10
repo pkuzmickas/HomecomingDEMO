@@ -2,6 +2,7 @@
 #include "Entity.h"
 #include "PlayerStats.h"
 #include "CollisionSystem.h"
+
 class Movement : public Component {
 public:
 	int velX;

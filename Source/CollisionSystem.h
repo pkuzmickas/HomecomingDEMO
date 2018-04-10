@@ -2,7 +2,7 @@
 #include <SDL.h>
 #include "Globals.h"
 #include "MapSystem.h"
-
+#include "Collider.h"
 class CollisionSystem {
 public:
 	static bool isColliding(SDL_Rect object1, SDL_Rect object2);

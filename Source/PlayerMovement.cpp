@@ -8,27 +8,39 @@ bool PlayerMovement::isMoving() {
 }
 
 void PlayerMovement::update(float deltaTime) {
-	
+
 	int numOfDirs = 0;
 	for (bool dir : moving) if (dir) numOfDirs++;
 	float velocity = stats->SPEED * deltaTime;
 	if (numOfDirs == 2) {
 		velocity *= SIN45;
 	}
-	std::cout << CollisionSystem::isCollidingWithEnv(collider->colBox) << std::endl;
-	// ABOVE DOES NOT WORK SINCE U NEED TO UPDATE ENTITIES COLBOX ON MOVEMENT OR CAMERA MOVEMENT, CREATE AN UPDATE FOR THE COLLIDER COMPONENT?
-	if (moving[DOWN]) {
-		float estimateLoc = transform->globalPosY + velocity;
+	if (numOfDirs != 0) {
+		CameraSystem::centerAround((int)transform->globalPosX, (int)transform->globalPosY, MapSystem::getWidth(), MapSystem::getHeight());
+		if (moving[DOWN]) {
+			collider->colBox.y += velocity;
+			if (CollisionSystem::isCollidingWithEnv(collider->colBox) == Collider::ColliderType::NONE) {
+				transform->globalPosY += velocity;
+			}
+		}
+		if (moving[UP]) {
+			collider->colBox.y -= velocity;
+			if (CollisionSystem::isCollidingWithEnv(collider->colBox) == Collider::ColliderType::NONE) {
+				transform->globalPosY -= velocity;
+			}
+		}
+		if (moving[LEFT]) {
+			collider->colBox.x -= velocity;
+			if (CollisionSystem::isCollidingWithEnv(collider->colBox) == Collider::ColliderType::NONE) {
+				transform->globalPosX -= velocity;
+			}
+		}
+		if (moving[RIGHT]) {
+			collider->colBox.x += velocity;
+			if (CollisionSystem::isCollidingWithEnv(collider->colBox) == Collider::ColliderType::NONE) {
+				transform->globalPosX += velocity;
+			}
+		}
+	}
 
-		transform->globalPosY += velocity;
-	}
-	if (moving[UP]) {
-		transform->globalPosY -= velocity;
-	}
-	if (moving[LEFT]) {
-		transform->globalPosX -= velocity;
-	}
-	if (moving[RIGHT]) {
-		transform->globalPosX += velocity;
-	}
 }
