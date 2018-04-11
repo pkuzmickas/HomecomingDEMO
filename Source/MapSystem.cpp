@@ -1,4 +1,5 @@
 #include "MapSystem.h"
+#include "Collider.h"
 
 using namespace rapidxml;
 using namespace std;
@@ -36,7 +37,6 @@ vector<char> MapSystem::loadMap(string path) {
 }
 
 void MapSystem::createMap(SDL_Renderer* renderer, std::string path) {
-	path = (string)ASSET_DIR + path;
 	std::vector<char> map = loadMap(path);
 	if (map.empty()) return;
 
@@ -59,8 +59,7 @@ void MapSystem::createMap(SDL_Renderer* renderer, std::string path) {
 	int ssWidth = stoi((string)layer->first_attribute("width")->value());
 	int ssHeight = stoi((string)layer->first_attribute("height")->value());
 
-	string temp = ASSET_DIR;
-	SDL_Texture* spriteSheet = IMG_LoadTexture(renderer, (((string)ASSET_DIR) + spriteSheetPath).c_str());
+	SDL_Texture* spriteSheet = IMG_LoadTexture(renderer, (((string)(ASSET_DIR LEVEL_DIR) + spriteSheetPath).c_str()));
 
 	// loading low collision map AND the map matrix for the tile entities
 

@@ -7,6 +7,7 @@ class CollisionSystem {
 public:
 	static bool isColliding(SDL_Rect object1, SDL_Rect object2);
 	static Collider::ColliderType isCollidingWithEnv(SDL_Rect object);
+	static std::vector<Collider*> collidersInView;
 private:
 	CollisionSystem();
 };

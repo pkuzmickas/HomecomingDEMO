@@ -8,6 +8,9 @@ The names should be self explanatory and if not, should be changed to be so
 
 #define SIN45 0.707f
 #define ASSET_DIR "Assets/"
+#define CHARACTER_DIR "Characters/"
+#define LEVEL_DESIGN_DIR "LevelDesign/"
+#define LEVEL_DIR "Levels/"
 
 class Globals {
 

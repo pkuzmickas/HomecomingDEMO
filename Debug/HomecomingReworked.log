@@ -1,3 +1,39 @@
-﻿  PlayerMovement.cpp
-  HomecomingReworked.vcxproj -> C:\Users\pauliuskuzmickas.COMPUTING\Desktop\programming\HomecomingDEMO\Debug\HomecomingReworked.exe
-  HomecomingReworked.vcxproj -> C:\Users\pauliuskuzmickas.COMPUTING\Desktop\programming\HomecomingDEMO\Debug\HomecomingReworked.pdb (Partial PDB)
+﻿  SceneDesignSystem.cpp
+c:\users\pauliuskuzmickas.computing\desktop\programming\homecomingdemo\source\collider.h(19): error C2653: 'MapSystem': is not a class or namespace name
+c:\users\pauliuskuzmickas.computing\desktop\programming\homecomingdemo\source\collider.h(19): error C3861: 'getHeight': identifier not found
+  Scene.cpp
+c:\users\pauliuskuzmickas.computing\desktop\programming\homecomingdemo\source\scene.cpp(34): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  PlayerSystem.cpp
+  PlayerMovement.cpp
+  PlayerInput.cpp
+  Movement.cpp
+  MapSystem.cpp
+c:\users\pauliuskuzmickas.computing\desktop\programming\homecomingdemo\source\mapsystem.cpp(80): error C2027: use of undefined type 'Collider'
+  c:\users\pauliuskuzmickas.computing\desktop\programming\homecomingdemo\source\mapsystem.cpp(3): note: see declaration of 'Collider'
+c:\users\pauliuskuzmickas.computing\desktop\programming\homecomingdemo\source\mapsystem.cpp(81): error C2027: use of undefined type 'Collider'
+  c:\users\pauliuskuzmickas.computing\desktop\programming\homecomingdemo\source\mapsystem.cpp(3): note: see declaration of 'Collider'
+c:\users\pauliuskuzmickas.computing\desktop\programming\homecomingdemo\source\mapsystem.cpp(81): error C2227: left of '->colType' must point to class/struct/union/generic type
+c:\users\pauliuskuzmickas.computing\desktop\programming\homecomingdemo\source\mapsystem.cpp(81): error C2065: 'LOW': undeclared identifier
+c:\users\pauliuskuzmickas.computing\desktop\programming\homecomingdemo\source\mapsystem.cpp(82): error C2664: 'void Entity::addComponent(Component *)': cannot convert argument 1 from 'Collider *' to 'Component *'
+  c:\users\pauliuskuzmickas.computing\desktop\programming\homecomingdemo\source\mapsystem.cpp(82): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+c:\users\pauliuskuzmickas.computing\desktop\programming\homecomingdemo\source\mapsystem.cpp(105): error C2027: use of undefined type 'Collider'
+  c:\users\pauliuskuzmickas.computing\desktop\programming\homecomingdemo\source\mapsystem.cpp(3): note: see declaration of 'Collider'
+c:\users\pauliuskuzmickas.computing\desktop\programming\homecomingdemo\source\mapsystem.cpp(106): error C2664: 'void Entity::addComponent(Component *)': cannot convert argument 1 from 'Collider *' to 'Component *'
+  c:\users\pauliuskuzmickas.computing\desktop\programming\homecomingdemo\source\mapsystem.cpp(106): note: Types pointed to are unrelated; conversion requires reinterpret_cast, C-style cast or function-style cast
+  main.cpp
+c:\users\pauliuskuzmickas.computing\desktop\programming\homecomingdemo\source\collider.h(19): error C2653: 'MapSystem': is not a class or namespace name
+c:\users\pauliuskuzmickas.computing\desktop\programming\homecomingdemo\source\collider.h(19): error C3861: 'getHeight': identifier not found
+  Graphics.cpp
+c:\users\pauliuskuzmickas.computing\desktop\programming\homecomingdemo\source\collider.h(19): error C2653: 'MapSystem': is not a class or namespace name
+c:\users\pauliuskuzmickas.computing\desktop\programming\homecomingdemo\source\collider.h(19): error C3861: 'getHeight': identifier not found
+  EncounterScene.cpp
+  Entity.cpp
+  Director.cpp
+c:\users\pauliuskuzmickas.computing\desktop\programming\homecomingdemo\source\collider.h(19): error C2653: 'MapSystem': is not a class or namespace name
+c:\users\pauliuskuzmickas.computing\desktop\programming\homecomingdemo\source\collider.h(19): error C3861: 'getHeight': identifier not found
+  CollisionSystem.cpp
+  CameraSystem.cpp
+  Animator.cpp
+c:\users\pauliuskuzmickas.computing\desktop\programming\homecomingdemo\source\collider.h(19): error C2653: 'MapSystem': is not a class or namespace name
+c:\users\pauliuskuzmickas.computing\desktop\programming\homecomingdemo\source\collider.h(19): error C3861: 'getHeight': identifier not found
+  Generating Code...

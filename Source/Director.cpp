@@ -36,6 +36,11 @@ void Director::getInput() {
 			case SDL_QUIT:
 				gameRunning = false;
 				break;
+			case SDL_KEYDOWN:
+				if (e.key.keysym.sym == SDLK_t) {
+					graphics->debug = !graphics->debug;
+				}
+				break;
 		}
 	}
 

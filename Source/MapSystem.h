@@ -9,7 +9,6 @@
 #include <sstream>
 #include "Globals.h"
 #include "Entity.h"
-#include "Collider.h"
 
 class MapSystem {
 public:

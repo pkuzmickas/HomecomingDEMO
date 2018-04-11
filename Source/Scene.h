@@ -2,7 +2,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include "PlayerSystem.h"
-
+#include "SceneDesignSystem.h"
 
 class Scene {
 public:

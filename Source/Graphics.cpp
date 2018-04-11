@@ -76,7 +76,7 @@ void Graphics::render()
 	for (int layer = 0; layer < Globals::Layers::END_MARKER; layer++) {
 		if (layer < Globals::Layers::UI) {
 			for (auto tileSprite : mapDrawQueue[layer]) {
-				draw(tileSprite);
+				if(!debug)draw(tileSprite);
 				tileSprite.entity->update(0); // need to update all of the  visible tiles in case the camera moves
 			}
 			if (debug) {

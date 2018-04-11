@@ -1,6 +1,5 @@
 #pragma once
 #include <SDL.h>
-#include "Globals.h"
 #include <string>
 #include "CameraSystem.h"
 #include <iostream>

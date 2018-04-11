@@ -1,5 +1,7 @@
 #include "CollisionSystem.h"
 
+std::vector<Collider*> CollisionSystem::collidersInView;
+
 bool CollisionSystem::isColliding(SDL_Rect object1, SDL_Rect object2) {
 	if (object1.x < object2.x + object2.w &&
 		object1.x + object2.w > object2.x &&

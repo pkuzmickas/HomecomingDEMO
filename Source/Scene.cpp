@@ -24,13 +24,13 @@ Scene::Scene(SDL_Renderer * renderer, Graphics * graphics) {
 }
 
 void Scene::createPlayer(int globalPosX, int globalPosY, PlayerAnimator::LookDirection lookDirection) {
-	player = PlayerSystem::createPlayer(globalPosX, globalPosY, IMG_LoadTexture(renderer, ASSET_DIR"player.png"));
+	player = PlayerSystem::createPlayer(globalPosX, globalPosY, IMG_LoadTexture(renderer, ASSET_DIR CHARACTER_DIR "player.png"));
 	graphics->addToDraw(player);
 }
 
 void Scene::wait(float waitSeconds, std::string nextAction) {
 	this->waitSeconds = waitSeconds;
 	this->nextAction = nextAction;
-	waitTimePassed = SDL_GetTicks();
+	waitTimePassed = (int)SDL_GetTicks();
 	curAction = "waiting";
 }
