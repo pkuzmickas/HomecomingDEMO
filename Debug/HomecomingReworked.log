@@ -1,2 +1,8 @@
-﻿  PlayerSystem.cpp
+﻿  PlayerMovement.cpp
+p:\programming\homecomingdemo\source\collider.h(15): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+p:\programming\homecomingdemo\source\collider.h(16): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+p:\programming\homecomingdemo\source\playermovement.cpp(21): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+p:\programming\homecomingdemo\source\playermovement.cpp(27): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
+p:\programming\homecomingdemo\source\playermovement.cpp(33): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
+p:\programming\homecomingdemo\source\playermovement.cpp(39): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
   HomecomingReworked.vcxproj -> P:\Programming\HomecomingDEMO\Debug\HomecomingReworked.exe

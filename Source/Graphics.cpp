@@ -56,8 +56,8 @@ void Graphics::render()
 {
 	SDL_RenderClear(renderer);
 
-	int xBound = CameraSystem::posX / Globals::TILE_SIZE + Globals::SCREEN_WIDTH / Globals::TILE_SIZE + 1;
-	int yBound = CameraSystem::posY / Globals::TILE_SIZE + Globals::SCREEN_HEIGHT / Globals::TILE_SIZE + 1;
+	int xBound = CameraSystem::posX / Globals::TILE_SIZE + Globals::SCREEN_WIDTH / Globals::TILE_SIZE + 2;
+	int yBound = CameraSystem::posY / Globals::TILE_SIZE + Globals::SCREEN_HEIGHT / Globals::TILE_SIZE + 2;
 	int xStart = CameraSystem::posX / Globals::TILE_SIZE;
 	int yStart = CameraSystem::posY / Globals::TILE_SIZE;
 	

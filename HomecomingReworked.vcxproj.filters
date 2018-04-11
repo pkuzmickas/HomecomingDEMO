@@ -42,9 +42,6 @@
     <ClCompile Include="Source\Entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Camera.cpp">
-      <Filter>Source Files\Systems</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Director.cpp">
       <Filter>Source Files\Systems</Filter>
     </ClCompile>
@@ -81,13 +78,13 @@
     <ClCompile Include="Source\CollisionSystem.cpp">
       <Filter>Source Files\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="Source\CameraSystem.cpp">
+      <Filter>Source Files\Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Entity.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Camera.h">
-      <Filter>Header Files\Systems</Filter>
     </ClInclude>
     <ClInclude Include="Source\Director.h">
       <Filter>Header Files\Systems</Filter>
@@ -132,6 +129,12 @@
       <Filter>Header Files\Systems</Filter>
     </ClInclude>
     <ClInclude Include="Source\MapSystem.h">
+      <Filter>Header Files\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Collider.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CameraSystem.h">
       <Filter>Header Files\Systems</Filter>
     </ClInclude>
   </ItemGroup>

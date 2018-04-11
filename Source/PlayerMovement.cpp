@@ -16,7 +16,7 @@ void PlayerMovement::update(float deltaTime) {
 		velocity *= SIN45;
 	}
 	if (numOfDirs != 0) {
-		CameraSystem::centerAround((int)transform->globalPosX, (int)transform->globalPosY, MapSystem::getWidth(), MapSystem::getHeight());
+		//CameraSystem::centerAround((int)transform->globalPosX, (int)transform->globalPosY, MapSystem::getWidth(), MapSystem::getHeight());
 		if (moving[DOWN]) {
 			collider->colBox.y += velocity;
 			if (CollisionSystem::isCollidingWithEnv(collider->colBox) == Collider::ColliderType::NONE) {
