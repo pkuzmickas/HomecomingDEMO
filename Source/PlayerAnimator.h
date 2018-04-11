@@ -10,8 +10,9 @@ public:
 		UP
 	};
 	LookDirection direction;
-	PlayerAnimator(Entity* owner) : Animator(owner) {
-		direction = LookDirection::DOWN;
+	PlayerAnimator(Entity* owner, LookDirection lookDirection = LookDirection::RIGHT) : Animator(owner) {
+		direction = LookDirection::RIGHT;
+		update(0);
 	}
 	void animateMovement() {
 		std::string walkingDir = "walking" + std::to_string(direction);

@@ -32,7 +32,7 @@ bool Entity::hasComponent(ComponentType comp)
 
 void Entity::update(float deltaTime) {
 	for (auto comp : components) {
-		if (comp.second->updatable) {
+		if (comp.second->updatable && comp.second->enabled) {
 			comp.second->update(deltaTime);
 		}
 	}	

@@ -8,39 +8,37 @@ bool PlayerMovement::isMoving() {
 }
 
 void PlayerMovement::update(float deltaTime) {
-
 	int numOfDirs = 0;
 	for (bool dir : moving) if (dir) numOfDirs++;
 	float velF = stats->SPEED * deltaTime;
 	if (numOfDirs == 2) {
 		velF *= SIN45;
 	}
-	int velocity = (int)velF;
 	if (numOfDirs != 0) {
 		
 		if (moving[DOWN]) {
-			collider->colBox.y += velocity;
+			collider->colBox.y += (int)velF;
 			if (CollisionSystem::isCollidingWithEnv(collider->colBox) == Collider::ColliderType::NONE) {
-				transform->globalPosY += velocity;
+				transform->globalPosY += velF;
 				
 			}
 		}
 		if (moving[UP]) {
-			collider->colBox.y -= velocity;
+			collider->colBox.y -= (int)velF;
 			if (CollisionSystem::isCollidingWithEnv(collider->colBox) == Collider::ColliderType::NONE) {
-				transform->globalPosY -= velocity;
+				transform->globalPosY -= velF;
 			}
 		}
 		if (moving[LEFT]) {
-			collider->colBox.x -= velocity;
+			collider->colBox.x -= (int)velF;
 			if (CollisionSystem::isCollidingWithEnv(collider->colBox) == Collider::ColliderType::NONE) {
-				transform->globalPosX -= velocity;
+				transform->globalPosX -= velF;
 			}
 		}
 		if (moving[RIGHT]) {
-			collider->colBox.x += velocity;
+			collider->colBox.x += (int)velF;
 			if (CollisionSystem::isCollidingWithEnv(collider->colBox) == Collider::ColliderType::NONE) {
-				transform->globalPosX += velocity;
+				transform->globalPosX += velF;
 			}
 		}
 		//CameraSystem::centerAround((int)transform->globalPosX, (int)transform->globalPosY, MapSystem::getWidth(), MapSystem::getHeight());

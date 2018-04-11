@@ -1,10 +1,10 @@
 #include "PlayerSystem.h"
 
+Entity * PlayerSystem::player;
 
-
-Entity * PlayerSystem::createPlayer(int globalPosX, int globalPosY, SDL_Texture* texture) {
-
+Entity * PlayerSystem::createPlayer(int globalPosX, int globalPosY, SDL_Texture* texture, PlayerAnimator::LookDirection lookDirection) {
 	Entity* player = new Entity();
+	PlayerSystem::player = player;
 	Transform* playerTransform = new Transform(player, 48, 48, globalPosX, globalPosY);
 	player->addComponent(playerTransform);
 	PlayerStats* playerStats = new PlayerStats(player);
@@ -20,7 +20,7 @@ Entity * PlayerSystem::createPlayer(int globalPosX, int globalPosY, SDL_Texture*
 	player->addComponent(playerCollider);
 	Movement* playerMovement = new PlayerMovement(player);
 	player->addComponent(playerMovement);
-	PlayerAnimator* animator = new PlayerAnimator(player);
+	PlayerAnimator* animator = new PlayerAnimator(player, lookDirection);
 	player->addComponent(animator);
 	int walkAnimSpeed = 150;
 	Animator::Animation walkingd("walking0", { 0, 1, 2, 1 }, walkAnimSpeed, false);
@@ -34,4 +34,14 @@ Entity * PlayerSystem::createPlayer(int globalPosX, int globalPosY, SDL_Texture*
 	PlayerInput* playerInput = new PlayerInput(player);
 	player->addComponent(playerInput);
 	return player;
+}
+
+void PlayerSystem::disableMovement() {
+	player->findComponent(ComponentType::ANIMATOR)->enabled = false;
+	player->findComponent(ComponentType::MOVEMENT)->enabled = false;
+}
+
+void PlayerSystem::enableMovement() {
+	player->findComponent(ComponentType::MOVEMENT)->enabled = true;
+	player->findComponent(ComponentType::ANIMATOR)->enabled = true;
 }

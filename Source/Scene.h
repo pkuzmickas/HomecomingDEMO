@@ -7,7 +7,7 @@
 class Scene {
 public:
 	~Scene();
-	void update(float deltaTime);
+	virtual void update(float deltaTime);
 protected:
 	SDL_Renderer* renderer;
 	Graphics* graphics;
@@ -15,9 +15,15 @@ protected:
 	
 	explicit Scene(SDL_Renderer* renderer, Graphics* graphics);
 	
-	void createPlayer(int globalPosX, int globalPosY); // Centers the camera as well
+	void createPlayer(int globalPosX, int globalPosY, PlayerAnimator::LookDirection lookDirection = PlayerAnimator::LookDirection::RIGHT); // Centers the camera as well
 
+	std::string curAction;
 	
+	// For the waiting ACTION
+	void wait(float waitSeconds, std::string nextAction);
+	float waitSeconds;
+	float waitTimePassed;
+	std::string nextAction;
 	
 
 };
