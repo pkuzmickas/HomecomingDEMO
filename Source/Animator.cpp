@@ -26,7 +26,7 @@ void Animator::stopAnimation() {
 
 void Animator::update(float deltaTime) {
 	if (animating) {
-		if (SDL_GetTicks() - elapsedTime > curAnim.speed) {
+		if ((int)(SDL_GetTicks() - elapsedTime) > curAnim.speed) {
 
 			if (nextSeqID == curAnim.spriteSequence.size()) {
 				if (!curAnim.loop) {
@@ -37,7 +37,7 @@ void Animator::update(float deltaTime) {
 				}
 
 			}
-			if (nextSeqID < curAnim.spriteSequence.size()) {
+			if (nextSeqID < (int)curAnim.spriteSequence.size()) {
 				elapsedTime = SDL_GetTicks();
 				int spriteNr = curAnim.spriteSequence[nextSeqID++];
 				int spritesInRow = curSSW / curSrcRect->w;

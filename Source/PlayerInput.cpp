@@ -98,8 +98,8 @@ void PlayerInput::animateByMouse() {
 	int mouseX, mouseY;
 	SDL_GetMouseState(&mouseX, &mouseY);
 	fPoint mouse;
-	mouse.x = mouseX;
-	mouse.y = mouseY;
+	mouse.x = (float)mouseX;
+	mouse.y = (float)mouseY;
 	fPoint middle;
 	middle.x = playerTransform->globalPosX - CameraSystem::posX + playerTransform->width/2;
 	middle.y = playerTransform->globalPosY - CameraSystem::posY + playerTransform->height / 2;

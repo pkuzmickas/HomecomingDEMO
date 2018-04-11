@@ -11,16 +11,18 @@ void PlayerMovement::update(float deltaTime) {
 
 	int numOfDirs = 0;
 	for (bool dir : moving) if (dir) numOfDirs++;
-	float velocity = stats->SPEED * deltaTime;
+	float velF = stats->SPEED * deltaTime;
 	if (numOfDirs == 2) {
-		velocity *= SIN45;
+		velF *= SIN45;
 	}
+	int velocity = (int)velF;
 	if (numOfDirs != 0) {
-		//CameraSystem::centerAround((int)transform->globalPosX, (int)transform->globalPosY, MapSystem::getWidth(), MapSystem::getHeight());
+		
 		if (moving[DOWN]) {
 			collider->colBox.y += velocity;
 			if (CollisionSystem::isCollidingWithEnv(collider->colBox) == Collider::ColliderType::NONE) {
 				transform->globalPosY += velocity;
+				
 			}
 		}
 		if (moving[UP]) {
@@ -41,6 +43,7 @@ void PlayerMovement::update(float deltaTime) {
 				transform->globalPosX += velocity;
 			}
 		}
+		//CameraSystem::centerAround((int)transform->globalPosX, (int)transform->globalPosY, MapSystem::getWidth(), MapSystem::getHeight());
 	}
 
 }

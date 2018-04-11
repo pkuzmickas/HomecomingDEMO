@@ -14,10 +14,10 @@ bool CollisionSystem::isColliding(SDL_Rect object1, SDL_Rect object2) {
 
 Collider::ColliderType CollisionSystem::isCollidingWithEnv(SDL_Rect object)
 {
-	int col1 = (object.x + CameraSystem::posX) / Globals::TILE_SIZE;
-	int col2 = (object.x + object.w + CameraSystem::posX) / Globals::TILE_SIZE;
-	int row1 = (object.y + CameraSystem::posY) / Globals::TILE_SIZE;
-	int row2 = (object.y + object.h + CameraSystem::posY) / Globals::TILE_SIZE;
+	int col1 = (int)((object.x + CameraSystem::posX) / Globals::TILE_SIZE);
+	int col2 = (int)((object.x + object.w + CameraSystem::posX) / Globals::TILE_SIZE);
+	int row1 = (int)((object.y + CameraSystem::posY) / Globals::TILE_SIZE);
+	int row2 = (int)((object.y + object.h + CameraSystem::posY) / Globals::TILE_SIZE);
 
 	auto map = MapSystem::getMap();
 	for (Entity* ent : map->at(row1).at(col1)) {
@@ -36,17 +36,6 @@ Collider::ColliderType CollisionSystem::isCollidingWithEnv(SDL_Rect object)
 			}
 		}
 	}
-	// write a sick alg to check whether the object is colliding with the environment and if it is with what type of collider :)
-	/*if (row1 >= colMap.size() || col1 >= colMap[row1].size() || row2 >= colMap.size() || col2 >= colMap[row2].size()) {
-		return 1;
-	}
-	if (colMap[row1][col1] > 0 || colMap[row1][col2] > 0 || colMap[row2][col1] > 0 || colMap[row2][col2] > 0) {
-		return 1;
-	}
-
-	/*if (colMap[row1][col1] == 119 || colMap[row1][col2] == 119 || colMap[row2][col1] == 119 || colMap[row2][col2] == 119) {
-	return 0;
-	}*/
 
 	return Collider::ColliderType::NONE;
 }

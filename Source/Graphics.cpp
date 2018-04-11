@@ -21,9 +21,9 @@ void Graphics::addMap(std::vector<std::vector<std::vector<Entity*>>> mapMatrix) 
 
 	mapRows = mapMatrix.size();
 	mapCols = mapMatrix[0].size();
-	for (int i = 0; i < mapMatrix.size(); i++) {
+	for (int i = 0; i < (int)mapMatrix.size(); i++) {
 		std::vector<std::vector<Sprite>> row;
-		for (int j = 0; j < mapMatrix[i].size(); j++) {
+		for (int j = 0; j < (int)mapMatrix[i].size(); j++) {
 			std::vector<Sprite > col;
 			for (auto entity : mapMatrix[i][j]) {
 				Drawable* curDrawable = (Drawable*)entity->findComponent(ComponentType::DRAWABLE);
@@ -56,10 +56,12 @@ void Graphics::render()
 {
 	SDL_RenderClear(renderer);
 
-	int xBound = CameraSystem::posX / Globals::TILE_SIZE + Globals::SCREEN_WIDTH / Globals::TILE_SIZE + 2;
-	int yBound = CameraSystem::posY / Globals::TILE_SIZE + Globals::SCREEN_HEIGHT / Globals::TILE_SIZE + 2;
-	int xStart = CameraSystem::posX / Globals::TILE_SIZE;
-	int yStart = CameraSystem::posY / Globals::TILE_SIZE;
+	int xBound = (int)(CameraSystem::posX / Globals::TILE_SIZE + Globals::SCREEN_WIDTH / Globals::TILE_SIZE + 2);
+	if (xBound > MapSystem::getWidth() / Globals::TILE_SIZE) xBound = MapSystem::getWidth() / Globals::TILE_SIZE;
+	int yBound = (int)(CameraSystem::posY / Globals::TILE_SIZE + Globals::SCREEN_HEIGHT / Globals::TILE_SIZE + 2);
+	if (yBound > MapSystem::getHeight() / Globals::TILE_SIZE) yBound = MapSystem::getHeight() / Globals::TILE_SIZE;
+	int xStart = (int)(CameraSystem::posX / Globals::TILE_SIZE);
+	int yStart = (int)(CameraSystem::posY / Globals::TILE_SIZE);
 	
 	// Checks the tiles needed to be drawn in regards to the camera and adds them to the vector
 	for (int row = yStart; row < yBound; row++) {

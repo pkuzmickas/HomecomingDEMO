@@ -6,6 +6,7 @@
 #include <sstream>
 #include <iterator>
 #include <map>
+#include "MapSystem.h"
 class Graphics {
 public:
 	void addToDraw(Entity* entity); // for game objects

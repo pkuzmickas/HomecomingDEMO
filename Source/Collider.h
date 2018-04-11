@@ -12,8 +12,8 @@ public:
 	SDL_Rect colBox; // X and Y are relative to the transform of the entity
 	SDL_Rect offset;
 	virtual void update(float deltaTime) {
-		colBox.x = transform->globalPosX - CameraSystem::posX + offset.x;
-		colBox.y = transform->globalPosY - CameraSystem::posY + offset.y;
+		colBox.x = (int)(transform->globalPosX - CameraSystem::posX) + offset.x;
+		colBox.y = (int)(transform->globalPosY - CameraSystem::posY) + offset.y;
 	}
 	Collider(Entity* owner, ColliderType colType = ColliderType::NORMAL, int XOffset = 0, int YOffset = 0, int width = 0, int height = 0) : Component(owner, true) {
 		type = COLLIDER;
