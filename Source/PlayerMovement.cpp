@@ -17,31 +17,50 @@ void PlayerMovement::update(float deltaTime) {
 	if (numOfDirs != 0) {
 		
 		if (moving[DOWN]) {
-			collider->colBox.y += (int)velF;
-			if (CollisionSystem::isCollidingWithEnv(collider->colBox) == Collider::ColliderType::NONE) {
+			int prev = collider->colBox.y;
+			collider->colBox.y += (int)velF+1; // Adding one to remove getting stuck at the walls
+			if (CollisionSystem::isCollidingWithEnv(collider->colBox) == Collider::ColliderType::NONE && CollisionSystem::isCollidingWithObjects(collider->colBox) == Collider::ColliderType::NONE) {
 				transform->globalPosY += velF;
-				
+				collider->colBox.y -= 1;
+			}
+			else {
+				collider->colBox.y = prev;
 			}
 		}
 		if (moving[UP]) {
-			collider->colBox.y -= (int)velF;
-			if (CollisionSystem::isCollidingWithEnv(collider->colBox) == Collider::ColliderType::NONE) {
+			int prev = collider->colBox.y;
+			collider->colBox.y -= ((int)velF+1);
+			if (CollisionSystem::isCollidingWithEnv(collider->colBox) == Collider::ColliderType::NONE && CollisionSystem::isCollidingWithObjects(collider->colBox) == Collider::ColliderType::NONE) {
 				transform->globalPosY -= velF;
+				collider->colBox.y += 1;
+
+			}
+			else {
+				collider->colBox.y = prev;
 			}
 		}
 		if (moving[LEFT]) {
-			collider->colBox.x -= (int)velF;
-			if (CollisionSystem::isCollidingWithEnv(collider->colBox) == Collider::ColliderType::NONE) {
+			int prev = collider->colBox.x;
+			collider->colBox.x -= ((int)velF+1);
+			if (CollisionSystem::isCollidingWithEnv(collider->colBox) == Collider::ColliderType::NONE && CollisionSystem::isCollidingWithObjects(collider->colBox) == Collider::ColliderType::NONE) {
 				transform->globalPosX -= velF;
+				collider->colBox.x += 1;
+			}
+			else {
+				collider->colBox.x = prev;
 			}
 		}
 		if (moving[RIGHT]) {
-			collider->colBox.x += (int)velF;
-			if (CollisionSystem::isCollidingWithEnv(collider->colBox) == Collider::ColliderType::NONE) {
+			int prev = collider->colBox.x;
+			collider->colBox.x += (int)velF+1;
+			if (CollisionSystem::isCollidingWithEnv(collider->colBox) == Collider::ColliderType::NONE && CollisionSystem::isCollidingWithObjects(collider->colBox) == Collider::ColliderType::NONE) {
 				transform->globalPosX += velF;
+				collider->colBox.x -= 1;
+			}
+			else {
+				collider->colBox.x = prev;
 			}
 		}
-		//CameraSystem::centerAround((int)transform->globalPosX, (int)transform->globalPosY, MapSystem::getWidth(), MapSystem::getHeight());
 	}
 
 }

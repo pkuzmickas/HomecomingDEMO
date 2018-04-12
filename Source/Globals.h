@@ -47,6 +47,7 @@ public:
 	enum Layers {
 		BACKGROUND0,
 		BACKGROUND1,
+		BACKGROUND2,
 		PLAYER,
 		FOREGROUND,
 		UI,

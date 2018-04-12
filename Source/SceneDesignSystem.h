@@ -2,8 +2,8 @@
 #include "Globals.h"
 #include "Entity.h"
 #include <string>
-#include "Collider.h"
 #include "Animator.h"
+#include "CollisionSystem.h"
 class SceneDesignSystem {
 private:
 	SceneDesignSystem();

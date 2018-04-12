@@ -45,3 +45,7 @@ void PlayerSystem::enableMovement() {
 	player->findComponent(ComponentType::MOVEMENT)->enabled = true;
 	player->findComponent(ComponentType::ANIMATOR)->enabled = true;
 }
+
+Entity * PlayerSystem::getPlayer() {
+	return player;
+}

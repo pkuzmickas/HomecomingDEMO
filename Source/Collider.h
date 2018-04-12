@@ -16,7 +16,6 @@ public:
 	virtual void update(float deltaTime) {
 		colBox.x = (int)(transform->globalPosX - CameraSystem::posX) + offset.x;
 		colBox.y = (int)(transform->globalPosY - CameraSystem::posY) + offset.y;
-		std::cout << MapSystem::getHeight() << std::endl; // How do I solve this? Do the below somewhere else? hmm
 		/*if (colBox.x + colBox.w >= 0 && colBox.y + colBox.h >= 0 && colBox.x <= MapSystem::getWidth() && colBox.y <= MapSystem::getHeight()) {
 			if (std::find(CollisionSystem::collidersInView.begin(), CollisionSystem::collidersInView.end(), this) == CollisionSystem::collidersInView.end()) { // Is collider in vector
 				CollisionSystem::collidersInView.push_back(this);

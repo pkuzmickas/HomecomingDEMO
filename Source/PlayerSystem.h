@@ -13,6 +13,7 @@ public:
 	static Entity* createPlayer(int globalPosX, int globalPosY, SDL_Texture* texture, PlayerAnimator::LookDirection lookDirection = PlayerAnimator::LookDirection::RIGHT);
 	static void disableMovement();
 	static void enableMovement();
+	static Entity* getPlayer();
 private:
 	PlayerSystem();
 	static Entity* player;

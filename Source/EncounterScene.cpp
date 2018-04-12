@@ -3,17 +3,25 @@
 EncounterScene::EncounterScene(SDL_Renderer * renderer, Graphics * graphics) : Scene(renderer, graphics) {
 	MapSystem::createMap(renderer, ASSET_DIR LEVEL_DIR "demoMap.tmx");
 	graphics->addMap(*MapSystem::getMap());
-
+	CameraSystem::setUp(MapSystem::getWidth(), MapSystem::getHeight()); // need to set up the camera right when the map is loaded
 	createPlayer(1250, 700);
 
 	tree = IMG_LoadTexture(renderer, ASSET_DIR LEVEL_DESIGN_DIR "tree.png");
 	treeNoLeaves = IMG_LoadTexture(renderer, ASSET_DIR LEVEL_DESIGN_DIR "treeNoLeaves.png");
+	for (int j = 0; j < 2; j++) {
+		for (int i = 0; i < MapSystem::getWidth()/103 + 1; i++) {
+			Entity* e = SceneDesignSystem::createTree(i * 103, 550 + j * 150, (Globals::Layers)(Globals::Layers::BACKGROUND2 + j), treeNoLeaves);
+			graphics->addToDraw(e);
+			trees.push_back(e);
+			if (i * 122 < MapSystem::getWidth()) {
+				Entity* e2 = SceneDesignSystem::createTree(i * 122, 475 + j * 305, (Globals::Layers)(Globals::Layers::BACKGROUND1 + 3 * j), tree);
+				graphics->addToDraw(e2);
+				trees.push_back(e2);
+			}
+		}
+	}
 
-	Entity* e = SceneDesignSystem::createTree(1400, 700, Globals::Layers::FOREGROUND, treeNoLeaves);
-	graphics->addToDraw(e);
-	trees.push_back(e);
-
-	CameraSystem::centerAround(0, 700, MapSystem::getWidth(), MapSystem::getHeight());
+	CameraSystem::centerAround(0, 700);
 	PlayerSystem::disableMovement();
 	wait(1, "init camera");
 }
@@ -34,6 +42,8 @@ void EncounterScene::update(float deltaTime) {
 	}
 	if (curAction == "dialogue start") {
 		PlayerSystem::enableMovement();
+		Transform* playerTransform = (Transform*)(player->findComponent(ComponentType::TRANSFORM));
+		CameraSystem::follow(&playerTransform->globalPosX, &playerTransform->globalPosY);
 	}
 	
 }

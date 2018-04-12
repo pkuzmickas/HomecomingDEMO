@@ -10,8 +10,9 @@ Entity* SceneDesignSystem::createTree(int posX, int posY, Globals::Layers layer,
 	tree->addComponent(transform);
 	Drawable* drawable = new Drawable(tree, texture, "tree" + treesSpawned, layer, NULL);
 	tree->addComponent(drawable);
-	Collider* collider = new Collider(tree);
+	Collider* collider = new Collider(tree, Collider::NORMAL, 0, 100, 103, 25);
 	tree->addComponent(collider);
+	CollisionSystem::collidersInScene.push_back(collider);
 	Animator* animator = new Animator(tree);
 	tree->addComponent(animator);
 	// Leaves fall animations etc.

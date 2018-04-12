@@ -1,10 +1,10 @@
 #include "CollisionSystem.h"
 
-std::vector<Collider*> CollisionSystem::collidersInView;
+std::vector<Collider*> CollisionSystem::collidersInScene;
 
 bool CollisionSystem::isColliding(SDL_Rect object1, SDL_Rect object2) {
 	if (object1.x < object2.x + object2.w &&
-		object1.x + object2.w > object2.x &&
+		object1.x + object1.w > object2.x &&
 		object1.y < object2.y + object2.h &&
 		object1.h + object1.y > object2.y) {
 
@@ -41,3 +41,14 @@ Collider::ColliderType CollisionSystem::isCollidingWithEnv(SDL_Rect object)
 
 	return Collider::ColliderType::NONE;
 }
+
+Collider::ColliderType CollisionSystem::isCollidingWithObjects(SDL_Rect object) {
+	for (auto object2 : collidersInScene) {
+		object2->update(0);
+		if (isColliding(object, object2->colBox)) {
+			return object2->colType;
+		}
+	}
+	return Collider::ColliderType::NONE;
+}
+
