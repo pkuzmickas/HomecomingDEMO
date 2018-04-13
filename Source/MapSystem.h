@@ -9,6 +9,7 @@
 #include <sstream>
 #include "Globals.h"
 #include "Entity.h"
+#include "PathfindingSystem.h"
 
 class MapSystem {
 public:

@@ -8,6 +8,7 @@ bool PlayerMovement::isMoving() {
 }
 
 void PlayerMovement::update(float deltaTime) {
+	Movement::update(deltaTime);
 	int numOfDirs = 0;
 	for (bool dir : moving) if (dir) numOfDirs++;
 	float velF = stats->SPEED * deltaTime;

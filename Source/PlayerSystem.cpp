@@ -1,5 +1,5 @@
 #include "PlayerSystem.h"
-
+#include "AIComponent.h"
 Entity * PlayerSystem::player;
 
 Entity * PlayerSystem::createPlayer(int globalPosX, int globalPosY, SDL_Texture* texture, PlayerAnimator::LookDirection lookDirection) {
@@ -33,6 +33,8 @@ Entity * PlayerSystem::createPlayer(int globalPosX, int globalPosY, SDL_Texture*
 	animator->addAnimation(walkingu);
 	PlayerInput* playerInput = new PlayerInput(player);
 	player->addComponent(playerInput);
+	AIComponent* ai = new AIComponent(player);
+	player->addComponent(ai);
 	return player;
 }
 

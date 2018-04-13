@@ -158,6 +158,7 @@ void MapSystem::createMap(SDL_Renderer* renderer, std::string path) {
 		}
 		layer = layer->next_sibling();
 	}
+	PathfindingSystem::initBoard(mapMatrix);
 }
 
 void MapSystem::deleteMap() {

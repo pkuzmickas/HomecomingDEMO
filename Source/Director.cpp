@@ -1,5 +1,5 @@
 #include "Director.h"
-
+#include "AIComponent.h"
 using namespace std;
 
 Director::Director(SDL_Renderer* renderer) {
@@ -40,6 +40,10 @@ void Director::getInput() {
 				if (e.key.keysym.sym == SDLK_t) {
 					graphics->debug = !graphics->debug;
 				}
+				if (e.key.keysym.sym == SDLK_y) {
+					AIComponent* ai = (AIComponent*)PlayerSystem::getPlayer()->findComponent(ComponentType::AI);
+					ai->walkTo(100, 700, 300);
+				}
 				break;
 		}
 	}
@@ -53,7 +57,9 @@ void Director::update() {
 	//cout << deltaTimeInSeconds << endl;
 	runTime += deltaTime;
 
+	
 	curScene->update(deltaTimeInSeconds);
+	
 	CameraSystem::update(deltaTimeInSeconds);
 
 	Globals::GetFrameEvents().clear();
