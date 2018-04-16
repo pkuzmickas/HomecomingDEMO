@@ -7,5 +7,5 @@ class NPCSystem {
 private:
 	NPCSystem();
 public:
-	static Entity* createNPC(int posX, int posY, Globals::Layers layer, SDL_Texture* texture, std::string spriteName, Abilities* abilities = NULL, Talkable* talkable = NULL);
+	static Entity* createNPC(int posX, int posY, int width, int height,Globals::Layers layer, SDL_Texture* texture, std::string spriteName, Abilities* abilities = NULL, Talkable* talkable = NULL);
 };

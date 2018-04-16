@@ -1,13 +1,18 @@
 #include "NPCSystem.h"
 
-Entity* NPCSystem::createNPC(int posX, int posY, Globals::Layers layer, SDL_Texture * texture, std::string spriteName, Abilities * abilities, Talkable * talkable) {
+Entity* NPCSystem::createNPC(int posX, int posY, int width, int height, Globals::Layers layer, SDL_Texture * texture, std::string spriteName, Abilities * abilities, Talkable * talkable) {
 	Entity* npc = new Entity();
-	int width, height;
-	SDL_QueryTexture(texture, NULL, NULL, &width, &height);
 	Transform* transform = new Transform(npc, width, height, posX, posY);
 	npc->addComponent(transform);
-	Drawable* drawable = new Drawable(npc, texture, spriteName, layer, NULL);
+	SDL_Rect* srcRect = new SDL_Rect();
+	srcRect->h = height;
+	srcRect->w = width;
+	srcRect->x = 1 * srcRect->w;
+	srcRect->y = Animator::LookDirection::RIGHT * srcRect->h;
+	Drawable* drawable = new Drawable(npc, texture, spriteName, layer, srcRect);
 	npc->addComponent(drawable);
+	Movement* movement = new Movement(npc);
+	npc->addComponent(movement);
 	Collider* collider = new Collider(npc, Collider::NORMAL);
 	npc->addComponent(collider);
 	CollisionSystem::collidersInScene.push_back(collider);

@@ -3,6 +3,12 @@
 #include "Collider.h"
 class Animator : public Component {
 public:
+	enum LookDirection {
+		DOWN,
+		LEFT,
+		RIGHT,
+		UP
+	};
 	struct Animation {
 		std::string name;
 		std::vector<int> spriteSequence;

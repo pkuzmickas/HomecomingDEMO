@@ -3,6 +3,7 @@
 #include <SDL_image.h>
 #include "PlayerSystem.h"
 #include "SceneDesignSystem.h"
+#include "NPCSystem.h"
 
 class Scene {
 public:

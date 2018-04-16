@@ -41,8 +41,7 @@ void Director::getInput() {
 					graphics->debug = !graphics->debug;
 				}
 				if (e.key.keysym.sym == SDLK_y) {
-					AIComponent* ai = (AIComponent*)PlayerSystem::getPlayer()->findComponent(ComponentType::AI);
-					ai->walkTo(100, 700, 300);
+					
 				}
 				break;
 		}

@@ -3,12 +3,7 @@
 #include <string>
 class PlayerAnimator : public Animator {
 public:
-	enum LookDirection {
-		DOWN,
-		LEFT,
-		RIGHT,
-		UP
-	};
+	
 	LookDirection direction;
 	PlayerAnimator(Entity* owner, LookDirection lookDirection = LookDirection::RIGHT) : Animator(owner) {
 		direction = LookDirection::RIGHT;
