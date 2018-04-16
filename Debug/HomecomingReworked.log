@@ -1,19 +1,3 @@
-﻿  SceneDesignSystem.cpp
-  Scene.cpp
-p:\programming\homecomingdemo\source\scene.cpp(34): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-  PlayerSystem.cpp
-  PlayerMovement.cpp
-  PlayerInput.cpp
-  Movement.cpp
-  MapSystem.cpp
-  main.cpp
-  Graphics.cpp
-  EncounterScene.cpp
-  Entity.cpp
-  Director.cpp
-  CollisionSystem.cpp
-  CameraSystem.cpp
-p:\programming\homecomingdemo\source\camerasystem.cpp(44): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-  Animator.cpp
-  Generating Code...
-  HomecomingReworked.vcxproj -> P:\Programming\HomecomingDEMO\Debug\HomecomingReworked.exe
+﻿  NPCSystem.cpp
+  HomecomingReworked.vcxproj -> C:\Users\pauliuskuzmickas\Desktop\programming\homecomingDEMO\Debug\HomecomingReworked.exe
+  HomecomingReworked.vcxproj -> C:\Users\pauliuskuzmickas\Desktop\programming\homecomingDEMO\Debug\HomecomingReworked.pdb (Partial PDB)

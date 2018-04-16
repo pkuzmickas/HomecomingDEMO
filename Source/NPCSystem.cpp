@@ -18,6 +18,16 @@ Entity* NPCSystem::createNPC(int posX, int posY, int width, int height, Globals:
 	CollisionSystem::collidersInScene.push_back(collider);
 	Animator* animator = new Animator(npc);
 	npc->addComponent(animator);
+	int walkAnimSpeed = 200;
+	Animator::Animation walkingd("walking0", { 0, 1, 2, 1 }, walkAnimSpeed, false);
+	animator->addAnimation(walkingd);
+	Animator::Animation walkingl("walking1", { 3, 4, 5, 4 }, walkAnimSpeed, false);
+	animator->addAnimation(walkingl);
+	Animator::Animation walkingr("walking2", { 6, 7, 8, 7 }, walkAnimSpeed, false);
+	animator->addAnimation(walkingr);
+	Animator::Animation walkingu("walking3", { 9, 10, 11, 10 }, walkAnimSpeed, false);
+	animator->addAnimation(walkingu);
+
 	AIComponent* ai = new AIComponent(npc);
 	npc->addComponent(ai);
 	return npc;

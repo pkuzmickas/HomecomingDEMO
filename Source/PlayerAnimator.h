@@ -6,7 +6,7 @@ public:
 	
 	LookDirection direction;
 	PlayerAnimator(Entity* owner, LookDirection lookDirection = LookDirection::RIGHT) : Animator(owner) {
-		direction = LookDirection::RIGHT;
+		direction = lookDirection;
 		update(0);
 	}
 	void animateMovement() {
