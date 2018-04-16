@@ -14,7 +14,8 @@ enum ComponentType {
 	ABILITIES = 1 << 5,
 	AI = 1 << 6,
 	TRANSFORM = 1 << 7,
-	STATS = 1 << 8
+	STATS = 1 << 8,
+	TALKABLE = 1 << 9
 };
 
 class Entity;
@@ -102,5 +103,21 @@ class Stats : public Component {
 public:
 	Stats(Entity* owner) : Component(owner) {
 		type = STATS;
+	}
+};
+
+class Talkable : public Component {
+public:
+	struct Dialogue {
+		std::string sentence = "";
+		bool wasSaid = false;
+		Dialogue(std::string sentence) { this->sentence = sentence; };
+	};
+	std::vector<Dialogue> dialogues;
+	std::string speakerName;
+	Talkable(Entity* owner, std::string speakerName, std::vector<Dialogue> dialogues) : Component(owner) {
+		type = TALKABLE;
+		this->speakerName = speakerName;
+		this->dialogues = dialogues;
 	}
 };
