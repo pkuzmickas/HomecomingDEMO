@@ -14,7 +14,22 @@ void Graphics::addToDraw(Entity * entity) {
 	Sprite sprite;
 	sprite.drawable = drawableComponent;
 	sprite.transform = transformComponent;
+	sprite.entity = entity;
 	objectDrawQueue[drawableComponent->layer].push_back(sprite);
+}
+
+bool Graphics::removeFromDraw(Entity * entity) {
+	Drawable* drawable = (Drawable*) entity->findComponent(ComponentType::DRAWABLE);
+	for(int i=0; i < (int)objectDrawQueue[drawable->layer].size(); i++) {
+		if (objectDrawQueue[drawable->layer][i].entity == entity) {
+			// Swaps the element with the matching name with the last one in the vector and then pops the vector
+			iter_swap(objectDrawQueue[drawable->layer].begin() + i, objectDrawQueue[drawable->layer].begin() + objectDrawQueue[drawable->layer].size() - 1);
+			objectDrawQueue[drawable->layer].pop_back();
+			return true;
+		}
+	}
+	cout << "COULD NOT REMOVE FROM DRAW" << endl;
+	return false;
 }
 
 void Graphics::addMap(std::vector<std::vector<std::vector<Entity*>>> mapMatrix) {

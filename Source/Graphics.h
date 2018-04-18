@@ -10,6 +10,7 @@
 class Graphics {
 public:
 	void addToDraw(Entity* entity); // for game objects
+	bool removeFromDraw(Entity* entity);
 	void addMap(std::vector<std::vector<std::vector<Entity*>>> mapMatrix);
 	Graphics(SDL_Renderer* renderer);
 	void render();

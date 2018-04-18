@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 #include "PlayerSystem.h"
 #include "SceneDesignSystem.h"
 #include "NPCSystem.h"
@@ -25,6 +26,7 @@ protected:
 	float waitSeconds;
 	float waitTimePassed;
 	std::string nextAction;
+
 	
 
 };

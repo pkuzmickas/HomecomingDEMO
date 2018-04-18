@@ -11,7 +11,10 @@ EncounterScene::EncounterScene(SDL_Renderer * renderer, Graphics * graphics) : S
 
 void EncounterScene::setup() {
 
-	createPlayer(1700, 700, Animator::LookDirection::LEFT);
+	createPlayer(1800, 700, Animator::LookDirection::LEFT);
+	PlayerSystem::disableMovement();
+
+	textFont = TTF_OpenFont(ASSET_DIR "Fonts/bgothm.ttf", 50);
 
 	// Spawning npcs
 	oldman = IMG_LoadTexture(renderer, ASSET_DIR CHARACTER_DIR "oldman.png");
@@ -48,26 +51,55 @@ void EncounterScene::setup() {
 	}
 
 	
-
-	PlayerSystem::disableMovement();
-	curAction = "intro text";
-	Entity* blackBox1 = SceneDesignSystem::createRect(CameraSystem::posX, 0, Globals::SCREEN_WIDTH + 10, Globals::SCREEN_HEIGHT/2, Globals::Layers::UI, true); // -85 is a good number
-	Entity* blackBox2 = SceneDesignSystem::createRect(CameraSystem::posX, 0, Globals::SCREEN_WIDTH + 10, Globals::SCREEN_HEIGHT/2, Globals::Layers::UI, true);
+	CameraSystem::posY = MapSystem::getHeight() - Globals::SCREEN_HEIGHT;
+	Entity* blackBox1 = SceneDesignSystem::createRect(CameraSystem::posX, CameraSystem::posY, Globals::SCREEN_WIDTH + 10, Globals::SCREEN_HEIGHT/2, Globals::Layers::UI, true); // -85 is a good number
+	Entity* blackBox2 = SceneDesignSystem::createRect(CameraSystem::posX, CameraSystem::posY + Globals::SCREEN_HEIGHT / 2, Globals::SCREEN_WIDTH + 10, Globals::SCREEN_HEIGHT/2, Globals::Layers::UI, true);
 	blackBox1T = (Transform*) blackBox1->findComponent(ComponentType::TRANSFORM);
 	blackBox2T = (Transform*)blackBox2->findComponent(ComponentType::TRANSFORM);
 	graphics->addToDraw(blackBox1);
 	graphics->addToDraw(blackBox2);
 	entities.push_back(blackBox1);
 	entities.push_back(blackBox2);
-
+	
+	wait(2, "intro text");
 }
 
 void EncounterScene::preFightScenario(float deltaTime) {
 	if (curAction == "intro text") {
-		CameraSystem::posY = MapSystem::getHeight() - Globals::SCREEN_HEIGHT;
-		blackBox1T->globalPosY = CameraSystem::posY;
-		blackBox2T->globalPosY = CameraSystem::posY + Globals::SCREEN_HEIGHT / 2;
-		wait(1, "open shades");
+		if (textTexture) SDL_DestroyTexture(textTexture);
+		if (textProgress > 1) {
+			graphics->removeFromDraw(textEntity);
+		}
+		SDL_Color textColor = { 255, 255,255, 0xFF };
+		string text = introText.substr(0, textProgress);
+		SDL_Surface* textSurface = TTF_RenderText_Solid(textFont, text.c_str(), textColor);
+		int totalTextWidth;
+		TTF_SizeText(textFont, introText.c_str(), &totalTextWidth, NULL);
+		textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+		SDL_FreeSurface(textSurface);
+		textEntity = new Entity();
+		Transform* transform = new Transform(textEntity, textSurface->w, textSurface->h, CameraSystem::posX + Globals::SCREEN_WIDTH / 2 - totalTextWidth / 2, CameraSystem::posY + Globals::SCREEN_HEIGHT / 2 - textSurface->h / 2);
+		textEntity->addComponent(transform);
+		Drawable* drawable = new Drawable(textEntity, textTexture, "introText", Globals::Layers::UI);
+		textEntity->addComponent(drawable);
+		graphics->addToDraw(textEntity);
+		textProgress++;
+		if (textProgress > introText.length()) {
+			wait(2, "delete text");
+		}
+		else if (textProgress > introText.length() - 3) {
+			wait(1, "intro text");
+		}
+		else {
+			wait(0.25f, "intro text");
+		}
+	}
+	if (curAction == "delete text") {
+		graphics->removeFromDraw(textEntity);
+		delete textEntity;
+		TTF_CloseFont(textFont);
+		SDL_DestroyTexture(textTexture);
+		wait(2, "open shades");
 	}
 	if (curAction == "open shades") {
 		blackBox1T->height = 0;
@@ -85,9 +117,9 @@ void EncounterScene::preFightScenario(float deltaTime) {
 	}
 	if (curAction == "start walking") {
 		Transform* oldmanT = (Transform*)oldmanAI->owner->findComponent(ComponentType::TRANSFORM);
-		soldier2AI->walkTo(1150, 700, 80);
-		oldmanAI->walkTo(1080, 700, 80);
-		soldierAI->walkTo(1010, 700, 80);
+		soldier2AI->walkTo(1250, 700, 80);
+		oldmanAI->walkTo(1180, 700, 80);
+		soldierAI->walkTo(1110, 700, 80);
 		curAction = "npcs walking";
 	}
 	if (curAction == "npcs walking") {
