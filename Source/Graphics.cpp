@@ -79,6 +79,8 @@ void Graphics::render()
 				if(!debug)draw(tileSprite);
 				tileSprite.entity->update(0); // need to update all of the  visible tiles in case the camera moves
 			}
+
+			// DEBUG CODE
 			if (debug) {
 				for (auto tileSprite : mapDrawQueue[layer]) {
 					if (tileSprite.drawable->owner->hasComponent(ComponentType::COLLIDER)) {
@@ -94,11 +96,30 @@ void Graphics::render()
 					}
 				}
 			}
+			// END OF DEBUG CODE
+
 			mapDrawQueue[layer].clear();
 			
 		}
 		for (auto gameObject : objectDrawQueue[layer]) {
-			draw(gameObject);
+			if (gameObject.drawable->isRect) {
+				SDL_Rect localPos;
+				localPos.h = gameObject.transform->height;
+				localPos.w = gameObject.transform->width;
+				localPos.x = (int)(gameObject.transform->globalPosX - CameraSystem::posX);
+				localPos.y = (int)(gameObject.transform->globalPosY - CameraSystem::posY);
+				if (gameObject.drawable->fill) {
+					SDL_RenderFillRect(renderer, &localPos);
+				}
+				else {
+					SDL_RenderDrawRect(renderer, &localPos);
+				}
+			}
+			else {
+				draw(gameObject);
+			}
+
+			// DEBUG CODE
 			if (debug) {
 				for (auto gameObject : objectDrawQueue[layer]) {
 					if (gameObject.drawable->owner->hasComponent(ComponentType::COLLIDER)) {
@@ -114,6 +135,7 @@ void Graphics::render()
 					}
 				}
 			}
+			// END OF DEBUG CODE
 		}
 	}
 

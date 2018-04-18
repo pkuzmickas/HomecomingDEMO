@@ -7,7 +7,7 @@ public:
 	~EncounterScene();
 private:
 	void setup();
-	void preFightScenario();
+	void preFightScenario(float deltaTime);
 	SDL_Texture* tree;
 	SDL_Texture* treeNoLeaves;
 	SDL_Texture* oldman;
@@ -18,5 +18,7 @@ private:
 	AIComponent* oldmanAI;
 	AIComponent* soldierAI;
 	AIComponent* soldier2AI;
+	Transform* blackBox1T;
+	Transform* blackBox2T;
 	std::vector<Entity*> entities;
 };

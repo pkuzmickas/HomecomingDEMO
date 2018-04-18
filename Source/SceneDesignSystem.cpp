@@ -27,3 +27,13 @@ Entity* SceneDesignSystem::createTree(int posX, int posY, Globals::Layers layer,
 
 	return tree;
 }
+
+Entity * SceneDesignSystem::createRect(int posX, int posY, int width, int height, Globals::Layers layer, bool fill)
+{
+	Entity* rect = new Entity();
+	Transform* transform = new Transform(rect, width, height, posX, posY);
+	rect->addComponent(transform);
+	Drawable* drawable = new Drawable(rect, layer, fill);
+	rect->addComponent(drawable);
+	return rect;
+}

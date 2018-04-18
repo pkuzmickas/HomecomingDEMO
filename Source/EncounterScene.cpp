@@ -52,10 +52,24 @@ void EncounterScene::setup() {
 
 	PlayerSystem::disableMovement();
 	curAction = "start walking";
+	Entity* blackBox1 = SceneDesignSystem::createRect(0, 0, Globals::SCREEN_WIDTH + 10, Globals::SCREEN_HEIGHT/2 - 85, Globals::Layers::UI, true);
+	Entity* blackBox2 = SceneDesignSystem::createRect(0, 0, Globals::SCREEN_WIDTH + 10, Globals::SCREEN_HEIGHT/2 - 85, Globals::Layers::UI, true);
+	blackBox1T = (Transform*) blackBox1->findComponent(ComponentType::TRANSFORM);
+	blackBox2T = (Transform*)blackBox2->findComponent(ComponentType::TRANSFORM);
+	graphics->addToDraw(blackBox1);
+	graphics->addToDraw(blackBox2);
+	entities.push_back(blackBox1);
+	entities.push_back(blackBox2);
 
 }
 
-void EncounterScene::preFightScenario() {
+void EncounterScene::preFightScenario(float deltaTime) {
+	if (blackBox1T->height > 0 && curAction!= "camera moving 1") {
+		blackBox1T->globalPosX = CameraSystem::posX;
+		blackBox1T->globalPosY = CameraSystem::posY;
+		blackBox2T->globalPosX = CameraSystem::posX;
+		blackBox2T->globalPosY = CameraSystem::posY + Globals::SCREEN_HEIGHT / 2 + 115;
+	}
 	if (curAction == "start walking") {
 		soldier2AI->walkTo(1150, 700, 80);
 		oldmanAI->walkTo(1080, 700, 80);
@@ -75,7 +89,14 @@ void EncounterScene::preFightScenario() {
 		curAction = "camera moving 1";
 	}
 	if (curAction == "camera moving 1") {
+		if (blackBox1T->height > 0) {
+			blackBox1T->globalPosX = CameraSystem::posX;
+			blackBox2T->globalPosX = CameraSystem::posX;
+			blackBox1T->height -= 150 * deltaTime;
+			blackBox2T->globalPosY += 175 * deltaTime;
+		}
 		if (!CameraSystem::isCameraMoving()) {
+			blackBox2T->height = 0;
 			// DIALOGUE HAPPENS HERE
 			wait(5, "move camera to player");
 		}
@@ -101,7 +122,7 @@ void EncounterScene::update(float deltaTime) {
 		ent->update(deltaTime);
 	}
 	
-	preFightScenario();
+	preFightScenario(deltaTime);
 }
 
 EncounterScene::~EncounterScene() {

@@ -74,6 +74,8 @@ public:
 	std::string ID;
 	Globals::Layers layer;
 	SDL_RendererFlip flip;
+	bool isRect = false;
+	bool fill;
 	Drawable(Entity* owner, SDL_Texture* image, std::string ID, Globals::Layers layer, SDL_Rect* srcRect = NULL, SDL_RendererFlip flip = SDL_FLIP_NONE) : Component(owner) {
 		this->image = image;
 		this->ID = ID;
@@ -82,14 +84,18 @@ public:
 		this->flip = flip;
 		type = DRAWABLE;
 	}
+	Drawable(Entity* owner, Globals::Layers layer, bool fill) : Component(owner) {
+		isRect = true;
+		this->fill = fill;
+		this->layer = layer;
+		type = DRAWABLE;
+	}
 	~Drawable() {
 		SDL_DestroyTexture(image);
 		if (srcRect) delete srcRect;
 	}
 
 };
-
-
 
 class Abilities : public Component {
 public:
