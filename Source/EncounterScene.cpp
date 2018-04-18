@@ -91,7 +91,7 @@ void EncounterScene::preFightScenario(float deltaTime) {
 			wait(1, "intro text");
 		}
 		else {
-			wait(0.25f, "intro text");
+			wait(0.2f, "intro text");
 		}
 	}
 	if (curAction == "delete text") {
@@ -104,7 +104,8 @@ void EncounterScene::preFightScenario(float deltaTime) {
 	if (curAction == "open shades") {
 		blackBox1T->height = 0;
 		blackBox2T->height = 0;
-		wait(3, "find action");
+		wait(1, "find action");
+		//curAction = "find action";
 	}
 	if (curAction == "find action") {
 		Transform* oldmanT = (Transform*)oldmanAI->owner->findComponent(ComponentType::TRANSFORM);

@@ -21,7 +21,7 @@ private:
 	Transform* blackBox1T;
 	Transform* blackBox2T;
 	std::vector<Entity*> entities;
-	std::string introText = "I WILL SAVE EVERYONE...";
+	std::string introText = "\"I WILL SAVE EVERYONE...\"";
 	int textProgress = 1;
 	TTF_Font* textFont;
 	SDL_Texture* textTexture;
