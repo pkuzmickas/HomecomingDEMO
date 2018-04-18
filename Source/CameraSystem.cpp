@@ -34,7 +34,13 @@ void CameraSystem::update(float deltaTime) {
 		if (posY < destY) {
 			posY += speed * deltaTime;
 		}
-		if (posX >= destX && posY >= destY) {
+		if (posX > destX) {
+			posX -= speed * deltaTime;
+		}
+		if (posY > destY) {
+			posY -= speed * deltaTime;
+		}
+		if (abs(posX - destX) <= 10 && abs(posY - destY) <= 10) {
 			posX = (float)destX;
 			posY = (float)destY;
 			cameraMoving = false;

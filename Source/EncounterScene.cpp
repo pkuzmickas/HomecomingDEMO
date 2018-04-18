@@ -16,9 +16,9 @@ void EncounterScene::setup() {
 	// Spawning npcs
 	oldman = IMG_LoadTexture(renderer, ASSET_DIR CHARACTER_DIR "oldman.png");
 	soldier = IMG_LoadTexture(renderer, ASSET_DIR CHARACTER_DIR "soldier.png");
-	Entity* oldmanEntity = NPCSystem::createNPC(370, 700, 48, 48, Globals::Layers::PLAYER, oldman, "oldman");
-	Entity* soldierEntity = NPCSystem::createNPC(300, 700, 48, 48, Globals::Layers::PLAYER, soldier, "soldier1");
-	Entity* soldier2Entity = NPCSystem::createNPC(440, 700, 48, 48, Globals::Layers::PLAYER, soldier, "soldier2");
+	Entity* oldmanEntity = NPCSystem::createNPC(270, 700, 48, 48, Globals::Layers::PLAYER, oldman, "oldman");
+	Entity* soldierEntity = NPCSystem::createNPC(200, 700, 48, 48, Globals::Layers::PLAYER, soldier, "soldier1");
+	Entity* soldier2Entity = NPCSystem::createNPC(340, 700, 48, 48, Globals::Layers::PLAYER, soldier, "soldier2");
 	oldmanAI = (AIComponent*)oldmanEntity->findComponent(ComponentType::AI);
 	soldierAI = (AIComponent*)soldierEntity->findComponent(ComponentType::AI);
 	soldier2AI = (AIComponent*)soldier2Entity->findComponent(ComponentType::AI);
@@ -67,10 +67,17 @@ void EncounterScene::preFightScenario(float deltaTime) {
 		CameraSystem::posY = MapSystem::getHeight() - Globals::SCREEN_HEIGHT;
 		blackBox1T->globalPosY = CameraSystem::posY;
 		blackBox2T->globalPosY = CameraSystem::posY + Globals::SCREEN_HEIGHT / 2;
-		wait(2, "open shades");
+		wait(1, "open shades");
 	}
 	if (curAction == "open shades") {
-
+		blackBox1T->height = 0;
+		blackBox2T->height = 0;
+		wait(3, "find action");
+	}
+	if (curAction == "find action") {
+		Transform* oldmanT = (Transform*)oldmanAI->owner->findComponent(ComponentType::TRANSFORM);
+		CameraSystem::moveCamera(CameraSystem::posX, oldmanT->globalPosY - Globals::SCREEN_HEIGHT/2, 1000);
+		curAction = "start walking";
 	}
 	if (curAction!= "camera moving 1") {
 		blackBox1T->globalPosX = CameraSystem::posX;
@@ -78,13 +85,33 @@ void EncounterScene::preFightScenario(float deltaTime) {
 	}
 	if (curAction == "start walking") {
 		Transform* oldmanT = (Transform*)oldmanAI->owner->findComponent(ComponentType::TRANSFORM);
-		CameraSystem::follow(&oldmanT->globalPosX, &oldmanT->globalPosY);
 		soldier2AI->walkTo(1150, 700, 80);
 		oldmanAI->walkTo(1080, 700, 80);
 		soldierAI->walkTo(1010, 700, 80);
 		curAction = "npcs walking";
 	}
 	if (curAction == "npcs walking") {
+		if (!CameraSystem::isCameraMoving() && !CameraSystem::isCameraFollowing()) {
+			Transform* oldmanT = (Transform*)oldmanAI->owner->findComponent(ComponentType::TRANSFORM);
+			CameraSystem::follow(&oldmanT->globalPosX, &oldmanT->globalPosY);
+			curAction = "shades close";
+		}
+	}
+	if (curAction == "shades close") {
+		if (blackBox1T->height == 0) {
+			blackBox1T->height = Globals::SCREEN_HEIGHT / 2 - 85;
+			blackBox2T->height = Globals::SCREEN_HEIGHT / 2 + 85;
+			blackBox1T->globalPosY = CameraSystem::posY - blackBox1T->height;
+			blackBox2T->globalPosY = CameraSystem::posY + Globals::SCREEN_HEIGHT;
+		}
+		if (CameraSystem::posY - blackBox1T->globalPosY > 0) {
+			blackBox1T->globalPosY += 300 * deltaTime;
+			blackBox2T->globalPosY -= 300 * deltaTime;
+		}
+		else {
+			blackBox1T->globalPosY = CameraSystem::posY;
+			blackBox2T->globalPosY = CameraSystem::posY + Globals::SCREEN_HEIGHT / 2 + 85;
+		}
 		if (!soldierAI->isWalking()) {
 			wait(2, "camera switch 1");
 		}
@@ -100,8 +127,8 @@ void EncounterScene::preFightScenario(float deltaTime) {
 		if (blackBox1T->height > 0) {
 			blackBox1T->globalPosX = CameraSystem::posX;
 			blackBox2T->globalPosX = CameraSystem::posX;
-			blackBox1T->globalPosY -= 150 * deltaTime;
-			blackBox2T->globalPosY += 150 * deltaTime;
+			blackBox1T->globalPosY -= 100 * deltaTime;
+			blackBox2T->globalPosY += 100 * deltaTime;
 		}
 		if (!CameraSystem::isCameraMoving()) {
 			blackBox1T->height = 0;
