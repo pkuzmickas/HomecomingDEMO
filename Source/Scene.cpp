@@ -15,12 +15,13 @@ void Scene::update(float deltaTime) {
 			nextAction = "";
 		}
 	}
+	DialogueSystem::update(deltaTime);
 }
 
 Scene::Scene(SDL_Renderer * renderer, Graphics * graphics) {
 	this->renderer = renderer;
 	this->graphics = graphics;
-	
+	dialogueBoxIMG = IMG_LoadTexture(renderer, ASSET_DIR UI_DIR "dialogueBox.png");
 }
 
 void Scene::createPlayer(int globalPosX, int globalPosY, PlayerAnimator::LookDirection lookDirection) {

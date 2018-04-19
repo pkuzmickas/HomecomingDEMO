@@ -58,8 +58,8 @@ void Director::update() {
 
 	
 	curScene->update(deltaTimeInSeconds);
-	
 	CameraSystem::update(deltaTimeInSeconds);
+	
 
 	Globals::GetFrameEvents().clear();
 }

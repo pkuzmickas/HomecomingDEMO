@@ -5,6 +5,7 @@
 #include "PlayerSystem.h"
 #include "SceneDesignSystem.h"
 #include "NPCSystem.h"
+#include "DialogueSystem.h"
 
 class Scene {
 public:
@@ -27,6 +28,8 @@ protected:
 	float waitTimePassed;
 	std::string nextAction;
 
+	// UI Textures that will be in every scene, think about refactoring to a separate class (UITextures?) (LoadUITextures()?)
+	SDL_Texture* dialogueBoxIMG;
 	
 
 };

@@ -4,6 +4,7 @@ EncounterScene::EncounterScene(SDL_Renderer * renderer, Graphics * graphics) : S
 	MapSystem::createMap(renderer, ASSET_DIR LEVEL_DIR "demoMap.tmx");
 	graphics->addMap(*MapSystem::getMap());
 	CameraSystem::setUp(MapSystem::getWidth(), MapSystem::getHeight()); // need to set up the camera right when the map is loaded
+	DialogueSystem::loadDialogues(ASSET_DIR DIALOGUE_DIR "FirstEncounter.xml");
 
 	setup();
 
