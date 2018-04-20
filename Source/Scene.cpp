@@ -3,6 +3,7 @@
 Scene::~Scene() {
 	if(player) delete player;
 	MapSystem::deleteMap();
+	DialogueSystem::cleanup();
 }
 
 void Scene::update(float deltaTime) {
@@ -21,7 +22,7 @@ void Scene::update(float deltaTime) {
 Scene::Scene(SDL_Renderer * renderer, Graphics * graphics) {
 	this->renderer = renderer;
 	this->graphics = graphics;
-	dialogueBoxIMG = IMG_LoadTexture(renderer, ASSET_DIR UI_DIR "dialogueBox.png");
+	DialogueSystem::setup(IMG_LoadTexture(renderer, ASSET_DIR UI_DIR "dialogueBox.png"));
 }
 
 void Scene::createPlayer(int globalPosX, int globalPosY, PlayerAnimator::LookDirection lookDirection) {

@@ -1,7 +1,20 @@
 #include "DialogueSystem.h"
 
-unordered_map<string, vector<Talkable::Dialogue>> DialogueSystem::dialogues;
+unordered_map<string, Talkable::Dialogue> DialogueSystem::dialogues;
 unordered_map<string, DialogueSystem::Actor> DialogueSystem::actors;
+SDL_Texture* DialogueSystem::dialogueBoxIMG = NULL;
+bool DialogueSystem::setuped = false;
+bool DialogueSystem::open = false;
+
+void DialogueSystem::setup(SDL_Texture * dialogueBox) {
+	if (!setuped) {
+		setuped = true;
+		dialogueBoxIMG = dialogueBox;
+	}
+	else {
+		cout << "Dialogue system is already setup?" << endl;
+	}
+}
 
 void DialogueSystem::loadDialogues(std::string filePath) {
 	ifstream theFile(filePath);
@@ -28,28 +41,48 @@ void DialogueSystem::loadDialogues(std::string filePath) {
 	}
 	node = root_node->next_sibling();
 	while (node) {
-		string speakerID = (string)node->first_attribute("speaker")->value();
-		string sentence = (string)node->value();
-		Talkable::Dialogue dialogue(sentence);
-		dialogues[speakerID].push_back(dialogue);
+		std::string dialogueID = node->first_attribute("id")->value();
+		xml_node<>* textNode = root_node->first_node("text");
+		std::vector<Talkable::Text> texts;
+		while (textNode) {
+			string speakerID = (string)textNode->first_attribute("speaker")->value();
+			string sentence = (string)textNode->value();
+			Talkable::Text text(sentence, speakerID);
+			texts.push_back(text);
+			textNode = textNode->next_sibling();
+		}
+		Talkable::Dialogue dialogue(texts, dialogueID);
+		dialogues[dialogueID] = dialogue;
 		node = node->next_sibling();
 	}
 }
 
-Entity * DialogueSystem::createDialogueBox(SDL_Texture* dialogueIMG)
+Entity * DialogueSystem::createDialogueBox()
 {
 	Entity* dialBox = new Entity();
 	Transform* transform = new Transform(dialBox, Globals::SCREEN_WIDTH, Globals::SCREEN_HEIGHT / 4, CameraSystem::posX, CameraSystem::posY + Globals::SCREEN_HEIGHT - Globals::SCREEN_HEIGHT / 4);
 	dialBox->addComponent(transform);
-	Drawable* drawable = new Drawable(dialBox, dialogueIMG, "dialogueBox", Globals::Layers::UI);
+	Drawable* drawable = new Drawable(dialBox, dialogueBoxIMG, "dialogueBox", Globals::Layers::UI);
 	dialBox->addComponent(drawable);
 	return dialBox;
 }
 
-Entity * DialogueSystem::closeDialogueBox()
-{
-	return nullptr;
+void DialogueSystem::openDialogueBox() {
+	open = true;
+}
+
+void DialogueSystem::closeDialogueBox() {
+	open = false;
 }
 
 void DialogueSystem::update(float deltaTime) {
+}
+
+void DialogueSystem::cleanup() {
+	if (setuped) {
+		dialogues.clear();
+		actors.clear();
+		SDL_DestroyTexture(dialogueBoxIMG);
+		setuped = false;
+	}
 }

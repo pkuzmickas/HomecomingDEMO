@@ -112,18 +112,25 @@ public:
 	}
 };
 
+// For game objects that when interacted - start a dialogue
 class Talkable : public Component {
 public:
+	struct Text {
+		std::string text = "";
+		std::string speakerID;
+		Text(std::string text, std::string speakerID) { this->text = text; this->speakerID = speakerID; };
+	};
 	struct Dialogue {
-		std::string sentence = "";
-		bool wasSaid = false;
-		Dialogue(std::string sentence) { this->sentence = sentence; };
+		std::vector<Text> dialogue;
+		std::string ID;
+		Dialogue() {};
+		Dialogue(std::vector<Text> dialogue, std::string dialogueID) { this->dialogue = dialogue; ID = dialogueID; };
 	};
 	std::vector<Dialogue> dialogues;
-	std::string speakerName;
-	Talkable(Entity* owner, std::string speakerName, std::vector<Dialogue> dialogues) : Component(owner) {
+	
+	int lastDialogue = 0;
+	Talkable(Entity* owner, std::vector<Dialogue> dialogues) : Component(owner) {
 		type = TALKABLE;
-		this->speakerName = speakerName;
 		this->dialogues = dialogues;
 	}
 };

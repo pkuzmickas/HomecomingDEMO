@@ -1,12 +1,11 @@
 #pragma once
-#include "Entity.h"
 #include "Movement.h"
 #include "PlayerStats.h"
 #include "PlayerInput.h"
 #include "PlayerMovement.h"
 #include "PlayerAnimator.h"
-#include "MapSystem.h"
 #include "Graphics.h"
+#include "DialogueSystem.h"
 
 class PlayerSystem {
 public:

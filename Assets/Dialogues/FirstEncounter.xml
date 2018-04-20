@@ -3,9 +3,11 @@
         <actor id="oldman" img="Assets/Characters/Portraits/OldMan.png" name="Old Man" />
         <actor id="soldier" img="Assets/Characters/Portraits/Soldier.png" name="Soldier" />
 </actors>
-<dialogue speaker="soldier">You there! Move out of the way!</dialogue>
-<dialogue speaker="morgan">It's been a while, old man.</dialogue>
-<dialogue speaker="oldman">Am I supposed to know you?</dialogue>
-<dialogue speaker="soldier">I repeat, move out of the way or there will be consequences.</dialogue>
-<dialogue speaker="morgan">What did you do to Elly, old man?</dialogue>
-<dialogue speaker="oldman">What?! I have had enough of this, kill him!</dialogue>
+<dialogue id="pre-fight dialogue">
+	<text speaker="soldier">You there! Move out of the way!</text>
+	<text speaker="morgan">It's been a while, old man.</dialogue>
+	<text speaker="oldman">Am I supposed to know you?</dialogue>
+	<text speaker="soldier">I repeat, move out of the way or there will be consequences.</dialogue>
+	<text speaker="morgan">What did you do to Elly, old man?</dialogue>
+	<text speaker="oldman">What?! I have had enough of this, kill him!</dialogue>
+</dialogue>

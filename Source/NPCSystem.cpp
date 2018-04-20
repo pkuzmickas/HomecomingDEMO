@@ -1,6 +1,6 @@
 #include "NPCSystem.h"
 
-Entity* NPCSystem::createNPC(int posX, int posY, int width, int height, Globals::Layers layer, SDL_Texture * texture, std::string spriteName, Abilities * abilities, Talkable * talkable) {
+Entity* NPCSystem::createNPC(int posX, int posY, int width, int height, Globals::Layers layer, SDL_Texture * texture, std::string spriteName, std::string* speakerID, Abilities* abilities) {
 	Entity* npc = new Entity();
 	Transform* transform = new Transform(npc, width, height, posX, posY);
 	npc->addComponent(transform);
@@ -27,8 +27,12 @@ Entity* NPCSystem::createNPC(int posX, int posY, int width, int height, Globals:
 	animator->addAnimation(walkingr);
 	Animator::Animation walkingu("walking3", { 9, 10, 11, 10 }, walkAnimSpeed, false);
 	animator->addAnimation(walkingu);
-
 	AIComponent* ai = new AIComponent(npc);
 	npc->addComponent(ai);
+	// TODO DIALOGUE IMPLEMENTATION FOR STATIC AI
+	/*if (speakerID) { 
+		Talkable* talkable = new Talkable(,);
+		npc->addComponent(talkable);
+	}*/
 	return npc;
 }
