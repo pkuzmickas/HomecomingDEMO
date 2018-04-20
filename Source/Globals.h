@@ -13,6 +13,7 @@ The names should be self explanatory and if not, should be changed to be so
 #define LEVEL_DIR "Levels/"
 #define DIALOGUE_DIR "Dialogues/"
 #define UI_DIR "UI/"
+#define PORTRAIT_DIR "Portraits/"
 
 class Globals {
 

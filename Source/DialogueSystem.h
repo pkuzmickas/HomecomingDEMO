@@ -6,6 +6,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include "Entity.h"
+#include "Graphics.h"
 
 using namespace std;
 using namespace rapidxml;
@@ -15,12 +16,12 @@ public:
 		string imgPath;
 		string name;
 	};
-	static void setup(SDL_Texture* dialogueBox);
+	static void setup(Graphics* graphics, SDL_Renderer* renderer);
 	static void loadDialogues(std::string filePath);
 	static unordered_map<string, Talkable::Dialogue> dialogues;
 	static unordered_map<string, Actor> actors;
 	// TODO create an OpenDialogue(all data and ^) then CloseDialogue or sth :)
-	static void openDialogueBox();
+	static void openDialogueBox(string dialogueID);
 	static void closeDialogueBox();
 	static void update(float deltaTime);
 	static void cleanup();
@@ -28,10 +29,17 @@ public:
 private:
 	DialogueSystem();
 	static Entity* createDialogueBox();
+	static Entity* createSpeakerIMG(std::string speakerID);
 	static bool setuped;
 	static bool open;
-	static SDL_Texture* dialogueBoxIMG;
-
+	static SDL_Texture* dialogueBoxTexture;
+	static Graphics* graphics;
+	static Entity* dialogueBox;
+	static Entity* speakerIMG;
+	static Transform* dialogueBoxTransform;
+	static Transform* speakerIMGTransform;
+	static SDL_Texture* speakerIMGTexture;
+	static SDL_Renderer* renderer;
 	
 
 	 

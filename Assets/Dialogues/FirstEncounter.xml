@@ -3,7 +3,7 @@
         <actor id="oldman" img="Assets/Characters/Portraits/OldMan.png" name="Old Man" />
         <actor id="soldier" img="Assets/Characters/Portraits/Soldier.png" name="Soldier" />
 </actors>
-<dialogue id="pre-fight dialogue">
+<dialogue id="pre-fight">
 	<text speaker="soldier">You there! Move out of the way!</text>
 	<text speaker="morgan">It's been a while, old man.</dialogue>
 	<text speaker="oldman">Am I supposed to know you?</dialogue>
