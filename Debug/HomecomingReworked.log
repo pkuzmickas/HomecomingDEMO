@@ -1,33 +1,8 @@
-﻿  SceneDesignSystem.cpp
-  Scene.cpp
-p:\programming\homecomingdemo\source\scene.cpp(34): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-  PlayerSystem.cpp
-  PlayerMovement.cpp
-  PlayerInput.cpp
-  PathfindingSystem.cpp
-  NPCSystem.cpp
-  Movement.cpp
-  MapSystem.cpp
-  main.cpp
-  Graphics.cpp
-  EncounterScene.cpp
-p:\programming\homecomingdemo\source\encounterscene.cpp(54): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-p:\programming\homecomingdemo\source\encounterscene.cpp(55): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-p:\programming\homecomingdemo\source\encounterscene.cpp(56): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-p:\programming\homecomingdemo\source\encounterscene.cpp(81): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-p:\programming\homecomingdemo\source\encounterscene.cpp(87): warning C4018: '>': signed/unsigned mismatch
-p:\programming\homecomingdemo\source\encounterscene.cpp(90): warning C4018: '>': signed/unsigned mismatch
-p:\programming\homecomingdemo\source\encounterscene.cpp(111): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-p:\programming\homecomingdemo\source\encounterscene.cpp(154): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-p:\programming\homecomingdemo\source\encounterscene.cpp(174): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-  Entity.cpp
-  Director.cpp
-  CollisionSystem.cpp
-  CameraSystem.cpp
-p:\programming\homecomingdemo\source\camerasystem.cpp(50): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-  Animator.cpp
-  AIComponent.cpp
-p:\programming\homecomingdemo\source\aicomponent.cpp(17): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-p:\programming\homecomingdemo\source\aicomponent.cpp(18): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-  Generating Code...
+﻿  DialogueSystem.cpp
+p:\programming\homecomingdemo\source\dialoguesystem.cpp(119): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+p:\programming\homecomingdemo\source\dialoguesystem.cpp(132): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+p:\programming\homecomingdemo\source\dialoguesystem.cpp(183): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+p:\programming\homecomingdemo\source\dialoguesystem.cpp(184): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+p:\programming\homecomingdemo\source\dialoguesystem.cpp(186): warning C4018: '>': signed/unsigned mismatch
+p:\programming\homecomingdemo\source\dialoguesystem.cpp(199): warning C4018: '>': signed/unsigned mismatch
   HomecomingReworked.vcxproj -> P:\Programming\HomecomingDEMO\Debug\HomecomingReworked.exe

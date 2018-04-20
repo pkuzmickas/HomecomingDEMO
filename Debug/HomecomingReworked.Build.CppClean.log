@@ -4,6 +4,7 @@ p:\programming\homecomingdemo\debug\aicomponent.obj
 p:\programming\homecomingdemo\debug\animator.obj
 p:\programming\homecomingdemo\debug\camerasystem.obj
 p:\programming\homecomingdemo\debug\collisionsystem.obj
+p:\programming\homecomingdemo\debug\dialoguesystem.obj
 p:\programming\homecomingdemo\debug\director.obj
 p:\programming\homecomingdemo\debug\entity.obj
 p:\programming\homecomingdemo\debug\encounterscene.obj
@@ -18,8 +19,8 @@ p:\programming\homecomingdemo\debug\playermovement.obj
 p:\programming\homecomingdemo\debug\playersystem.obj
 p:\programming\homecomingdemo\debug\scene.obj
 p:\programming\homecomingdemo\debug\scenedesignsystem.obj
-p:\programming\homecomingdemo\debug\homecomingreworked.exe
 p:\programming\homecomingdemo\debug\homecomingreworked.ilk
+p:\programming\homecomingdemo\debug\homecomingreworked.exe
 p:\programming\homecomingdemo\debug\homecomingreworked.pdb
 p:\programming\homecomingdemo\debug\homecomi.ee62b015.tlog\cl.command.1.tlog
 p:\programming\homecomingdemo\debug\homecomi.ee62b015.tlog\cl.read.1.tlog

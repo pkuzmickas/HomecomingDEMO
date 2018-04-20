@@ -122,6 +122,7 @@
     <ClCompile Include="Source\Animator.cpp" />
     <ClCompile Include="Source\CameraSystem.cpp" />
     <ClCompile Include="Source\CollisionSystem.cpp" />
+    <ClCompile Include="Source\DialogueSystem.cpp" />
     <ClCompile Include="Source\Director.cpp" />
     <ClCompile Include="Source\Entity.cpp" />
     <ClCompile Include="Source\EncounterScene.cpp" />
@@ -143,6 +144,7 @@
     <ClInclude Include="Source\Collider.h" />
     <ClInclude Include="Source\CollisionSystem.h" />
     <ClInclude Include="Source\Component.h" />
+    <ClInclude Include="Source\DialogueSystem.h" />
     <ClInclude Include="Source\EncounterScene.h" />
     <ClInclude Include="Source\Globals.h" />
     <ClInclude Include="Source\Director.h" />

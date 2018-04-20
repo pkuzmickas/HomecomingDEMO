@@ -5,8 +5,8 @@
 #include <unordered_map>
 #include <SDL.h>
 #include <SDL_image.h>
-#include "Entity.h"
 #include "Graphics.h"
+#include "SceneDesignSystem.h"
 
 using namespace std;
 using namespace rapidxml;
@@ -20,27 +20,40 @@ public:
 	static void loadDialogues(std::string filePath);
 	static unordered_map<string, Talkable::Dialogue> dialogues;
 	static unordered_map<string, Actor> actors;
-	// TODO create an OpenDialogue(all data and ^) then CloseDialogue or sth :)
 	static void openDialogueBox(string dialogueID);
 	static void closeDialogueBox();
 	static void update(float deltaTime);
 	static void cleanup();
 	static bool isOpen() { return open; }
+	static int dialogueSpeed;
 private:
 	DialogueSystem();
+	static void getInput();
 	static Entity* createDialogueBox();
 	static Entity* createSpeakerIMG(std::string speakerID);
 	static bool setuped;
 	static bool open;
+	static bool animating;
+	static bool endReached;
 	static SDL_Texture* dialogueBoxTexture;
 	static Graphics* graphics;
 	static Entity* dialogueBox;
 	static Entity* speakerIMG;
+	static Entity* speakerName;
+	static Entity* dialogueText;
 	static Transform* dialogueBoxTransform;
 	static Transform* speakerIMGTransform;
+	static Transform* speakerNameTransform;
+	static Transform* dialogueTextTransform;
 	static SDL_Texture* speakerIMGTexture;
+	static Drawable* dialogueTextDrawable;
 	static SDL_Renderer* renderer;
-	
-
+	static int textHeight;
+	static int textWidth;
+	static int curLetter;
+	static int lastTimeChecked;
+	static string curDialogueID;
+	static int curDialogueTextIndex;
+	static int fontSize;
 	 
 };

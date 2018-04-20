@@ -1,9 +1,12 @@
 #include "SceneDesignSystem.h"
 
 int SceneDesignSystem::treesSpawned = 0;
-TTF_Font* SceneDesignSystem::textFont = NULL;
-Entity* SceneDesignSystem::curText = NULL;
-SDL_Texture* SceneDesignSystem::curTextTexture = NULL;
+
+void SceneDesignSystem::checkFontSizeOnText(std::string text, int fontSize, int * width, int * height) {
+	TTF_Font* temp = TTF_OpenFont(ASSET_DIR FONT_PATH, fontSize);
+	TTF_SizeText(temp, text.c_str(), width, height); 
+	TTF_CloseFont(temp);
+}
 
 Entity* SceneDesignSystem::createTree(int posX, int posY, Globals::Layers layer, SDL_Texture * texture) {
 	Entity* tree = new Entity();
@@ -43,31 +46,25 @@ Entity * SceneDesignSystem::createRect(int posX, int posY, int width, int height
 
 Entity * SceneDesignSystem::createText(std::string text, int posX, int posY, int fontSize, SDL_Color color, Globals::Layers layer, SDL_Renderer* renderer)
 {
-	textFont = TTF_OpenFont(ASSET_DIR "Fonts/bgothm.ttf", fontSize);
+	TTF_Font* textFont = TTF_OpenFont(ASSET_DIR FONT_PATH, fontSize);
 	SDL_Surface* textSurface = TTF_RenderText_Solid(textFont, text.c_str(), color);
 	SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
 	SDL_FreeSurface(textSurface);
+	TTF_CloseFont(textFont);
 	Entity* textEntity = new Entity();
-	curText = textEntity;
 	Transform* transform = new Transform(textEntity, textSurface->w, textSurface->h, posX, posY);
 	textEntity->addComponent(transform);
 	Drawable* drawable = new Drawable(textEntity, textTexture, "textDesign", layer);
-	curTextTexture = textTexture;
 	textEntity->addComponent(drawable);
 	return textEntity;
 }
 
-void SceneDesignSystem::cleanupText() {
-	if (curText) {
-		delete curText;
-		curText = NULL;
+void SceneDesignSystem::cleanupText(Entity* text) {
+	if (text) {
+		SDL_Texture* texture = ((Drawable*)text->findComponent(ComponentType::DRAWABLE))->image;
+		SDL_DestroyTexture(texture);
+		delete text;
+		text = NULL;
 	}
-	if (textFont) {
-		TTF_CloseFont(textFont);
-		textFont = NULL;
-	}
-	if (curTextTexture) {
-		SDL_DestroyTexture(curTextTexture);
-		curTextTexture = NULL;
-	}
+	
 }

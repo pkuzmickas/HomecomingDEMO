@@ -72,18 +72,12 @@ void EncounterScene::preFightScenario(float deltaTime) {
 		if (textProgress > 1) {
 			graphics->removeFromDraw(textEntity);
 		}
-		SceneDesignSystem::cleanupText();
+		SceneDesignSystem::cleanupText(textEntity);
+		int fontSize = 50;
 		string text = introText.substr(0, textProgress);
 		int totalTextWidth, textHeight;
-		TTF_SizeText(SceneDesignSystem::textFont, introText.c_str(), &totalTextWidth, &textHeight); // write some kind of a getter
-		/*textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-		SDL_FreeSurface(textSurface);
-		textEntity = new Entity();
-		Transform* transform = new Transform(textEntity, textSurface->w, textSurface->h, CameraSystem::posX + Globals::SCREEN_WIDTH / 2 - totalTextWidth / 2, CameraSystem::posY + Globals::SCREEN_HEIGHT / 2 - textSurface->h / 2);
-		textEntity->addComponent(transform);
-		Drawable* drawable = new Drawable(textEntity, textTexture, "introText", Globals::Layers::UI);
-		textEntity->addComponent(drawable);*/
-		textEntity = SceneDesignSystem::createText(text, CameraSystem::posX + Globals::SCREEN_WIDTH / 2 - totalTextWidth / 2, CameraSystem::posY + Globals::SCREEN_HEIGHT / 2 - textHeight / 2, 50, { 255,255,255,0xFF }, Globals::Layers::UI, renderer);
+		SceneDesignSystem::checkFontSizeOnText(introText, fontSize, &totalTextWidth, &textHeight);
+		textEntity = SceneDesignSystem::createText(text, CameraSystem::posX + Globals::SCREEN_WIDTH / 2 - totalTextWidth / 2, CameraSystem::posY + Globals::SCREEN_HEIGHT / 2 - textHeight / 2, fontSize, { 255,255,255,0xFF }, Globals::Layers::UI, renderer);
 		textTexture = ((Drawable*)textEntity->findComponent(ComponentType::DRAWABLE))->image;
 		graphics->addToDraw(textEntity);
 		textProgress++;
@@ -99,7 +93,7 @@ void EncounterScene::preFightScenario(float deltaTime) {
 	}
 	if (curAction == "delete text") {
 		graphics->removeFromDraw(textEntity);
-		SceneDesignSystem::cleanupText();
+		SceneDesignSystem::cleanupText(textEntity);
 		wait(2, "open shades");
 	}
 	if (curAction == "open shades") {
