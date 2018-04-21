@@ -6,7 +6,6 @@ SDL_Texture* DialogueSystem::dialogueBoxTexture = NULL;
 bool DialogueSystem::setuped = false;
 bool DialogueSystem::open = false;
 bool DialogueSystem::animating = false;
-bool DialogueSystem::endReached = false;
 Graphics* DialogueSystem::graphics = NULL;
 Entity* DialogueSystem::dialogueBox = NULL;
 Transform* DialogueSystem::dialogueBoxTransform = NULL;
@@ -34,7 +33,7 @@ void DialogueSystem::setup(Graphics* graphics, SDL_Renderer* renderer) {
 		setuped = true;
 		DialogueSystem::renderer = renderer;
 		dialogueBoxTexture = IMG_LoadTexture(renderer, ASSET_DIR UI_DIR "dialogueBox.png");
-		DialogueSystem::graphics = graphics; 
+		DialogueSystem::graphics = graphics;
 		DialogueSystem::dialogueBox = createDialogueBox();
 	}
 	else {
@@ -94,23 +93,62 @@ void DialogueSystem::getInput() {
 				dialogueSpeed = 0;
 			}
 			else {
-				if (!endReached) {
-					curDialogueTextIndex++;
-					if (curDialogueTextIndex == dialogues[curDialogueID].dialogue.size()) {
-						curDialogueTextIndex = 0;
-						endReached = true;
-					}
-				}
-				else {
+				dialogueSpeed = 50;
+				curDialogueTextIndex++;
+				if (curDialogueTextIndex == dialogues[curDialogueID].dialogue.size()) {
+					curDialogueTextIndex = 0;
 					closeDialogueBox();
 				}
+				else {
+					switchDialogue();
+				}
+
 			}
 
 
 		}
-						  break;
+								  break;
 		}
 	}
+}
+
+void DialogueSystem::switchDialogue() {
+	cleanupDialogue();
+	
+	initDialogue();
+	
+}
+
+void DialogueSystem::initDialogue() {
+	speakerIMG = createSpeakerIMG(dialogues[curDialogueID].dialogue[curDialogueTextIndex].speakerID);
+	graphics->addToDraw(speakerIMG);
+	std::string speakerNameText = actors[dialogues[curDialogueID].dialogue[curDialogueTextIndex].speakerID].name;
+	SceneDesignSystem::checkFontSizeOnText(speakerNameText, fontSize, &textWidth, &textHeight);
+	speakerName = SceneDesignSystem::createText(speakerNameText, 0, 0, fontSize, { 237, 220, 188, 0xFF }, Globals::Layers::UI, renderer);
+	speakerNameTransform = (Transform*)speakerName->findComponent(ComponentType::TRANSFORM);
+	graphics->addToDraw(speakerName);
+
+	std::string dialText = dialogues[curDialogueID].dialogue[curDialogueTextIndex].text.substr(0, curLetter);
+	dialogueText = SceneDesignSystem::createText(dialText, 0, 0, fontSize, { 126, 58, 37, 0xFF }, Globals::Layers::UI, renderer);
+	dialogueTextTransform = (Transform*)dialogueText->findComponent(ComponentType::TRANSFORM);
+	dialogueTextDrawable = (Drawable*)dialogueText->findComponent(ComponentType::DRAWABLE);
+	graphics->addToDraw(dialogueText);
+
+	animating = true;
+}
+
+void DialogueSystem::cleanupDialogue() {
+	graphics->removeFromDraw(speakerIMG);
+	graphics->removeFromDraw(speakerName);
+	graphics->removeFromDraw(dialogueText);
+	delete speakerIMG;
+	speakerIMG = NULL;
+	SDL_DestroyTexture(speakerIMGTexture);
+	speakerIMGTexture = NULL;
+	SceneDesignSystem::cleanupText(speakerName);
+	speakerName = NULL;
+	SceneDesignSystem::cleanupText(dialogueText);
+	dialogueText = NULL;
 }
 
 Entity * DialogueSystem::createDialogueBox()
@@ -129,7 +167,7 @@ Entity * DialogueSystem::createSpeakerIMG(std::string speakerID) {
 	//60 x 39
 	if (speakerIMGTexture) SDL_DestroyTexture(speakerIMGTexture);
 	speakerIMGTexture = IMG_LoadTexture(renderer, actors[speakerID].imgPath.c_str());
-	Transform* transform = new Transform(speaker, dialogueBoxTransform->width/6.55f, dialogueBoxTransform->height/1.61f, 0, 0);
+	Transform* transform = new Transform(speaker, dialogueBoxTransform->width / 6.55f, dialogueBoxTransform->height / 1.61f, 0, 0);
 	speakerIMGTransform = transform;
 	speaker->addComponent(transform);
 	Drawable* drawable = new Drawable(speaker, speakerIMGTexture, "speakerIMG", Globals::Layers::UI);
@@ -138,37 +176,27 @@ Entity * DialogueSystem::createSpeakerIMG(std::string speakerID) {
 }
 
 void DialogueSystem::openDialogueBox(string dialogueID) {
-	open = true;
-	curDialogueID = dialogueID;
+	if (!open) {
+		open = true;
+		curDialogueID = dialogueID;
 
-	graphics->addToDraw(dialogueBox);
+		graphics->addToDraw(dialogueBox);
 
-	speakerIMG = createSpeakerIMG(dialogues[dialogueID].dialogue[curDialogueTextIndex].speakerID);
-	graphics->addToDraw(speakerIMG);
-	
+		//780
+		initDialogue();
 
-	std::string speakerNameText = actors[dialogues[dialogueID].dialogue[curDialogueTextIndex].speakerID].name;
-	SceneDesignSystem::checkFontSizeOnText(speakerNameText, fontSize, &textWidth, &textHeight);
-	speakerName = SceneDesignSystem::createText(speakerNameText, 0, 0, fontSize, { 237, 220, 188, 0xFF }, Globals::Layers::UI, renderer);
-	speakerNameTransform = (Transform*)speakerName->findComponent(ComponentType::TRANSFORM);
-	graphics->addToDraw(speakerName);
-
-	std::string dialText = dialogues[dialogueID].dialogue[curDialogueTextIndex].text.substr(0, curLetter);
-	dialogueText = SceneDesignSystem::createText(dialText, 0, 0, fontSize, { 126, 58, 37, 0xFF }, Globals::Layers::UI, renderer);
-	dialogueTextTransform = (Transform*)dialogueText->findComponent(ComponentType::TRANSFORM);
-	dialogueTextDrawable = (Drawable*)dialogueText->findComponent(ComponentType::DRAWABLE);
-	graphics->addToDraw(dialogueText);
-
-	animating = true;
-
+		animating = true;
+	}
+	else {
+		cout << "DIALOGUE BOX ALREADY OPEN!" << endl;
+	}
 }
 
 void DialogueSystem::closeDialogueBox() {
 	open = false;
 	graphics->removeFromDraw(dialogueBox);
-	graphics->removeFromDraw(speakerIMG);
-	graphics->removeFromDraw(dialogueText);
-	//TODO check if everything is cleaned up properly in cleanup() and write a switchDialogue() to switch to the next text
+	cleanupDialogue();
+	
 }
 
 void DialogueSystem::update(float deltaTime) {
@@ -188,7 +216,7 @@ void DialogueSystem::update(float deltaTime) {
 			SDL_DestroyTexture(dialogueTextDrawable->image);
 			std::string dialText = dialogues[curDialogueID].dialogue[curDialogueTextIndex].text.substr(0, curLetter);
 			TTF_Font* font = TTF_OpenFont(ASSET_DIR FONT_PATH, fontSize);
-			SDL_Surface* textSurface = TTF_RenderText_Solid(font, dialText.c_str(), { 126, 58, 37, 0xFF });
+			SDL_Surface* textSurface = TTF_RenderText_Blended_Wrapped(font, dialText.c_str(), { 126, 58, 37, 0xFF }, dialogueBoxTransform->width / 2);
 			SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
 			dialogueTextDrawable->image = textTexture;
 			dialogueTextTransform->width = textSurface->w;
@@ -211,7 +239,7 @@ void DialogueSystem::cleanup() {
 		dialogues.clear();
 		actors.clear();
 		SDL_DestroyTexture(dialogueBoxTexture);
-		
+
 		if (dialogueBox) delete dialogueBox;
 		if (speakerIMGTexture) {
 			SDL_DestroyTexture(speakerIMGTexture);

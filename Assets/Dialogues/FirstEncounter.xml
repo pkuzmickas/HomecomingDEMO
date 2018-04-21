@@ -5,9 +5,9 @@
 </actors>
 <dialogue id="pre-fight">
 	<text speaker="soldier">You there! Move out of the way!</text>
-	<text speaker="morgan">It's been a while, old man.</dialogue>
-	<text speaker="oldman">Am I supposed to know you?</dialogue>
-	<text speaker="soldier">I repeat, move out of the way or there will be consequences.</dialogue>
-	<text speaker="morgan">What did you do to Elly, old man?</dialogue>
-	<text speaker="oldman">What?! I have had enough of this, kill him!</dialogue>
+	<text speaker="morgan">It's been a while, old man.</text>
+	<text speaker="oldman">Am I supposed to know you?</text>
+	<text speaker="soldier">I repeat, move out of the way or there will be consequences.</text>
+	<text speaker="morgan">What did you do to Elly, old man?</text>
+	<text speaker="oldman">What?! I have had enough of this, kill him!</text>
 </dialogue>

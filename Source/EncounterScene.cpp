@@ -63,29 +63,40 @@ void EncounterScene::setup() {
 	entities.push_back(blackBox2);
 	
 	wait(2, "intro text");
-	DialogueSystem::openDialogueBox("pre-fight");
 }
 
 void EncounterScene::preFightScenario(float deltaTime) {
 	if (curAction == "intro text") {
-		//cleanup
-		if (textProgress > 1) {
-			graphics->removeFromDraw(textEntity);
-		}
-		SceneDesignSystem::cleanupText(textEntity);
 		int fontSize = 50;
-		string text = introText.substr(0, textProgress);
-		int totalTextWidth, textHeight;
-		SceneDesignSystem::checkFontSizeOnText(introText, fontSize, &totalTextWidth, &textHeight);
-		textEntity = SceneDesignSystem::createText(text, CameraSystem::posX + Globals::SCREEN_WIDTH / 2 - totalTextWidth / 2, CameraSystem::posY + Globals::SCREEN_HEIGHT / 2 - textHeight / 2, fontSize, { 255,255,255,0xFF }, Globals::Layers::UI, renderer);
-		textTexture = ((Drawable*)textEntity->findComponent(ComponentType::DRAWABLE))->image;
-		graphics->addToDraw(textEntity);
-		textProgress++;
+		if (textProgress > 1) {
+			SDL_DestroyTexture(textTexture);
+			string text = introText.substr(0, textProgress);
+			TTF_Font* font = TTF_OpenFont(ASSET_DIR FONT_PATH, fontSize);
+			SDL_Surface* textSurface = TTF_RenderText_Blended(font, text.c_str(), { 255, 255, 255, 0xFF });
+			SDL_Texture* textTexturee = SDL_CreateTextureFromSurface(renderer, textSurface);
+			Drawable* drawable = (Drawable*)textEntity->findComponent(ComponentType::DRAWABLE);
+			drawable->image = textTexturee;
+			textTexture = drawable->image;
+			Transform* transform = (Transform*)textEntity->findComponent(ComponentType::TRANSFORM);
+			transform->width = textSurface->w;
+			transform->height = textSurface->h;
+			SDL_FreeSurface(textSurface);
+			TTF_CloseFont(font);
+			textProgress++;
+		}
+		else {
+			string text = introText.substr(0, textProgress);
+			int totalTextWidth, textHeight;
+			SceneDesignSystem::checkFontSizeOnText(introText, fontSize, &totalTextWidth, &textHeight);
+			textEntity = SceneDesignSystem::createText(text, CameraSystem::posX + Globals::SCREEN_WIDTH / 2 - totalTextWidth / 2, CameraSystem::posY + Globals::SCREEN_HEIGHT / 2 - textHeight / 2, fontSize, { 255,255,255,0xFF }, Globals::Layers::UI, renderer);
+			textTexture = ((Drawable*)textEntity->findComponent(ComponentType::DRAWABLE))->image;
+			graphics->addToDraw(textEntity);
+			textProgress++;
+		}
+		
+
 		if (textProgress > introText.length()) {
 			wait(2, "delete text");
-		}
-		else if (textProgress > introText.length() - 3) {
-			wait(1, "intro text");
 		}
 		else {
 			wait(0.2f, "intro text");
@@ -161,13 +172,17 @@ void EncounterScene::preFightScenario(float deltaTime) {
 		if (!CameraSystem::isCameraMoving()) {
 			blackBox1T->height = 0;
 			blackBox2T->height = 0;
-			// DIALOGUE HAPPENS HERE
 			DialogueSystem::openDialogueBox("pre-fight");
-			wait(5, "move camera to player");
+			curAction = "dialogue";
+		}
+	}
+	if (curAction == "dialogue") {
+		if (!DialogueSystem::isOpen()) {
+			curAction = "move camera to player";
 		}
 	}
 	if (curAction == "move camera to player") {
-		DialogueSystem::closeDialogueBox();
+		//DialogueSystem::closeDialogueBox();
 		Transform* playerTransform = (Transform*)(player->findComponent(ComponentType::TRANSFORM));
 		CameraSystem::moveCamera(playerTransform->globalPosX - Globals::SCREEN_WIDTH / 2, CameraSystem::posY, 400);
 		curAction = "camera moving 2";

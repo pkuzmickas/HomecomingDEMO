@@ -47,7 +47,7 @@ Entity * SceneDesignSystem::createRect(int posX, int posY, int width, int height
 Entity * SceneDesignSystem::createText(std::string text, int posX, int posY, int fontSize, SDL_Color color, Globals::Layers layer, SDL_Renderer* renderer)
 {
 	TTF_Font* textFont = TTF_OpenFont(ASSET_DIR FONT_PATH, fontSize);
-	SDL_Surface* textSurface = TTF_RenderText_Solid(textFont, text.c_str(), color);
+	SDL_Surface* textSurface = TTF_RenderText_Blended(textFont, text.c_str(), color);
 	SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
 	SDL_FreeSurface(textSurface);
 	TTF_CloseFont(textFont);

@@ -23,18 +23,23 @@ public:
 	static void openDialogueBox(string dialogueID);
 	static void closeDialogueBox();
 	static void update(float deltaTime);
+	// To be called when closing the game
 	static void cleanup();
 	static bool isOpen() { return open; }
 	static int dialogueSpeed;
 private:
 	DialogueSystem();
 	static void getInput();
+	// Switches to the next dialogue text
+	static void switchDialogue();
+	static void initDialogue();
+	// Deletes everything except the dialogue box entity
+	static void cleanupDialogue();
 	static Entity* createDialogueBox();
 	static Entity* createSpeakerIMG(std::string speakerID);
 	static bool setuped;
 	static bool open;
 	static bool animating;
-	static bool endReached;
 	static SDL_Texture* dialogueBoxTexture;
 	static Graphics* graphics;
 	static Entity* dialogueBox;
