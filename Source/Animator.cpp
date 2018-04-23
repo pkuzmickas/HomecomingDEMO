@@ -40,7 +40,13 @@ void Animator::update(float deltaTime) {
 			if (nextSeqID < (int)curAnim.spriteSequence.size()) {
 				elapsedTime = SDL_GetTicks();
 				int spriteNr = curAnim.spriteSequence[nextSeqID++];
-				int spritesInRow = curSSW / curSrcRect->w;
+				int spritesInRow;
+				if (curAnim.spritesInRow == 0) {
+					spritesInRow = curSSW / curSrcRect->w;
+				}
+				else {
+					spritesInRow = curAnim.spritesInRow;
+				}
 				curSrcRect->x = (spriteNr % spritesInRow) * curSrcRect->w;
 				curSrcRect->y = (spriteNr / spritesInRow) * curSrcRect->h;
 			}

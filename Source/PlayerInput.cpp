@@ -5,7 +5,7 @@ PlayerInput::PlayerInput(Entity* owner) : Input(owner) {
 	playerStats = (PlayerStats*)owner->findComponent(ComponentType::STATS);
 	playerTransform = (Transform*)owner->findComponent(ComponentType::TRANSFORM);
 	playerAnimator = (PlayerAnimator*)owner->findComponent(ComponentType::ANIMATOR);
-
+	playerAbilities = (PlayerAbilities*)owner->findComponent(ComponentType::ABILITIES);
 }
 
 void PlayerInput::update(float deltaTime) {
@@ -14,7 +14,14 @@ void PlayerInput::update(float deltaTime) {
 	for (auto e : events) {
 		switch (e.type) {
 
-			
+		case SDL_MOUSEBUTTONDOWN: {
+			if (e.button.button == SDL_BUTTON_LEFT) {
+				if (playerMovement->enabled) {
+					playerAbilities->slashAttack();
+				}
+			}
+		}
+			break;
 
 		case SDL_KEYDOWN: {
 			// Handles the movement keys

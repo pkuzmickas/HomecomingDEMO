@@ -1,7 +1,7 @@
 #include "PlayerSystem.h"
 Entity * PlayerSystem::player;
 
-Entity * PlayerSystem::createPlayer(int globalPosX, int globalPosY, SDL_Texture* texture, PlayerAnimator::LookDirection lookDirection) {
+Entity * PlayerSystem::createPlayer(int globalPosX, int globalPosY, SDL_Texture* texture, SDL_Renderer* renderer, Graphics* graphics, PlayerAnimator::LookDirection lookDirection) {
 	Entity* player = new Entity();
 	PlayerSystem::player = player;
 	Transform* playerTransform = new Transform(player, 48, 48, globalPosX, globalPosY);
@@ -30,8 +30,13 @@ Entity * PlayerSystem::createPlayer(int globalPosX, int globalPosY, SDL_Texture*
 	animator->addAnimation(walkingr);
 	Animator::Animation walkingu("walking3", { 9, 10, 11, 10 }, walkAnimSpeed, false);
 	animator->addAnimation(walkingu);
+	PlayerAbilities* playerAbilities = new PlayerAbilities(player, renderer, graphics);
+	player->addComponent(playerAbilities);
+	
+	
 	PlayerInput* playerInput = new PlayerInput(player);
 	player->addComponent(playerInput);
+	
 	return player;
 }
 

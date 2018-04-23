@@ -100,7 +100,7 @@ public:
 class Abilities : public Component {
 public:
 	virtual void update(float deltaTime) = 0;
-	Abilities(Entity* owner) : Component(owner) {
+	Abilities(Entity* owner) : Component(owner, true) {
 		type = ABILITIES;
 	}
 };

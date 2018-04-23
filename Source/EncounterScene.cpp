@@ -57,12 +57,18 @@ void EncounterScene::setup() {
 	Entity* blackBox2 = SceneDesignSystem::createRect(CameraSystem::posX, CameraSystem::posY + Globals::SCREEN_HEIGHT / 2, Globals::SCREEN_WIDTH + 10, Globals::SCREEN_HEIGHT/2, Globals::Layers::UI, true);
 	blackBox1T = (Transform*) blackBox1->findComponent(ComponentType::TRANSFORM);
 	blackBox2T = (Transform*)blackBox2->findComponent(ComponentType::TRANSFORM);
-	graphics->addToDraw(blackBox1);
-	graphics->addToDraw(blackBox2);
+	//graphics->addToDraw(blackBox1);
+	//graphics->addToDraw(blackBox2);
 	entities.push_back(blackBox1);
 	entities.push_back(blackBox2);
 	
 	wait(2, "intro text");
+	
+	//for testing
+	Transform* playerTransform = (Transform*)(player->findComponent(ComponentType::TRANSFORM));
+	CameraSystem::follow(&playerTransform->globalPosX, &playerTransform->globalPosY);
+	PlayerSystem::enableMovement();
+
 }
 
 void EncounterScene::preFightScenario(float deltaTime) {
@@ -203,7 +209,8 @@ void EncounterScene::update(float deltaTime) {
 		ent->update(deltaTime);
 	}
 	
-	preFightScenario(deltaTime);
+	//preFightScenario(deltaTime);
+	
 }
 
 EncounterScene::~EncounterScene() {

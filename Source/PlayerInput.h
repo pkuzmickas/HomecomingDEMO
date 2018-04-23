@@ -5,12 +5,14 @@
 #include "PlayerAnimator.h"
 #include "Collider.h"
 #include <vector>
+#include "PlayerAbilities.h"
 class PlayerInput : public Input {
 private:
 	PlayerMovement* playerMovement;
 	PlayerStats* playerStats;
 	Transform* playerTransform;
 	PlayerAnimator* playerAnimator;
+	PlayerAbilities* playerAbilities;
 	
 	struct fPoint {
 		float x;

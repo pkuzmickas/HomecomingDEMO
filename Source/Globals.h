@@ -15,6 +15,7 @@ The names should be self explanatory and if not, should be changed to be so
 #define UI_DIR "UI/"
 #define PORTRAIT_DIR "Portraits/"
 #define FONT_PATH "Fonts/bgothm.ttf"
+#define ATTACKS_DIR "Attacks/"
 
 class Globals {
 

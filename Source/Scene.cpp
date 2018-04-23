@@ -26,7 +26,7 @@ Scene::Scene(SDL_Renderer * renderer, Graphics * graphics) {
 }
 
 void Scene::createPlayer(int globalPosX, int globalPosY, PlayerAnimator::LookDirection lookDirection) {
-	player = PlayerSystem::createPlayer(globalPosX, globalPosY, IMG_LoadTexture(renderer, ASSET_DIR CHARACTER_DIR "player.png"), lookDirection);
+	player = PlayerSystem::createPlayer(globalPosX, globalPosY, IMG_LoadTexture(renderer, ASSET_DIR CHARACTER_DIR "player.png"), renderer, graphics,lookDirection);
 	graphics->addToDraw(player);
 }
 
