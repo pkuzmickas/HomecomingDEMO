@@ -5,6 +5,7 @@
 #include "PlayerAnimator.h"
 #include "Graphics.h"
 #include "CollisionSystem.h"
+#include "AIComponent.h"
 class PlayerAbilities : public Abilities {
 public:
 	PlayerAbilities(Entity* owner, SDL_Renderer* renderer, Graphics* graphics);
@@ -13,6 +14,8 @@ public:
 	void update(float deltaTime);
 	bool isSlashing() { return slashing; }
 private:
+	void slashUpdates(float deltaTime);
+
 	SDL_Renderer * renderer;
 	Graphics* graphics;
 
@@ -25,5 +28,6 @@ private:
 	Entity* slashEntity;
 	Animator* slashAnimator;
 	Collider* slashCollider;
+	Transform* slashTransform = NULL;
 
 };

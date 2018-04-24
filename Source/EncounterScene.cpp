@@ -68,6 +68,8 @@ void EncounterScene::setup() {
 	Transform* playerTransform = (Transform*)(player->findComponent(ComponentType::TRANSFORM));
 	CameraSystem::follow(&playerTransform->globalPosX, &playerTransform->globalPosY);
 	PlayerSystem::enableMovement();
+	Transform* solt = (Transform*)(soldier2Entity->findComponent(ComponentType::TRANSFORM));
+	solt->globalPosX = 1500;
 
 }
 

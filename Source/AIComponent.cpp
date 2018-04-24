@@ -78,4 +78,19 @@ void AIComponent::update(float deltaTime) {
 	else {
 		if (walking) walking = false;
 	}
+
+	if (isKnocked) {
+		if (transform->globalPosX <= resultX) {
+			isKnocked = false;
+			movement->velX = 0;
+		}
+	}
+}
+
+void AIComponent::knockBack(int dist, int speed) {
+	isKnocked = true;
+	knockTimePassed = SDL_GetTicks();
+	knockSpeed = speed;
+	resultX = transform->globalPosX - dist;
+	movement->velX -= speed;
 }

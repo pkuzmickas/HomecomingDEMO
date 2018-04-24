@@ -26,20 +26,19 @@ void PlayerAbilities::slashAttack() {
 		width = 50;
 		height = 90;
 	}
-	Transform* transform = NULL;
 	if (playerAnimator->direction == PlayerAnimator::LookDirection::UP) {
-		transform = new Transform(slashEntity, width, height, playerTransform->globalPosX + playerTransform->width / 2 - width / 2, playerTransform->globalPosY - height*2/3);
+		slashTransform = new Transform(slashEntity, width, height, playerTransform->globalPosX + playerTransform->width / 2 - width / 2, playerTransform->globalPosY - height * 2 / 3);
 	}
 	if (playerAnimator->direction == PlayerAnimator::LookDirection::DOWN) {
-		transform = new Transform(slashEntity, width, height, playerTransform->globalPosX + playerTransform->width / 2 - width / 2, playerTransform->globalPosY + playerTransform->height);
+		slashTransform = new Transform(slashEntity, width, height, playerTransform->globalPosX + playerTransform->width / 2 - width / 2, playerTransform->globalPosY + playerTransform->height);
 	}
 	if (playerAnimator->direction == PlayerAnimator::LookDirection::LEFT) {
-		transform = new Transform(slashEntity, width, height, playerTransform->globalPosX - width, playerTransform->globalPosY + playerTransform->height/2 - width*2/3);
+		slashTransform = new Transform(slashEntity, width, height, playerTransform->globalPosX - width, playerTransform->globalPosY + playerTransform->height / 2 - width * 2 / 3);
 	}
 	if (playerAnimator->direction == PlayerAnimator::LookDirection::RIGHT) {
-		transform = new Transform(slashEntity, width, height, playerTransform->globalPosX + playerTransform->width, playerTransform->globalPosY + playerTransform->height / 2 - width*2/3);
+		slashTransform = new Transform(slashEntity, width, height, playerTransform->globalPosX + playerTransform->width, playerTransform->globalPosY + playerTransform->height / 2 - width * 2 / 3);
 	}
-	slashEntity->addComponent(transform);
+	slashEntity->addComponent(slashTransform);
 	SDL_Rect* src = new SDL_Rect();
 	src->h = height;
 	src->w = width;
@@ -50,9 +49,9 @@ void PlayerAbilities::slashAttack() {
 	}
 	Drawable* drawable = new Drawable(slashEntity, slashAttackIMG, "slashAttack", Globals::PLAYER, src);
 	slashEntity->addComponent(drawable);
-	
+
 	slashAnimator = new Animator(slashEntity);
-	int slashSpeed = 40;
+	int slashSpeed = 30;
 	// playerAnimator->direction * 4 + 0 + 1 + 2 + 3
 	int dir = playerAnimator->direction * 4;
 	if (playerAnimator->direction == PlayerAnimator::LookDirection::UP) {
@@ -73,10 +72,53 @@ void PlayerAbilities::slashAttack() {
 
 void PlayerAbilities::update(float deltaTime) {
 	if (slashing) {
-		slashEntity->update(deltaTime);
-		CollisionSystem::isCollidingWithObjects(slashCollider, { "player" });
+		slashUpdates(deltaTime);
 	}
-	if (slashing && !slashAnimator->isAnimating()) {
+}
+
+void PlayerAbilities::slashUpdates(float deltaTime) {
+	slashEntity->update(deltaTime);
+
+	int width, height;
+	if (playerAnimator->direction == PlayerAnimator::LookDirection::DOWN || playerAnimator->direction == PlayerAnimator::LookDirection::UP) {
+		width = 90;
+		height = 50;
+	}
+	else {
+		width = 50;
+		height = 90;
+	}
+	if (playerAnimator->direction == PlayerAnimator::LookDirection::UP) {
+		slashTransform->globalPosX = playerTransform->globalPosX + playerTransform->width / 2 - width / 2;
+		slashTransform->globalPosY = playerTransform->globalPosY - height * 2 / 3;
+	}
+	if (playerAnimator->direction == PlayerAnimator::LookDirection::DOWN) {
+		slashTransform->globalPosX = playerTransform->globalPosX + playerTransform->width / 2 - width / 2;
+		slashTransform->globalPosY = playerTransform->globalPosY + playerTransform->height;
+	}
+	if (playerAnimator->direction == PlayerAnimator::LookDirection::LEFT) {
+		slashTransform->globalPosX = playerTransform->globalPosX - width;
+		slashTransform->globalPosY = playerTransform->globalPosY + playerTransform->height / 2 - width * 2 / 3;
+	}
+	if (playerAnimator->direction == PlayerAnimator::LookDirection::RIGHT) {
+		slashTransform->globalPosX = playerTransform->globalPosX + playerTransform->width;
+		slashTransform->globalPosY = playerTransform->globalPosY + playerTransform->height / 2 - width * 2 / 3;
+	}
+
+	Collider* slashCollision = CollisionSystem::isCollidingWithObjects(slashCollider, {});
+	if (slashCollision) {
+		Drawable* draw = (Drawable*)slashCollision->owner->findComponent(ComponentType::DRAWABLE);
+		Transform* trans = (Transform*)slashCollision->owner->findComponent(ComponentType::TRANSFORM);
+		if (slashCollision->owner->hasComponent(ComponentType::AI)) {
+			AIComponent* ai = (AIComponent*)slashCollision->owner->findComponent(ComponentType::AI);
+			if (draw->ID == "soldier2") { // can use substrings to know type (soldier)
+				ai->knockBack(100, 200);
+			}
+		}
+		
+	}
+
+	if (!slashAnimator->isAnimating()) {
 		CollisionSystem::removeCollider(slashCollider);
 		slashing = false;
 		graphics->removeFromDraw(slashEntity);
