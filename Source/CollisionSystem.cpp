@@ -14,19 +14,19 @@ bool CollisionSystem::isColliding(SDL_Rect object1, SDL_Rect object2) {
 	return false;
 }
 
-Collider::ColliderType CollisionSystem::isCollidingWithEnv(SDL_Rect object)
+Collider* CollisionSystem::isCollidingWithEnv(Collider* object)
 {
-	int col1 = (int)((object.x + CameraSystem::posX) / Globals::TILE_SIZE);
-	int col2 = (int)((object.x + object.w + CameraSystem::posX) / Globals::TILE_SIZE);
-	int row1 = (int)((object.y + CameraSystem::posY) / Globals::TILE_SIZE);
-	int row2 = (int)((object.y + object.h + CameraSystem::posY) / Globals::TILE_SIZE);
+	int col1 = (int)((object->colBox.x + CameraSystem::posX) / Globals::TILE_SIZE);
+	int col2 = (int)((object->colBox.x + object->colBox.w + CameraSystem::posX) / Globals::TILE_SIZE);
+	int row1 = (int)((object->colBox.y + CameraSystem::posY) / Globals::TILE_SIZE);
+	int row2 = (int)((object->colBox.y + object->colBox.h + CameraSystem::posY) / Globals::TILE_SIZE);
 
 	auto map = MapSystem::getMap();
 	for (Entity* ent : map->at(row1).at(col1)) {
 		if (ent->hasComponent(ComponentType::COLLIDER)) {
 			Collider* col = (Collider*)ent->findComponent(ComponentType::COLLIDER);
 			if (col) {
-				return col->colType;
+				return col;
 			}
 		}
 	}
@@ -34,21 +34,48 @@ Collider::ColliderType CollisionSystem::isCollidingWithEnv(SDL_Rect object)
 		if (ent->hasComponent(ComponentType::COLLIDER)) {
 			Collider* col = (Collider*)ent->findComponent(ComponentType::COLLIDER);
 			if (col) {
-				return col->colType;
+				return col;
 			}
 		}
 	}
 
-	return Collider::ColliderType::NONE;
+	return NULL;
 }
 
-Collider::ColliderType CollisionSystem::isCollidingWithObjects(SDL_Rect object) {
+Collider* CollisionSystem::isCollidingWithObjects(Collider* object, vector<string> exceptions) {
 	for (auto object2 : collidersInScene) {
 		object2->update(0);
-		if (isColliding(object, object2->colBox)) {
-			return object2->colType;
+		Drawable* d1 = (Drawable*)(object->owner->findComponent(ComponentType::DRAWABLE));
+		Drawable* d2 = (Drawable*)(object2->owner->findComponent(ComponentType::DRAWABLE));
+		bool isExcepted = false;
+		for (auto name : exceptions) {
+			if (d2->ID == "slashAttack") {
+				if (name == d2->ID) {
+					isExcepted = true;
+				}
+			}
+		}
+		if (isExcepted) continue;
+		if (object2 != object && isColliding(object->colBox, object2->colBox)) {
+			
+			cout << d1->ID << " is colliding with " << d2->ID << endl;
+			return object2;
 		}
 	}
-	return Collider::ColliderType::NONE;
+	return NULL;
+}
+
+bool CollisionSystem::removeCollider(Collider * col)
+{
+	for (int i = 0; i < (int)collidersInScene.size(); i++) {
+		if (collidersInScene[i] == col) {
+			// Swaps the element with the matching name with the last one in the vector and then pops the vector
+			iter_swap(collidersInScene.begin() + i, collidersInScene.begin() + collidersInScene.size() - 1);
+			collidersInScene.pop_back();
+			return true;
+		}
+	}
+	cout << "COULD NOT REMOVE COLLIDER" << endl;
+	return false;
 }
 

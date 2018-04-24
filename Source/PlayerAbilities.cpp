@@ -7,13 +7,9 @@ PlayerAbilities::PlayerAbilities(Entity * owner, SDL_Renderer* renderer, Graphic
 	this->renderer = renderer;
 	this->graphics = graphics;
 
-	initSlash();
+	slashAttackIMG = IMG_LoadTexture(renderer, ASSET_DIR ATTACKS_DIR "slash.png");
 }
 
-void PlayerAbilities::initSlash() {
-	slashAttackIMG = IMG_LoadTexture(renderer, ASSET_DIR ATTACKS_DIR "slash.png");
-	
-}
 
 PlayerAbilities::~PlayerAbilities() {
 	SDL_DestroyTexture(slashAttackIMG);
@@ -65,8 +61,11 @@ void PlayerAbilities::slashAttack() {
 	Animator::Animation slashingAnim("slashing", { dir + 0, dir + 1, dir + 2, dir + 3 }, slashSpeed, false, 4);
 	slashAnimator->addAnimation(slashingAnim);
 	slashEntity->addComponent(slashAnimator);
-
 	slashAnimator->playAnimation("slashing");
+
+	slashCollider = new Collider(slashEntity, Collider::ColliderType::NORMAL);
+	CollisionSystem::collidersInScene.push_back(slashCollider);
+	slashEntity->addComponent(slashCollider);
 
 	slashing = true;
 	graphics->addToDraw(slashEntity);
@@ -75,13 +74,14 @@ void PlayerAbilities::slashAttack() {
 void PlayerAbilities::update(float deltaTime) {
 	if (slashing) {
 		slashEntity->update(deltaTime);
+		CollisionSystem::isCollidingWithObjects(slashCollider, { "player" });
 	}
 	if (slashing && !slashAnimator->isAnimating()) {
+		CollisionSystem::removeCollider(slashCollider);
 		slashing = false;
 		graphics->removeFromDraw(slashEntity);
 		delete slashEntity;
 		slashEntity = NULL;
-
 	}
 }
 

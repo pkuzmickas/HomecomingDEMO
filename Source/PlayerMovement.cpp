@@ -20,7 +20,7 @@ void PlayerMovement::update(float deltaTime) {
 		if (moving[DOWN]) {
 			int prev = collider->colBox.y;
 			collider->colBox.y += (int)velF+1; // Adding one to remove getting stuck at the walls
-			if (CollisionSystem::isCollidingWithEnv(collider->colBox) == Collider::ColliderType::NONE && CollisionSystem::isCollidingWithObjects(collider->colBox) == Collider::ColliderType::NONE) {
+			if (CollisionSystem::isCollidingWithEnv(collider) == NULL && CollisionSystem::isCollidingWithObjects(collider, { "slashAttack" }) == NULL) {
 				transform->globalPosY += velF;
 				collider->colBox.y -= 1;
 			}
@@ -31,7 +31,7 @@ void PlayerMovement::update(float deltaTime) {
 		if (moving[UP]) {
 			int prev = collider->colBox.y;
 			collider->colBox.y -= ((int)velF+1);
-			if (CollisionSystem::isCollidingWithEnv(collider->colBox) == Collider::ColliderType::NONE && CollisionSystem::isCollidingWithObjects(collider->colBox) == Collider::ColliderType::NONE) {
+			if (CollisionSystem::isCollidingWithEnv(collider) == NULL && CollisionSystem::isCollidingWithObjects(collider, { "slashAttack" }) == NULL) {
 				transform->globalPosY -= velF;
 				collider->colBox.y += 1;
 
@@ -43,7 +43,7 @@ void PlayerMovement::update(float deltaTime) {
 		if (moving[LEFT]) {
 			int prev = collider->colBox.x;
 			collider->colBox.x -= ((int)velF+1);
-			if (CollisionSystem::isCollidingWithEnv(collider->colBox) == Collider::ColliderType::NONE && CollisionSystem::isCollidingWithObjects(collider->colBox) == Collider::ColliderType::NONE) {
+			if (CollisionSystem::isCollidingWithEnv(collider) == NULL && CollisionSystem::isCollidingWithObjects(collider, { "slashAttack" }) == NULL) {
 				transform->globalPosX -= velF;
 				collider->colBox.x += 1;
 			}
@@ -54,7 +54,7 @@ void PlayerMovement::update(float deltaTime) {
 		if (moving[RIGHT]) {
 			int prev = collider->colBox.x;
 			collider->colBox.x += (int)velF+1;
-			if (CollisionSystem::isCollidingWithEnv(collider->colBox) == Collider::ColliderType::NONE && CollisionSystem::isCollidingWithObjects(collider->colBox) == Collider::ColliderType::NONE) {
+			if (CollisionSystem::isCollidingWithEnv(collider) == NULL && CollisionSystem::isCollidingWithObjects(collider, { "slashAttack" }) == NULL) {
 				transform->globalPosX += velF;
 				collider->colBox.x -= 1;
 			}

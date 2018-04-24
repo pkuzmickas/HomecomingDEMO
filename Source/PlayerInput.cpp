@@ -16,7 +16,7 @@ void PlayerInput::update(float deltaTime) {
 
 		case SDL_MOUSEBUTTONDOWN: {
 			if (e.button.button == SDL_BUTTON_LEFT) {
-				if (playerMovement->enabled) {
+				if (playerMovement->enabled && !playerAbilities->isSlashing()) {
 					playerAbilities->slashAttack();
 				}
 			}
