@@ -4,6 +4,7 @@ Scene::~Scene() {
 	if(player) delete player;
 	MapSystem::deleteMap();
 	DialogueSystem::cleanup();
+	UIDesignSystem::cleanup();
 }
 
 void Scene::update(float deltaTime) {
@@ -17,12 +18,15 @@ void Scene::update(float deltaTime) {
 		}
 	}
 	DialogueSystem::update(deltaTime);
+	UIDesignSystem::update(deltaTime);
 }
 
 Scene::Scene(SDL_Renderer * renderer, Graphics * graphics) {
 	this->renderer = renderer;
 	this->graphics = graphics;
 	DialogueSystem::setup(graphics, renderer);
+	UIDesignSystem::setup(renderer, graphics);
+	
 }
 
 void Scene::createPlayer(int globalPosX, int globalPosY, PlayerAnimator::LookDirection lookDirection) {

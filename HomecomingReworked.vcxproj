@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{EE62B015-87B2-4F4B-A985-155ECD6CC9C8}</ProjectGuid>
     <RootNamespace>HomecomingReworked</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -138,6 +138,7 @@
     <ClCompile Include="Source\PlayerSystem.cpp" />
     <ClCompile Include="Source\Scene.cpp" />
     <ClCompile Include="Source\SceneDesignSystem.cpp" />
+    <ClCompile Include="Source\UIDesignSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AIComponent.h" />
@@ -164,6 +165,7 @@
     <ClInclude Include="Source\PlayerSystem.h" />
     <ClInclude Include="Source\Scene.h" />
     <ClInclude Include="Source\SceneDesignSystem.h" />
+    <ClInclude Include="Source\UIDesignSystem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

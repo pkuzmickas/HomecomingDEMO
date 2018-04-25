@@ -111,8 +111,11 @@ void PlayerAbilities::slashUpdates(float deltaTime) {
 		Transform* trans = (Transform*)slashCollision->owner->findComponent(ComponentType::TRANSFORM);
 		if (slashCollision->owner->hasComponent(ComponentType::AI)) {
 			AIComponent* ai = (AIComponent*)slashCollision->owner->findComponent(ComponentType::AI);
-			if (draw->ID == "soldier2") { // can use substrings to know type (soldier)
-				ai->knockBack(100, 200);
+			if (draw->ID == "soldier2" && !ai->isKnocked()) { // can use substrings to know type (soldier)
+				Stats* enemyStats = (Stats*)slashCollision->owner->findComponent(ComponentType::STATS);
+				PlayerStats* playerStats = (PlayerStats*)player->findComponent(ComponentType::STATS);
+				enemyStats->curHealth -= playerStats->mainAttackDmg;
+				ai->knockBack(100, 300, playerAnimator->direction);
 			}
 		}
 		

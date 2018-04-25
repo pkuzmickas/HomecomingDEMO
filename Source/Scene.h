@@ -6,6 +6,7 @@
 #include "SceneDesignSystem.h"
 #include "NPCSystem.h"
 #include "DialogueSystem.h"
+#include "UIDesignSystem.h"
 
 class Scene {
 public:

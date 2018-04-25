@@ -99,6 +99,9 @@
     <ClCompile Include="Source\PathfindingSystem.cpp">
       <Filter>Source Files\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="Source\UIDesignSystem.cpp">
+      <Filter>Source Files\Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Entity.h">
@@ -172,6 +175,9 @@
     </ClInclude>
     <ClInclude Include="Source\PlayerAbilities.h">
       <Filter>Header Files\Components\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UIDesignSystem.h">
+      <Filter>Header Files\Systems</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

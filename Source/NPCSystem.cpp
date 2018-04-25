@@ -29,6 +29,10 @@ Entity* NPCSystem::createNPC(int posX, int posY, int width, int height, Globals:
 	animator->addAnimation(walkingu);
 	AIComponent* ai = new AIComponent(npc);
 	npc->addComponent(ai);
+	Stats* stats = new Stats(npc);
+	npc->addComponent(stats);
+	stats->totalHealth = 100;
+	stats->curHealth = 100;
 	// TODO DIALOGUE IMPLEMENTATION FOR STATIC AI
 	/*if (speakerID) { 
 		Talkable* talkable = new Talkable(,);

@@ -8,6 +8,7 @@ Entity * PlayerSystem::createPlayer(int globalPosX, int globalPosY, SDL_Texture*
 	player->addComponent(playerTransform);
 	PlayerStats* playerStats = new PlayerStats(player);
 	player->addComponent(playerStats);
+	playerStats->mainAttackDmg = 30;
 	SDL_Rect* srcRect = new SDL_Rect();
 	srcRect->h = 48;
 	srcRect->w = 48;

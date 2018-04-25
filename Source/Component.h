@@ -107,6 +107,9 @@ public:
 
 class Stats : public Component {
 public:
+	int totalHealth;
+	int curHealth;
+	int mainAttackDmg;
 	Stats(Entity* owner) : Component(owner) {
 		type = STATS;
 	}

@@ -79,18 +79,56 @@ void AIComponent::update(float deltaTime) {
 		if (walking) walking = false;
 	}
 
-	if (isKnocked) {
-		if (transform->globalPosX <= resultX) {
-			isKnocked = false;
-			movement->velX = 0;
+	if (isKnocked()) {
+		if (knockDir == Animator::LookDirection::LEFT) {
+			if (transform->globalPosX <= result) {
+				knocked = false;
+				movement->velX = 0;
+			}
 		}
+		if (knockDir == Animator::LookDirection::RIGHT) {
+			if (transform->globalPosX >= result) {
+				knocked = false;
+				movement->velX = 0;
+			}
+		}
+		if (knockDir == Animator::LookDirection::UP) {
+			if (transform->globalPosY <= result) {
+				knocked = false;
+				movement->velY = 0;
+			}
+		}
+		if (knockDir == Animator::LookDirection::DOWN) {
+			if (transform->globalPosY >= result) {
+				knocked = false;
+				movement->velY = 0;
+			}
+		}
+		
 	}
 }
 
-void AIComponent::knockBack(int dist, int speed) {
-	isKnocked = true;
-	knockTimePassed = SDL_GetTicks();
-	knockSpeed = speed;
-	resultX = transform->globalPosX - dist;
-	movement->velX -= speed;
+void AIComponent::knockBack(int dist, int speed, Animator::LookDirection dir) {
+	knocked = true;
+	knockDir = dir;
+	if (!UIDesignSystem::isHealthShowing(owner)) {
+		UIDesignSystem::showHealth(owner);
+	}
+	if (dir == Animator::LookDirection::LEFT) {
+		result = transform->globalPosX - dist;
+		movement->velX -= speed;
+	}
+	if (dir == Animator::LookDirection::RIGHT) {
+		result = transform->globalPosX + dist;
+		movement->velX += speed;
+	}
+	if (dir == Animator::LookDirection::UP) {
+		result = transform->globalPosY - dist;
+		movement->velY -= speed;
+	}
+	if (dir == Animator::LookDirection::DOWN) {
+		result = transform->globalPosY + dist;
+		movement->velY += speed;
+	}
+	
 }
