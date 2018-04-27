@@ -14,6 +14,7 @@ Entity* NPCSystem::createNPC(int posX, int posY, int width, int height, Globals:
 	Movement* movement = new Movement(npc);
 	npc->addComponent(movement);
 	Collider* collider = new Collider(npc, Collider::NORMAL);
+	collider->colBox.h -= 20;
 	npc->addComponent(collider);
 	CollisionSystem::collidersInScene.push_back(collider);
 	Animator* animator = new Animator(npc);

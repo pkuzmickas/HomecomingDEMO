@@ -12,8 +12,7 @@ EncounterScene::EncounterScene(SDL_Renderer * renderer, Graphics * graphics) : S
 
 void EncounterScene::setup() {
 
-	createPlayer(1800, 700, Animator::LookDirection::LEFT);
-	PlayerSystem::disableMovement();
+	
 
 	
 
@@ -33,7 +32,8 @@ void EncounterScene::setup() {
 	entities.push_back(soldierEntity);
 	entities.push_back(soldier2Entity);
 	
-
+	createPlayer(1800, 700, Animator::LookDirection::LEFT);
+	PlayerSystem::disableMovement();
 
 	// Spawning trees
 	tree = IMG_LoadTexture(renderer, ASSET_DIR LEVEL_DESIGN_DIR "tree.png");

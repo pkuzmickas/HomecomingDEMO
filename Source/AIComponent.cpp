@@ -4,6 +4,7 @@ AIComponent::AIComponent(Entity * owner) : Component(owner, true) {
 	movement = (Movement*)owner->findComponent(ComponentType::MOVEMENT);
 	animator = (Animator*)owner->findComponent(ComponentType::ANIMATOR);
 	transform = (Transform*)owner->findComponent(ComponentType::TRANSFORM);
+	collider = (Collider*)owner->findComponent(ComponentType::COLLIDER);
 	type = AI;
 }
 
@@ -80,6 +81,12 @@ void AIComponent::update(float deltaTime) {
 	}
 
 	if (isKnocked()) {
+		Collider* didCollide = CollisionSystem::isCollidingWithObjects(collider, { knockedByAttackName });
+		if (didCollide) {
+			knocked = false;
+			movement->velX = 0;
+			movement->velY = 0;
+		}
 		if (knockDir == Animator::LookDirection::LEFT) {
 			if (transform->globalPosX <= result) {
 				knocked = false;
@@ -104,31 +111,41 @@ void AIComponent::update(float deltaTime) {
 				movement->velY = 0;
 			}
 		}
+		if (!knocked) {
+			collider->offset.x = 0;
+			collider->offset.y = 0;
+		}
 		
 	}
 }
 
-void AIComponent::knockBack(int dist, int speed, Animator::LookDirection dir) {
+void AIComponent::knockBack(int dist, int speed, Animator::LookDirection dir, std::string attackName) {
+	knockedByAttackName = attackName;
 	knocked = true;
 	knockDir = dir;
 	if (!UIDesignSystem::isHealthShowing(owner)) {
 		UIDesignSystem::showHealth(owner);
 	}
+	int colBoxChangeVal = 10; // Changing the collision box a bit to test whether or not it will collide so to not get "stuck"
 	if (dir == Animator::LookDirection::LEFT) {
 		result = transform->globalPosX - dist;
 		movement->velX -= speed;
+		collider->offset.x -= colBoxChangeVal;
 	}
 	if (dir == Animator::LookDirection::RIGHT) {
 		result = transform->globalPosX + dist;
 		movement->velX += speed;
+		collider->offset.x += colBoxChangeVal;
 	}
 	if (dir == Animator::LookDirection::UP) {
 		result = transform->globalPosY - dist;
 		movement->velY -= speed;
+		collider->offset.y -= colBoxChangeVal;
 	}
 	if (dir == Animator::LookDirection::DOWN) {
 		result = transform->globalPosY + dist;
 		movement->velY += speed;
+		collider->offset.y += colBoxChangeVal;
 	}
 	
 }

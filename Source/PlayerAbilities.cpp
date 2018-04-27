@@ -106,22 +106,25 @@ void PlayerAbilities::slashUpdates(float deltaTime) {
 	}
 
 	Collider* slashCollision = CollisionSystem::isCollidingWithObjects(slashCollider, {});
-	if (slashCollision) {
+	if (slashCollider->enabled && slashCollision) {
 		Drawable* draw = (Drawable*)slashCollision->owner->findComponent(ComponentType::DRAWABLE);
 		Transform* trans = (Transform*)slashCollision->owner->findComponent(ComponentType::TRANSFORM);
 		if (slashCollision->owner->hasComponent(ComponentType::AI)) {
 			AIComponent* ai = (AIComponent*)slashCollision->owner->findComponent(ComponentType::AI);
 			if (draw->ID == "soldier2" && !ai->isKnocked()) { // can use substrings to know type (soldier)
+				slashCollider->enabled = false;
 				Stats* enemyStats = (Stats*)slashCollision->owner->findComponent(ComponentType::STATS);
 				PlayerStats* playerStats = (PlayerStats*)player->findComponent(ComponentType::STATS);
 				enemyStats->curHealth -= playerStats->mainAttackDmg;
-				ai->knockBack(100, 300, playerAnimator->direction);
+				Drawable* slashDrawable = (Drawable*)slashEntity->findComponent(ComponentType::DRAWABLE);
+				ai->knockBack(100, 300, playerAnimator->direction, slashDrawable->ID);
 			}
 		}
 		
 	}
 
 	if (!slashAnimator->isAnimating()) {
+		slashCollider->enabled = true;
 		CollisionSystem::removeCollider(slashCollider);
 		slashing = false;
 		graphics->removeFromDraw(slashEntity);

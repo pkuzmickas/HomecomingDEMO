@@ -16,15 +16,17 @@ public:
 	virtual void update(float deltaTime);
 	bool isWalking() { return walking; }
 	bool isKnocked() { return knocked; }
-	void knockBack(int dist, int speed, Animator::LookDirection dir);
+	void knockBack(int dist, int speed, Animator::LookDirection dir, std::string attackName);
 private:
 	bool walking, knocked;
 	int destX, destY, walkingSpeed;
 	Movement* movement;
 	Animator* animator;
 	Transform* transform;
+	Collider* collider;
 	std::vector<SDL_Point> path;
 	int curPathIndex;
 	int result; // for some computation (temp global int)
 	Animator::LookDirection knockDir;
+	std::string knockedByAttackName = "";
 };
