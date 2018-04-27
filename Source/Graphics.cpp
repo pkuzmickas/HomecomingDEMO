@@ -165,7 +165,12 @@ void Graphics::draw(Sprite sprite) {
 	localPos.w = sprite.transform->width;
 	localPos.x = (int)(sprite.transform->globalPosX - CameraSystem::posX);
 	localPos.y = (int)(sprite.transform->globalPosY - CameraSystem::posY);
-	SDL_RenderCopy(renderer, sprite.drawable->image, sprite.drawable->srcRect, &localPos);
+	if (!sprite.transform->isRotated) {
+		SDL_RenderCopy(renderer, sprite.drawable->image, sprite.drawable->srcRect, &localPos);
+	}
+	else {
+		SDL_RenderCopyEx(renderer, sprite.drawable->image, sprite.drawable->srcRect, &localPos, sprite.transform->rotationAngle, &sprite.transform->rotationCenter, sprite.drawable->flip);
+	}
 }
 
 /*if (debug) {
