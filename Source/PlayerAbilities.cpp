@@ -8,6 +8,7 @@ PlayerAbilities::PlayerAbilities(Entity * owner, SDL_Renderer* renderer, Graphic
 	this->graphics = graphics;
 
 	slashAttackIMG = IMG_LoadTexture(renderer, ASSET_DIR ATTACKS_DIR "slash.png");
+	dashIMG = IMG_LoadTexture(renderer, ASSET_DIR ATTACKS_DIR "dash.png");
 }
 
 
@@ -70,10 +71,56 @@ void PlayerAbilities::slashAttack() {
 	graphics->addToDraw(slashEntity);
 }
 
+void PlayerAbilities::dashMove() {
+	int mouseX, mouseY;
+	SDL_GetMouseState(&mouseX, &mouseY);
+	
+	dashEntity = new Entity();
+	int dashWidth, dashHeight;
+	SDL_QueryTexture(dashIMG, NULL, NULL, &dashWidth, &dashHeight);
+	float dx = mouseX - (playerTransform->globalPosX + playerTransform->width/2 - CameraSystem::posX);
+	float dy = mouseY - (playerTransform->globalPosY + playerTransform->height/2 - CameraSystem::posY);
+	float angle = atan2(dy, dx) * 180 / M_PI;
+	dashTransform = new Transform(dashEntity, sqrt(dx*dx + dy*dy), dashHeight, playerTransform->globalPosX + playerTransform->width / 2 + 10 * cos(angle * M_PI / 180), playerTransform->globalPosY + 10 * sin(angle * M_PI / 180));
+	SDL_Point center;
+	center.y = dashHeight / 2;
+	center.x = 0;
+	dashTransform->rotate(angle, &center);
+	dashEntity->addComponent(dashTransform);
+	/*globalX += KUNAI_SPEED * deltaTime * cos(this->sprite.angle * M_PI / 180);
+	globalY += KUNAI_SPEED * deltaTime * sin(this->sprite.angle * M_PI / 180);*/
+	Drawable* dashDrawable = new Drawable(owner, dashIMG, "dash", Globals::Layers::PLAYER);
+	dashEntity->addComponent(dashDrawable);
+	dashCollider = new Collider(owner);
+	dashEntity->addComponent(dashCollider);
+	CollisionSystem::collidersInScene.push_back(dashCollider);
+
+	graphics->addToDraw(dashEntity);
+	dashing = true;
+	playerTransform->globalPosX += dx;
+	playerTransform->globalPosY += dy;
+	dashStart = SDL_GetTicks();
+}
+
 void PlayerAbilities::update(float deltaTime) {
 	if (slashing) {
 		slashUpdates(deltaTime);
 	}
+	if (dashing) {
+		dashUpdates(deltaTime);
+	}
+}
+
+void PlayerAbilities::dashUpdates(float deltaTime) {
+	dashEntity->update(deltaTime);
+	if (SDL_GetTicks() - dashStart > 200) { //TODO figure out how to use players collider to do the attack's collision
+		graphics->removeFromDraw(dashEntity);
+		dashing = false;
+		delete dashEntity;
+		dashEntity = NULL;
+		CollisionSystem::removeCollider(dashCollider);
+	}
+
 }
 
 void PlayerAbilities::slashUpdates(float deltaTime) {

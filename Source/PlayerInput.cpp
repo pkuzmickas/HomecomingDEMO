@@ -20,6 +20,9 @@ void PlayerInput::update(float deltaTime) {
 					playerAbilities->slashAttack();
 				}
 			}
+			if (e.button.button == SDL_BUTTON_RIGHT) {
+				playerAbilities->dashMove();
+			}
 		}
 			break;
 

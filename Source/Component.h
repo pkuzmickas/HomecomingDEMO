@@ -54,7 +54,9 @@ public:
 	void rotate(double rotationAngle, SDL_Point* rotationCenter = NULL) {
 		isRotated = true;
 		this->rotationAngle = rotationAngle;
-		this->rotationCenter = *rotationCenter;
+		if (rotationCenter) {
+			this->rotationCenter = *rotationCenter;
+		}
 	}
 	
 };
