@@ -46,9 +46,10 @@ void CameraSystem::update(float deltaTime) {
 			cameraMoving = false;
 		}
 	}
-	if (cameraAttached) {
+	if (cameraAttached && !cameraMoving) {
 		centerAround(*followX, *followY);
 	}
+	
 }
 
 void CameraSystem::moveCamera(int destX, int destY, int speed) {
@@ -62,4 +63,11 @@ void CameraSystem::follow(float * posX, float * posY) {
 	cameraAttached = true;
 	followX = posX;
 	followY = posY;
+}
+
+void CameraSystem::moveAndFollow(int moveToX, int moveToY, float* followPosX, float* followPosY, int speed) {
+	follow(followPosX, followPosY);
+	moveCamera(moveToX, moveToY, speed);
+
+	cameraAttached = true;
 }

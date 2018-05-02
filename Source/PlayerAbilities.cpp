@@ -100,6 +100,7 @@ void PlayerAbilities::dashMove() {
 	playerTransform->globalPosX += dx;
 	playerTransform->globalPosY += dy;
 	dashStart = SDL_GetTicks();
+	CameraSystem::detachCamera();
 }
 
 void PlayerAbilities::update(float deltaTime) {
@@ -119,6 +120,7 @@ void PlayerAbilities::dashUpdates(float deltaTime) {
 		delete dashEntity;
 		dashEntity = NULL;
 		CollisionSystem::removeCollider(dashCollider);
+		CameraSystem::moveAndFollow(playerTransform->globalPosX - Globals::SCREEN_WIDTH/2, playerTransform->globalPosY - Globals::SCREEN_HEIGHT / 2,&playerTransform->globalPosX, &playerTransform->globalPosY, 1200);
 	}
 
 }

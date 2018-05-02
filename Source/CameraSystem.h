@@ -11,6 +11,7 @@ public:
 	static bool isCameraFollowing() { return cameraAttached; }
 	static void moveCamera(int destX, int destY, int speed);
 	static void follow(float* posX, float* posY);
+	static void moveAndFollow(int moveToX, int moveToY, float* followPosX, float* followPosY, int speed);
 	static void detachCamera() { cameraAttached = false; }
 private:
 	CameraSystem();
