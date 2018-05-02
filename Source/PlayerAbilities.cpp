@@ -78,6 +78,7 @@ void PlayerAbilities::dashMove() {
 	dashEntity = new Entity();
 	int dashWidth, dashHeight;
 	SDL_QueryTexture(dashIMG, NULL, NULL, &dashWidth, &dashHeight);
+	dashHeight = 50;
 	float dx = mouseX - (playerTransform->globalPosX + playerTransform->width/2 - CameraSystem::posX);
 	float dy = mouseY - (playerTransform->globalPosY + playerTransform->height/2 - CameraSystem::posY);
 	float angle = atan2(dy, dx) * 180 / M_PI;
@@ -87,13 +88,22 @@ void PlayerAbilities::dashMove() {
 	center.x = 0;
 	dashTransform->rotate(angle, &center);
 	dashEntity->addComponent(dashTransform);
-	/*globalX += KUNAI_SPEED * deltaTime * cos(this->sprite.angle * M_PI / 180);
-	globalY += KUNAI_SPEED * deltaTime * sin(this->sprite.angle * M_PI / 180);*/
-	Drawable* dashDrawable = new Drawable(owner, dashIMG, "dash", Globals::Layers::PLAYER);
+	SDL_Rect* src = new SDL_Rect();
+	src->h = dashHeight;
+	src->w = dashWidth;
+	src->x = 0;
+	src->y = 0;
+	Drawable* dashDrawable = new Drawable(owner, dashIMG, "dash", Globals::Layers::PLAYER, src);
 	dashEntity->addComponent(dashDrawable);
 	dashCollider = new Collider(owner);
 	dashEntity->addComponent(dashCollider);
 	CollisionSystem::collidersInScene.push_back(dashCollider);
+	Animator* dashAnimator = new Animator(dashEntity);
+	int dashSpeed = 30;
+	Animator::Animation dashingAnim("dashing", { 0, 1, 2 }, dashSpeed, false);
+	dashAnimator->addAnimation(dashingAnim);
+	dashEntity->addComponent(dashAnimator);
+	dashAnimator->playAnimation("dashing");
 
 	graphics->addToDraw(dashEntity);
 	dashing = true;
