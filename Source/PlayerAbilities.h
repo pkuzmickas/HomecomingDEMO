@@ -12,13 +12,16 @@ public:
 	PlayerAbilities(Entity* owner, SDL_Renderer* renderer, Graphics* graphics);
 	~PlayerAbilities();
 	void slashAttack();
+	void flyingSlashAttack();
 	void dashMove(); // add mana to this later
 	void update(float deltaTime);
 	bool isSlashing() { return slashing; }
 	bool isDashing() { return dashing; }
+	bool isFSlashing() { return flyingSlashing; }
 private:
 	void slashUpdates(float deltaTime);
 	void dashUpdates(float deltaTime);
+	void fSlashUpdates(float deltaTime);
 	SDL_Renderer * renderer;
 	Graphics* graphics;
 
@@ -38,6 +41,14 @@ private:
 	Entity* dashEntity;
 	Animator* dashAnimator;
 	Transform* dashTransform = NULL;
+	int dashStart = 0;
+
+	SDL_Texture* flyingSlashIMG;
+	bool flyingSlashing;
+	Entity* fSlashEntity;
+	Animator* fSlashAnimator;
+	Collider* fSlashCollider;
+	Transform* fSlashTransform = NULL;
 	int dashStart = 0;
 
 

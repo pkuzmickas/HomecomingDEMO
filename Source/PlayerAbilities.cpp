@@ -9,11 +9,47 @@ PlayerAbilities::PlayerAbilities(Entity * owner, SDL_Renderer* renderer, Graphic
 
 	slashAttackIMG = IMG_LoadTexture(renderer, ASSET_DIR ATTACKS_DIR "slash.png");
 	dashIMG = IMG_LoadTexture(renderer, ASSET_DIR ATTACKS_DIR "dash.png");
+	flyingSlashIMG = IMG_LoadTexture(renderer, ASSET_DIR ATTACKS_DIR "flyingSlash.png");
 }
 
 
 PlayerAbilities::~PlayerAbilities() {
 	SDL_DestroyTexture(slashAttackIMG);
+}
+
+void PlayerAbilities::flyingSlashAttack() {
+	if (flyingSlashing) return;
+	int mouseX, mouseY;
+	SDL_GetMouseState(&mouseX, &mouseY);
+	fSlashEntity = new Entity();
+	int width;
+	SDL_QueryTexture(flyingSlashIMG, NULL, NULL, &width, NULL);
+	int height = 90;
+	float dx = mouseX - (playerTransform->globalPosX + playerTransform->width / 2 - CameraSystem::posX);
+	float dy = mouseY - (playerTransform->globalPosY + playerTransform->height / 2 - CameraSystem::posY);
+	float angle = atan2(dy, dx) * 180 / M_PI;
+	fSlashTransform = new Transform(fSlashEntity, width, height, playerTransform->globalPosX + playerTransform->width / 2 + 10 * cos(angle * M_PI / 180), playerTransform->globalPosY + 10 * sin(angle * M_PI / 180));
+	SDL_Point center;
+	center.y = height / 2;
+	center.x = 0;
+	fSlashTransform->rotate(angle, &center);
+	fSlashEntity->addComponent(fSlashTransform);
+	SDL_Rect* src = new SDL_Rect();
+	src->h = height;
+	src->w = width;
+	src->x = 0;
+	src->y = 0;
+	Drawable* fSlashDrawable = new Drawable(owner, flyingSlashIMG, "fslash", Globals::Layers::PLAYER, src);
+	fSlashEntity->addComponent(fSlashDrawable);
+	fSlashAnimator = new Animator(fSlashEntity);
+	int slashSpeed = 30;
+	Animator::Animation slashStart("fSlashStart", { 0, 1, 2 }, slashSpeed, false);
+	fSlashAnimator->addAnimation(slashStart);
+	Animator::Animation fslashing("fSlashing", { 1, 2 }, slashSpeed, true);
+	fSlashAnimator->addAnimation(fslashing);
+	fSlashEntity->addComponent(fSlashAnimator);
+
+	// TODO implement movement cols and stuf
 }
 
 void PlayerAbilities::slashAttack() {
@@ -72,6 +108,7 @@ void PlayerAbilities::slashAttack() {
 }
 
 void PlayerAbilities::dashMove() {
+	if (dashing) return;
 	int mouseX, mouseY;
 	SDL_GetMouseState(&mouseX, &mouseY);
 	
@@ -152,6 +189,9 @@ void PlayerAbilities::update(float deltaTime) {
 	if (dashing) {
 		dashUpdates(deltaTime);
 	}
+	if (flyingSlashing) {
+		fSlashUpdates(deltaTime);
+	}
 }
 
 void PlayerAbilities::dashUpdates(float deltaTime) {
@@ -216,7 +256,7 @@ void PlayerAbilities::slashUpdates(float deltaTime) {
 				PlayerStats* playerStats = (PlayerStats*)player->findComponent(ComponentType::STATS);
 				enemyStats->curHealth -= playerStats->mainAttackDmg;
 				Drawable* slashDrawable = (Drawable*)slashEntity->findComponent(ComponentType::DRAWABLE);
-				ai->knockBack(100, 300, playerAnimator->direction, slashDrawable->ID);
+				ai->knockBack(200, 500, playerAnimator->direction, slashDrawable->ID);
 			}
 		}
 		
