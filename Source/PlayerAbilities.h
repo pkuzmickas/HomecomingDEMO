@@ -37,7 +37,6 @@ private:
 	bool dashing;
 	Entity* dashEntity;
 	Animator* dashAnimator;
-	Collider* dashCollider;
 	Transform* dashTransform = NULL;
 	int dashStart = 0;
 

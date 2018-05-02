@@ -95,9 +95,6 @@ void PlayerAbilities::dashMove() {
 	src->y = 0;
 	Drawable* dashDrawable = new Drawable(owner, dashIMG, "dash", Globals::Layers::PLAYER, src);
 	dashEntity->addComponent(dashDrawable);
-	dashCollider = new Collider(owner);
-	dashEntity->addComponent(dashCollider);
-	CollisionSystem::collidersInScene.push_back(dashCollider);
 	dashAnimator = new Animator(dashEntity);
 	int dashSpeed = 30;
 	Animator::Animation dashingAnim("dashing", { 0, 1, 2 }, dashSpeed, false);
@@ -115,8 +112,30 @@ void PlayerAbilities::dashMove() {
 	}
 	else {
 		dashAnimator->playAnimation("dashing");
+		// Some original mathematical shenanigans to calculate whether the dash collides with the soldier
+		double dxSpeed = dx / Globals::TILE_SIZE;
+		double dySpeed = dy / Globals::TILE_SIZE;
+		for (double i = playerTransform->globalPosX, j = playerTransform->globalPosY; i != playerTransform->globalPosX + dx && j != playerTransform->globalPosY + dy; i += dxSpeed, j += dySpeed) {
+			testCol.x = (i - playerTransform->width / 2) - CameraSystem::posX;
+			testCol.y = (j - playerTransform->height / 2) - CameraSystem::posY;
+			testCol.h = playerTransform->height;
+			testCol.w = playerTransform->width;
+			Collider* collision = CollisionSystem::isCollidingWithObjects(testCol, { "" });
+			if (collision) {
+				Drawable* drw = (Drawable*)collision->owner->findComponent(ComponentType::DRAWABLE);
+				if (drw->ID == "soldier1" || drw->ID == "oldman" || drw->ID == "soldier2") {
+					AIComponent* ai = (AIComponent*)collision->owner->findComponent(ComponentType::AI);
+					ai->knockBack(20, 100, playerAnimator->direction, "dash");
+					Stats* enemyStats = (Stats*)collision->owner->findComponent(ComponentType::STATS);
+					PlayerStats* playerStats = (PlayerStats*)player->findComponent(ComponentType::STATS);
+					enemyStats->curHealth -= playerStats->dashAttackDmg;
+					break; // Change if want multiple knocks
+				}
+			}
+		}
 		playerTransform->globalPosX += dx;
 		playerTransform->globalPosY += dy;
+		
 		dashStart = SDL_GetTicks();
 		CameraSystem::detachCamera();
 	}
@@ -143,7 +162,6 @@ void PlayerAbilities::dashUpdates(float deltaTime) {
 			dashing = false;
 			delete dashEntity;
 			dashEntity = NULL;
-			CollisionSystem::removeCollider(dashCollider);
 		}
 	}
 	if (dashStart != 0 && SDL_GetTicks() - dashStart > 200) { //TODO figure out how to use players collider to do the attack's collision
@@ -152,7 +170,6 @@ void PlayerAbilities::dashUpdates(float deltaTime) {
 		delete dashEntity;
 		dashStart = 0;
 		dashEntity = NULL;
-		CollisionSystem::removeCollider(dashCollider);
 		CameraSystem::moveAndFollow(playerTransform->globalPosX - Globals::SCREEN_WIDTH/2, playerTransform->globalPosY - Globals::SCREEN_HEIGHT / 2,&playerTransform->globalPosX, &playerTransform->globalPosY, 1200);
 	}
 
