@@ -42,6 +42,34 @@ Collider* CollisionSystem::isCollidingWithEnv(Collider* object)
 	return NULL;
 }
 
+Collider * CollisionSystem::isCollidingWithEnv(SDL_Rect object) {
+
+	int col1 = (int)((object.x + CameraSystem::posX) / Globals::TILE_SIZE);
+	int col2 = (int)((object.x + object.w + CameraSystem::posX) / Globals::TILE_SIZE);
+	int row1 = (int)((object.y + CameraSystem::posY) / Globals::TILE_SIZE);
+	int row2 = (int)((object.y + object.h + CameraSystem::posY) / Globals::TILE_SIZE);
+
+	auto map = MapSystem::getMap();
+	for (Entity* ent : map->at(row1).at(col1)) {
+		if (ent->hasComponent(ComponentType::COLLIDER)) {
+			Collider* col = (Collider*)ent->findComponent(ComponentType::COLLIDER);
+			if (col) {
+				return col;
+			}
+		}
+	}
+	for (auto ent : map->at(row2).at(col2)) {
+		if (ent->hasComponent(ComponentType::COLLIDER)) {
+			Collider* col = (Collider*)ent->findComponent(ComponentType::COLLIDER);
+			if (col) {
+				return col;
+			}
+		}
+	}
+
+	return NULL;
+}
+
 Collider* CollisionSystem::isCollidingWithObjects(Collider* object, vector<string> exceptions) {
 	for (auto object2 : collidersInScene) {
 		object2->update(0);
@@ -49,16 +77,34 @@ Collider* CollisionSystem::isCollidingWithObjects(Collider* object, vector<strin
 		Drawable* d2 = (Drawable*)(object2->owner->findComponent(ComponentType::DRAWABLE));
 		bool isExcepted = false;
 		for (auto name : exceptions) {
-			if (d2->ID == "slashAttack") {
-				if (name == d2->ID) {
-					isExcepted = true;
-				}
+			if (name == d2->ID) {
+				isExcepted = true;
 			}
 		}
 		if (isExcepted) continue;
 		if (object2 != object && isColliding(object->colBox, object2->colBox)) {
-			
+
 			cout << d1->ID << " is colliding with " << d2->ID << endl;
+			return object2;
+		}
+	}
+	return NULL;
+}
+
+Collider* CollisionSystem::isCollidingWithObjects(SDL_Rect object, vector<string> exceptions) {
+	for (auto object2 : collidersInScene) {
+		object2->update(0);
+		Drawable* d2 = (Drawable*)(object2->owner->findComponent(ComponentType::DRAWABLE));
+		bool isExcepted = false;
+		for (auto name : exceptions) {
+			if (name == d2->ID) {
+				isExcepted = true;
+			}
+		}
+		if (isExcepted) continue;
+		if (isColliding(object, object2->colBox)) {
+
+			cout << "SDL_RECT is colliding with " << d2->ID << endl;
 			return object2;
 		}
 	}

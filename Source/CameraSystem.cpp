@@ -29,16 +29,40 @@ void CameraSystem::centerAround(int x, int y) {
 void CameraSystem::update(float deltaTime) {
 	if (cameraMoving) {
 		if (posX < destX) {
-			posX += speed * deltaTime;
+			if (posX + speed * deltaTime + Globals::SCREEN_WIDTH < levelWidth) {
+				posX += speed * deltaTime;
+			}
+			else {
+				cameraMoving = false;
+				return;
+			}
 		}
 		if (posY < destY) {
-			posY += speed * deltaTime;
+			if (posY + speed * deltaTime + Globals::SCREEN_HEIGHT  < levelHeight) {
+				posY += speed * deltaTime;
+			}
+			else {
+				cameraMoving = false;
+				return;
+			}
 		}
 		if (posX > destX) {
-			posX -= speed * deltaTime;
+			if (posX - speed * deltaTime > 0) {
+				posX -= speed * deltaTime;
+			}
+			else {
+				cameraMoving = false;
+				return;
+			}
 		}
 		if (posY > destY) {
-			posY -= speed * deltaTime;
+			if (posY - speed * deltaTime > 0) {
+				posY -= speed * deltaTime;
+			}
+			else {
+				cameraMoving = false;
+				return;
+			}
 		}
 		if (abs(posX - destX) <= 10 && abs(posY - destY) <= 10) {
 			posX = (float)destX;

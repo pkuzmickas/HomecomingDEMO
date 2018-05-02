@@ -39,7 +39,7 @@ private:
 	Animator* dashAnimator;
 	Collider* dashCollider;
 	Transform* dashTransform = NULL;
-	int dashStart;
+	int dashStart = 0;
 
 
 };

@@ -98,19 +98,32 @@ void PlayerAbilities::dashMove() {
 	dashCollider = new Collider(owner);
 	dashEntity->addComponent(dashCollider);
 	CollisionSystem::collidersInScene.push_back(dashCollider);
-	Animator* dashAnimator = new Animator(dashEntity);
+	dashAnimator = new Animator(dashEntity);
 	int dashSpeed = 30;
 	Animator::Animation dashingAnim("dashing", { 0, 1, 2 }, dashSpeed, false);
 	dashAnimator->addAnimation(dashingAnim);
+	Animator::Animation notdashingAnim("notDashing", { 3, 3 }, dashSpeed, false);
+	dashAnimator->addAnimation(notdashingAnim);
 	dashEntity->addComponent(dashAnimator);
-	dashAnimator->playAnimation("dashing");
+	SDL_Rect testCol;
+	testCol.x = mouseX - Globals::TILE_SIZE/2;
+	testCol.y = mouseY - Globals::TILE_SIZE/2;
+	testCol.h = Globals::TILE_SIZE;
+	testCol.w = Globals::TILE_SIZE;
+	if (CollisionSystem::isCollidingWithEnv(testCol) || CollisionSystem::isCollidingWithObjects(testCol, { "" })) {
+		dashAnimator->playAnimation("notDashing");
+	}
+	else {
+		dashAnimator->playAnimation("dashing");
+		playerTransform->globalPosX += dx;
+		playerTransform->globalPosY += dy;
+		dashStart = SDL_GetTicks();
+		CameraSystem::detachCamera();
+	}
 
 	graphics->addToDraw(dashEntity);
 	dashing = true;
-	playerTransform->globalPosX += dx;
-	playerTransform->globalPosY += dy;
-	dashStart = SDL_GetTicks();
-	CameraSystem::detachCamera();
+	
 }
 
 void PlayerAbilities::update(float deltaTime) {
@@ -124,10 +137,20 @@ void PlayerAbilities::update(float deltaTime) {
 
 void PlayerAbilities::dashUpdates(float deltaTime) {
 	dashEntity->update(deltaTime);
-	if (SDL_GetTicks() - dashStart > 200) { //TODO figure out how to use players collider to do the attack's collision
+	if (dashStart == 0) {
+		if (!dashAnimator->isAnimating()) {
+			graphics->removeFromDraw(dashEntity);
+			dashing = false;
+			delete dashEntity;
+			dashEntity = NULL;
+			CollisionSystem::removeCollider(dashCollider);
+		}
+	}
+	if (dashStart != 0 && SDL_GetTicks() - dashStart > 200) { //TODO figure out how to use players collider to do the attack's collision
 		graphics->removeFromDraw(dashEntity);
 		dashing = false;
 		delete dashEntity;
+		dashStart = 0;
 		dashEntity = NULL;
 		CollisionSystem::removeCollider(dashCollider);
 		CameraSystem::moveAndFollow(playerTransform->globalPosX - Globals::SCREEN_WIDTH/2, playerTransform->globalPosY - Globals::SCREEN_HEIGHT / 2,&playerTransform->globalPosX, &playerTransform->globalPosY, 1200);
