@@ -50,6 +50,7 @@ private:
 	Collider* fSlashCollider;
 	Transform* fSlashTransform = NULL;
 	Movement* fSlashMovement;
+	Animator::LookDirection fSlashDir;
 	
 
 

@@ -28,7 +28,7 @@ void PlayerAbilities::flyingSlashAttack() {
 	float dx = mouseX - (playerTransform->globalPosX + playerTransform->width / 2 - CameraSystem::posX);
 	float dy = mouseY - (playerTransform->globalPosY + playerTransform->height / 2 - CameraSystem::posY);
 	float angle = atan2(dy, dx) * 180 / M_PI;
-	fSlashTransform = new Transform(fSlashEntity, width, height, playerTransform->globalPosX + 40 * cos(angle * M_PI / 180), playerTransform->globalPosY - playerTransform->height/2 + 40 * sin(angle * M_PI / 180));
+	fSlashTransform = new Transform(fSlashEntity, width, height, playerTransform->globalPosX + 20 * cos(angle * M_PI / 180), playerTransform->globalPosY - playerTransform->height/2 + 20 * sin(angle * M_PI / 180));
 	SDL_Point center;
 	center.y = height / 2;
 	center.x = width / 2;
@@ -50,13 +50,14 @@ void PlayerAbilities::flyingSlashAttack() {
 	fSlashAnimator->addAnimation(fslashing);
 	fSlashEntity->addComponent(fSlashAnimator);
 	fSlashAnimator->playAnimation("fSlashStart");
-	fSlashCollider = new Collider(fSlashEntity);
+	fSlashCollider = new Collider(fSlashEntity,Collider::NORMAL, 0, 20, 50, 50);
 	CollisionSystem::collidersInScene.push_back(fSlashCollider);
 	fSlashEntity->addComponent(fSlashCollider);
-	fSlashMovement = new Movement(fSlashEntity, dx / slashFlySpeed, dy / slashFlySpeed);//idek velX ir velY ir tada checkink collisionus
+	fSlashMovement = new Movement(fSlashEntity, 500 * cos(angle * M_PI / 180), 500 * sin(angle * M_PI / 180));//idek velX ir velY ir tada checkink collisionus
 	fSlashEntity->addComponent(fSlashMovement);
 	graphics->addToDraw(fSlashEntity);
 	flyingSlashing = true;
+	fSlashDir = playerAnimator->direction;
 }
 
 void PlayerAbilities::slashAttack() {
@@ -239,7 +240,21 @@ void PlayerAbilities::fSlashUpdates(float deltaTime) {
 				PlayerStats* playerStats = (PlayerStats*)player->findComponent(ComponentType::STATS);
 				enemyStats->curHealth -= playerStats->fSlashAttackDmg;
 				Drawable* fslashDrawable = (Drawable*)fSlashEntity->findComponent(ComponentType::DRAWABLE);
-				ai->knockBack(200, 500, playerAnimator->direction, fslashDrawable->ID);
+				ai->knockBack(200, 500, fSlashDir, fslashDrawable->ID);
+			}
+			if (colDrw->ID == "tree") {
+				Animator* anim = (Animator*)collision->owner->findComponent(ComponentType::ANIMATOR);
+				Stats* treeStats = (Stats*)collision->owner->findComponent(ComponentType::STATS);
+				treeStats->curHealth -= 50;
+				if (treeStats->curHealth == 0) {
+					anim->playAnimation("treeHit");
+					Collider* col = (Collider*)collision->owner->findComponent(ComponentType::COLLIDER);
+					CollisionSystem::removeCollider(col);
+					collision->owner->active = false;
+				}
+				else {
+					anim->playAnimation("treeHit2");
+				}
 			}
 		}
 		CollisionSystem::removeCollider(fSlashCollider);

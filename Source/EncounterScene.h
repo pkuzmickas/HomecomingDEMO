@@ -9,7 +9,6 @@ private:
 	void setup();
 	void preFightScenario(float deltaTime);
 	SDL_Texture* tree;
-	SDL_Texture* treeNoLeaves;
 	SDL_Texture* oldman;
 	SDL_Texture* soldier;
 	AIComponent* oldmanAI;

@@ -32,8 +32,8 @@ Entity* NPCSystem::createNPC(int posX, int posY, int width, int height, Globals:
 	npc->addComponent(ai);
 	Stats* stats = new Stats(npc);
 	npc->addComponent(stats);
-	stats->totalHealth = 100;
-	stats->curHealth = 100;
+	stats->totalHealth = 300;
+	stats->curHealth = 300;
 	// TODO DIALOGUE IMPLEMENTATION FOR STATIC AI
 	/*if (speakerID) { 
 		Talkable* talkable = new Talkable(,);

@@ -5,6 +5,7 @@
 class Entity {
 public:
 	int mask;
+	bool active = true;
 	void addComponent(Component* comp);
 	Component* findComponent(ComponentType comp);
 	bool hasComponent(ComponentType comp);
@@ -12,4 +13,5 @@ public:
 	~Entity(); // Deletes all components 
 private:
 	std::unordered_map<ComponentType, Component*> components;
+
 };

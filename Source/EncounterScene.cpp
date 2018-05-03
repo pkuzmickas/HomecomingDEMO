@@ -33,7 +33,6 @@ void EncounterScene::setup() {
 
 	// Spawning trees
 	tree = IMG_LoadTexture(renderer, ASSET_DIR LEVEL_DESIGN_DIR "tree.png");
-	treeNoLeaves = IMG_LoadTexture(renderer, ASSET_DIR LEVEL_DESIGN_DIR "treeNoLeaves.png");
 	for (int j = 0; j < 2; j++) {
 		for (int i = 0; i < MapSystem::getWidth() / 103 + 1; i++) {
 			
@@ -41,7 +40,7 @@ void EncounterScene::setup() {
 			SDL_Rect* colPtr = &colOffset;
 			if (j == 0) {
 				colOffset.x = 0;
-				colOffset.y = -30;
+				colOffset.y = -40;
 				colOffset.w = 0;
 				colOffset.h = 0;
 			}
@@ -51,7 +50,15 @@ void EncounterScene::setup() {
 				colOffset.w = 103;
 				colOffset.h = 40;
 			}
-			Entity* e = SceneDesignSystem::createTree(i * 103, 550 + j * 150, (Globals::Layers)(Globals::Layers::BACKGROUND2 + j), treeNoLeaves, colPtr);
+			SDL_Rect* srcRect = new SDL_Rect();
+			srcRect->h = 156;
+			srcRect->w = 122;
+			srcRect->x = 0;
+			srcRect->y = 0;
+			//tree no leaves
+			Entity* e = SceneDesignSystem::createTree(i * srcRect->w, 550 + j * srcRect->h, (Globals::Layers)(Globals::Layers::BACKGROUND2 + j), tree, colPtr, srcRect);
+			Stats* treeStats = (Stats*)e->findComponent(ComponentType::STATS);
+			treeStats->curHealth = 50;
 			graphics->addToDraw(e);
 			entities.push_back(e);
 			if (i * 122 < MapSystem::getWidth()) {
@@ -65,7 +72,12 @@ void EncounterScene::setup() {
 					colOffset.h = 0;
 					
 				}
-				Entity* e2 = SceneDesignSystem::createTree(i * 122, 475 + j * 305, (Globals::Layers)(Globals::Layers::BACKGROUND1 + 3 * j), tree, colPtr);
+				SDL_Rect* srcRect = new SDL_Rect();
+				srcRect->h = 156;
+				srcRect->w = 122;
+				srcRect->x = 0;
+				srcRect->y = srcRect->h * 3;
+				Entity* e2 = SceneDesignSystem::createTree(i * 122, 475 + j * 305, (Globals::Layers)(Globals::Layers::BACKGROUND1 + 3 * j), tree, colPtr, srcRect);
 				graphics->addToDraw(e2);
 				entities.push_back(e2);
 			}
@@ -226,8 +238,24 @@ void EncounterScene::preFightScenario(float deltaTime) {
 
 void EncounterScene::update(float deltaTime) {
 	Scene::update(deltaTime);
-	for (auto ent : entities) {
-		ent->update(deltaTime);
+	for(int i=0; i<(int)entities.size(); i++) {
+		Entity* ent = entities[i];
+		if (ent->hasComponent(ComponentType::ANIMATOR)) {
+			Animator* anim = (Animator*)ent->findComponent(ComponentType::ANIMATOR);
+			if ((!ent->active && anim->isAnimating()) || ent->active) ent->update(deltaTime);
+			else if (!ent->active && !anim->isAnimating()) {
+
+				graphics->removeFromDraw(ent);
+				iter_swap(entities.begin() + i, entities.begin() + entities.size() - 1);
+				entities.pop_back();
+				delete ent;
+				
+			}
+		}
+		else {
+			ent->update(deltaTime);
+		}
+		
 	}
 	
 	//preFightScenario(deltaTime);
@@ -236,7 +264,6 @@ void EncounterScene::update(float deltaTime) {
 
 EncounterScene::~EncounterScene() {
 	SDL_DestroyTexture(tree);
-	SDL_DestroyTexture(treeNoLeaves);
 	SDL_DestroyTexture(oldman);
 	SDL_DestroyTexture(soldier);
 	for (auto tree : entities) {

@@ -35,7 +35,7 @@ void Entity::update(float deltaTime) {
 		if (comp.second->updatable && comp.second->enabled) {
 			comp.second->update(deltaTime);
 		}
-	}	
+	}
 }
 
 Entity::~Entity() {
