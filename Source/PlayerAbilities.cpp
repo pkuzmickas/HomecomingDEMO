@@ -18,7 +18,7 @@ PlayerAbilities::~PlayerAbilities() {
 }
 
 void PlayerAbilities::flyingSlashAttack() {
-	//if (flyingSlashing) return;
+	if (flyingSlashing) return;
 	int mouseX, mouseY;
 	SDL_GetMouseState(&mouseX, &mouseY);
 	fSlashEntity = new Entity();
@@ -227,7 +227,21 @@ void PlayerAbilities::fSlashUpdates(float deltaTime) {
 	if (!fSlashAnimator->isAnimating()) {
 		fSlashAnimator->playAnimation("fSlashing", true);
 	}
-	if (CollisionSystem::isCollidingWithEnv(fSlashCollider) || CollisionSystem::isCollidingWithObjects(fSlashCollider, { "player" })) {
+		
+
+	Collider* collision = CollisionSystem::isCollidingWithObjects(fSlashCollider, { "player" });
+	if (CollisionSystem::isCollidingWithEnv(fSlashCollider) || collision) {
+		if (collision) {
+			Drawable* colDrw = (Drawable*)collision->owner->findComponent(ComponentType::DRAWABLE);
+			if (colDrw->ID == "soldier" || colDrw->ID == "soldier2" || colDrw->ID == "oldman") {
+				AIComponent* ai = (AIComponent*)collision->owner->findComponent(ComponentType::AI);
+				Stats* enemyStats = (Stats*)collision->owner->findComponent(ComponentType::STATS);
+				PlayerStats* playerStats = (PlayerStats*)player->findComponent(ComponentType::STATS);
+				enemyStats->curHealth -= playerStats->fSlashAttackDmg;
+				Drawable* fslashDrawable = (Drawable*)fSlashEntity->findComponent(ComponentType::DRAWABLE);
+				ai->knockBack(200, 500, playerAnimator->direction, fslashDrawable->ID);
+			}
+		}
 		CollisionSystem::removeCollider(fSlashCollider);
 		graphics->removeFromDraw(fSlashEntity);
 		flyingSlashing = false;
@@ -271,13 +285,13 @@ void PlayerAbilities::slashUpdates(float deltaTime) {
 		Transform* trans = (Transform*)slashCollision->owner->findComponent(ComponentType::TRANSFORM);
 		if (slashCollision->owner->hasComponent(ComponentType::AI)) {
 			AIComponent* ai = (AIComponent*)slashCollision->owner->findComponent(ComponentType::AI);
-			if (draw->ID == "soldier2" && !ai->isKnocked()) { // can use substrings to know type (soldier)
+			if ((draw->ID == "soldier2" || draw->ID == "soldier") && !ai->isKnocked()) { // can use substrings to know type (soldier)
 				slashCollider->enabled = false;
 				Stats* enemyStats = (Stats*)slashCollision->owner->findComponent(ComponentType::STATS);
 				PlayerStats* playerStats = (PlayerStats*)player->findComponent(ComponentType::STATS);
 				enemyStats->curHealth -= playerStats->mainAttackDmg;
 				Drawable* slashDrawable = (Drawable*)slashEntity->findComponent(ComponentType::DRAWABLE);
-				ai->knockBack(200, 500, playerAnimator->direction, slashDrawable->ID);
+				ai->knockBack(100, 500, playerAnimator->direction, slashDrawable->ID);
 			}
 		}
 
