@@ -4,8 +4,10 @@ SDL_Renderer* UIDesignSystem::renderer;
 Graphics* UIDesignSystem::graphics;
 SDL_Texture* UIDesignSystem::healthBarFull;
 SDL_Texture* UIDesignSystem::healthBarEmpty;
+SDL_Texture* UIDesignSystem::bloodshotIMG;
 unordered_map<Entity*, Entity*> UIDesignSystem::emptyBars;
 unordered_map<Entity*, Entity*> UIDesignSystem::fullBars;
+vector<Entity*> UIDesignSystem::bloodShots;
 int UIDesignSystem::healthbarHeight;
 int UIDesignSystem::healthbarWidth;
 
@@ -14,6 +16,27 @@ bool UIDesignSystem::isHealthShowing(Entity * entity) {
 		return true;
 	}
 	return false;
+}
+
+void UIDesignSystem::createBloodshot(Entity* entity) {
+	Transform* objectTransform = (Transform*)entity->findComponent(ComponentType::TRANSFORM);
+	Entity* blood = new Entity();
+	bloodShots.push_back(blood);
+	SDL_Rect* srcRect = new SDL_Rect();
+	srcRect->x = 0;
+	srcRect->y = 0;
+	srcRect->w = 215;
+	srcRect->h = 200;
+	Transform* t = new Transform(blood, srcRect->w, srcRect->h, objectTransform->globalPosX + objectTransform->width/2 - srcRect->w/2, objectTransform->globalPosY + objectTransform->height / 2 - srcRect->h / 2);
+	blood->addComponent(t);
+	Drawable* drw = new Drawable(blood, bloodshotIMG, "blood", Globals::Layers::UI, srcRect);
+	blood->addComponent(drw);
+	Animator* anim = new Animator(blood);
+	blood->addComponent(anim);
+	Animator::Animation a("bloodshot", { 0, 1, 2 }, 40);
+	anim->addAnimation(a);
+	graphics->addToDraw(blood);
+	anim->playAnimation("bloodshot");
 }
 
 void UIDesignSystem::cleanup() {
@@ -34,6 +57,7 @@ void UIDesignSystem::setup(SDL_Renderer * renderer, Graphics * graphics) {
 	UIDesignSystem::graphics = graphics;
 	healthBarFull = IMG_LoadTexture(renderer, ASSET_DIR UI_DIR "healthBarFull.png");
 	healthBarEmpty = IMG_LoadTexture(renderer, ASSET_DIR UI_DIR "healthBarEmpty.png");
+	bloodshotIMG = IMG_LoadTexture(renderer, ASSET_DIR UI_DIR "blood.png");
 	SDL_QueryTexture(healthBarFull, NULL, NULL, &healthbarWidth, &healthbarHeight);
 }
 
@@ -63,6 +87,15 @@ void UIDesignSystem::showHealth(Entity * entity) {
 	fullBars[entity] = fullBar;
 }
 
+void UIDesignSystem::removeHealth(Entity * entity) {
+	graphics->removeFromDraw(emptyBars[entity]);
+	graphics->removeFromDraw(fullBars[entity]);
+	delete emptyBars[entity];
+	delete fullBars[entity];
+	emptyBars.erase(entity);
+	fullBars.erase(entity);
+}
+
 void UIDesignSystem::update(float deltaTime) {
 	for (auto it : emptyBars) {
 		Transform* gameobjectTransform = (Transform*)it.first->findComponent(ComponentType::TRANSFORM);
@@ -82,5 +115,16 @@ void UIDesignSystem::update(float deltaTime) {
 		barDrawable->srcRect->w = newWidth;
 		barTransform->width = newWidth;
 		
+	}
+	for (int i=0; i<(int)bloodShots.size(); i++) {
+		Entity* blood = bloodShots[i];
+		blood->update(deltaTime);
+		Animator* anim = (Animator*)blood->findComponent(ComponentType::ANIMATOR);
+		if (!anim->isAnimating()) {
+			iter_swap(bloodShots.begin() + i, bloodShots.begin() + bloodShots.size() - 1);
+			bloodShots.pop_back();
+			graphics->removeFromDraw(blood);
+			delete blood;
+		}
 	}
 }

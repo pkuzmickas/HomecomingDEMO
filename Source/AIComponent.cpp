@@ -5,6 +5,7 @@ AIComponent::AIComponent(Entity * owner) : Component(owner, true) {
 	animator = (Animator*)owner->findComponent(ComponentType::ANIMATOR);
 	transform = (Transform*)owner->findComponent(ComponentType::TRANSFORM);
 	collider = (Collider*)owner->findComponent(ComponentType::COLLIDER);
+	stats = (Stats*)owner->findComponent(ComponentType::STATS);
 	type = AI;
 }
 
@@ -29,6 +30,17 @@ void AIComponent::walkTo(int destX, int destY, int walkingSpeed) {
 }
 
 void AIComponent::update(float deltaTime) {
+	if (stats && stats->curHealth <= 0 && state != DEAD) {
+		state = DEAD;
+		Collider* col = (Collider*)owner->findComponent(ComponentType::COLLIDER);
+		col->enabled = false;
+		CollisionSystem::removeCollider(col);
+		/*Animator* anim = (Animator*)owner->findComponent(ComponentType::ANIMATOR);
+		anim->playAnimation("walking0");*/
+		owner->active = false;
+		UIDesignSystem::removeHealth(owner);
+		UIDesignSystem::createBloodshot(owner);
+	}
 	if (state == NORMAL) {
 		if (walking) {
 			int walkingDir = 2;
@@ -115,7 +127,7 @@ void AIComponent::update(float deltaTime) {
 			collider->offset.x = 0;
 			collider->offset.y = 0;
 		}
-		
+
 	}
 }
 
@@ -147,5 +159,5 @@ void AIComponent::knockBack(int dist, int speed, Animator::LookDirection dir, st
 		movement->velY += speed;
 		collider->offset.y += colBoxChangeVal;
 	}
-	
+
 }

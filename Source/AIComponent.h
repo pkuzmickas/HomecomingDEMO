@@ -8,7 +8,8 @@ class AIComponent : public Component {
 public:
 	enum State {
 		NORMAL,
-		ATTACKING
+		ATTACKING,
+		DEAD
 	};
 	AIComponent(Entity* owner);
 	State state = NORMAL;
@@ -24,6 +25,7 @@ private:
 	Animator* animator;
 	Transform* transform;
 	Collider* collider;
+	Stats* stats;
 	std::vector<SDL_Point> path;
 	int curPathIndex;
 	int result; // for some computation (temp global int)
