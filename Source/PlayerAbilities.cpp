@@ -215,6 +215,10 @@ void PlayerAbilities::dashUpdates(float deltaTime) {
 
 }
 
+void PlayerAbilities::fSlashUpdates(float deltaTime) {
+
+}
+
 void PlayerAbilities::slashUpdates(float deltaTime) {
 	slashEntity->update(deltaTime);
 

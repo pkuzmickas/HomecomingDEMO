@@ -49,7 +49,7 @@ private:
 	Animator* fSlashAnimator;
 	Collider* fSlashCollider;
 	Transform* fSlashTransform = NULL;
-	int dashStart = 0;
+	
 
 
 };

@@ -8,7 +8,7 @@ void SceneDesignSystem::checkFontSizeOnText(std::string text, int fontSize, int 
 	TTF_CloseFont(temp);
 }
 
-Entity* SceneDesignSystem::createTree(int posX, int posY, Globals::Layers layer, SDL_Texture * texture) {
+Entity* SceneDesignSystem::createTree(int posX, int posY, Globals::Layers layer, SDL_Texture * texture, SDL_Rect* colOffset) {
 	Entity* tree = new Entity();
 	int width, height;
 	SDL_QueryTexture(texture, NULL, NULL, &width, &height);
@@ -16,7 +16,13 @@ Entity* SceneDesignSystem::createTree(int posX, int posY, Globals::Layers layer,
 	tree->addComponent(transform);
 	Drawable* drawable = new Drawable(tree, texture, "tree" + treesSpawned, layer, NULL);
 	tree->addComponent(drawable);
-	Collider* collider = new Collider(tree, Collider::NORMAL, 0, 100, 103, 25);
+	Collider* collider = NULL;
+	if (!colOffset) {
+		collider = new Collider(tree); 
+	}
+	else {
+		collider = new Collider(tree, Collider::NORMAL, colOffset->x, colOffset->y, colOffset->w, colOffset->h);
+	}
 	tree->addComponent(collider);
 	CollisionSystem::collidersInScene.push_back(collider);
 	Animator* animator = new Animator(tree);

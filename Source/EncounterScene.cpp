@@ -12,10 +12,6 @@ EncounterScene::EncounterScene(SDL_Renderer * renderer, Graphics * graphics) : S
 
 void EncounterScene::setup() {
 
-	
-
-	
-
 	// Spawning npcs
 	oldman = IMG_LoadTexture(renderer, ASSET_DIR CHARACTER_DIR "oldman.png");
 	soldier = IMG_LoadTexture(renderer, ASSET_DIR CHARACTER_DIR "soldier.png");
@@ -40,11 +36,36 @@ void EncounterScene::setup() {
 	treeNoLeaves = IMG_LoadTexture(renderer, ASSET_DIR LEVEL_DESIGN_DIR "treeNoLeaves.png");
 	for (int j = 0; j < 2; j++) {
 		for (int i = 0; i < MapSystem::getWidth() / 103 + 1; i++) {
-			Entity* e = SceneDesignSystem::createTree(i * 103, 550 + j * 150, (Globals::Layers)(Globals::Layers::BACKGROUND2 + j), treeNoLeaves);
+			
+			SDL_Rect colOffset; //0, 100, 103, 25
+			SDL_Rect* colPtr = &colOffset;
+			if (j == 0) {
+				colOffset.x = 0;
+				colOffset.y = -30;
+				colOffset.w = 0;
+				colOffset.h = 0;
+			}
+			else {
+				colOffset.x = 0;
+				colOffset.y = 100;
+				colOffset.w = 103;
+				colOffset.h = 40;
+			}
+			Entity* e = SceneDesignSystem::createTree(i * 103, 550 + j * 150, (Globals::Layers)(Globals::Layers::BACKGROUND2 + j), treeNoLeaves, colPtr);
 			graphics->addToDraw(e);
 			entities.push_back(e);
 			if (i * 122 < MapSystem::getWidth()) {
-				Entity* e2 = SceneDesignSystem::createTree(i * 122, 475 + j * 305, (Globals::Layers)(Globals::Layers::BACKGROUND1 + 3 * j), tree);
+				if (j == 0) {
+					colPtr = NULL;
+				}
+				else {
+					colOffset.x = 0;
+					colOffset.y = 50;
+					colOffset.w = 0;
+					colOffset.h = 0;
+					
+				}
+				Entity* e2 = SceneDesignSystem::createTree(i * 122, 475 + j * 305, (Globals::Layers)(Globals::Layers::BACKGROUND1 + 3 * j), tree, colPtr);
 				graphics->addToDraw(e2);
 				entities.push_back(e2);
 			}
