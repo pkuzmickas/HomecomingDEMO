@@ -19,8 +19,8 @@ void Graphics::addToDraw(Entity * entity) {
 }
 
 bool Graphics::removeFromDraw(Entity * entity) {
-	Drawable* drawable = (Drawable*) entity->findComponent(ComponentType::DRAWABLE);
-	for(int i=0; i < (int)objectDrawQueue[drawable->layer].size(); i++) {
+	Drawable* drawable = (Drawable*)entity->findComponent(ComponentType::DRAWABLE);
+	for (int i = 0; i < (int)objectDrawQueue[drawable->layer].size(); i++) {
 		if (objectDrawQueue[drawable->layer][i].entity == entity) {
 			// Swaps the element with the matching name with the last one in the vector and then pops the vector
 			iter_swap(objectDrawQueue[drawable->layer].begin() + i, objectDrawQueue[drawable->layer].begin() + objectDrawQueue[drawable->layer].size() - 1);
@@ -77,7 +77,7 @@ void Graphics::render()
 	if (yBound > MapSystem::getHeight() / Globals::TILE_SIZE) yBound = MapSystem::getHeight() / Globals::TILE_SIZE;
 	int xStart = (int)(CameraSystem::posX / Globals::TILE_SIZE);
 	int yStart = (int)(CameraSystem::posY / Globals::TILE_SIZE);
-	
+
 	// Checks the tiles needed to be drawn in regards to the camera and adds them to the vector
 	for (int row = yStart; row < yBound; row++) {
 		for (int col = xStart; col < xBound; col++) {
@@ -91,7 +91,7 @@ void Graphics::render()
 	for (int layer = 0; layer < Globals::Layers::END_MARKER; layer++) {
 		if (layer < Globals::Layers::UI) {
 			for (auto tileSprite : mapDrawQueue[layer]) {
-				if(!debug)draw(tileSprite);
+				if (!debug)draw(tileSprite);
 				tileSprite.entity->update(0); // need to update all of the  visible tiles in case the camera moves
 			}
 
@@ -114,7 +114,7 @@ void Graphics::render()
 			// END OF DEBUG CODE
 
 			mapDrawQueue[layer].clear();
-			
+
 		}
 		for (auto gameObject : objectDrawQueue[layer]) {
 			if (gameObject.drawable->isRect) {
@@ -137,6 +137,7 @@ void Graphics::render()
 			// DEBUG CODE
 			if (debug) {
 				for (auto gameObject : objectDrawQueue[layer]) {
+
 					if (gameObject.drawable->owner->hasComponent(ComponentType::COLLIDER)) {
 						Collider* col = (Collider*)gameObject.drawable->owner->findComponent(ComponentType::COLLIDER);
 						SDL_Rect collider;
@@ -148,6 +149,7 @@ void Graphics::render()
 						SDL_RenderDrawRect(renderer, &collider);
 						SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
 					}
+
 				}
 			}
 			// END OF DEBUG CODE

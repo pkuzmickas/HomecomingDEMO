@@ -21,7 +21,7 @@ void PlayerInput::update(float deltaTime) {
 				}
 			}
 			if (e.button.button == SDL_BUTTON_RIGHT) {
-				playerAbilities->dashMove();
+				playerAbilities->flyingSlashAttack();
 			}
 		}
 			break;
@@ -43,6 +43,9 @@ void PlayerInput::update(float deltaTime) {
 			if (e.key.keysym.sym == SDLK_s || e.key.keysym.sym == SDLK_DOWN) {
 				playerMovement->moving[playerMovement->DOWN] = true;
 				playerAnimator->animateMovement();
+			}
+			if (e.key.keysym.sym == SDLK_SPACE) {
+				playerAbilities->dashMove();
 			}
 
 		}

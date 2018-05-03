@@ -16,11 +16,10 @@ public:
 		bool loop;
 		int spritesInRow;
 		Animation() {};
-		Animation(std::string name, std::vector<int> spriteSequence, int speed, bool loop, int spritesInRow = 0) {
+		Animation(std::string name, std::vector<int> spriteSequence, int speed, int spritesInRow = 0) {
 			this->name = name;
 			this->spriteSequence = spriteSequence;
 			this->speed = speed;
-			this->loop = loop;
 			this->spritesInRow = spritesInRow;
 		}
 	};

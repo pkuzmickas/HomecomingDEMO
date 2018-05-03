@@ -49,6 +49,7 @@ private:
 	Animator* fSlashAnimator;
 	Collider* fSlashCollider;
 	Transform* fSlashTransform = NULL;
+	Movement* fSlashMovement;
 	
 
 

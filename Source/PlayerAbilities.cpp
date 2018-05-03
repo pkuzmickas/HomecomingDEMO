@@ -18,7 +18,7 @@ PlayerAbilities::~PlayerAbilities() {
 }
 
 void PlayerAbilities::flyingSlashAttack() {
-	if (flyingSlashing) return;
+	//if (flyingSlashing) return;
 	int mouseX, mouseY;
 	SDL_GetMouseState(&mouseX, &mouseY);
 	fSlashEntity = new Entity();
@@ -28,10 +28,10 @@ void PlayerAbilities::flyingSlashAttack() {
 	float dx = mouseX - (playerTransform->globalPosX + playerTransform->width / 2 - CameraSystem::posX);
 	float dy = mouseY - (playerTransform->globalPosY + playerTransform->height / 2 - CameraSystem::posY);
 	float angle = atan2(dy, dx) * 180 / M_PI;
-	fSlashTransform = new Transform(fSlashEntity, width, height, playerTransform->globalPosX + playerTransform->width / 2 + 10 * cos(angle * M_PI / 180), playerTransform->globalPosY + 10 * sin(angle * M_PI / 180));
+	fSlashTransform = new Transform(fSlashEntity, width, height, playerTransform->globalPosX + 40 * cos(angle * M_PI / 180), playerTransform->globalPosY - playerTransform->height/2 + 40 * sin(angle * M_PI / 180));
 	SDL_Point center;
 	center.y = height / 2;
-	center.x = 0;
+	center.x = width / 2;
 	fSlashTransform->rotate(angle, &center);
 	fSlashEntity->addComponent(fSlashTransform);
 	SDL_Rect* src = new SDL_Rect();
@@ -39,17 +39,24 @@ void PlayerAbilities::flyingSlashAttack() {
 	src->w = width;
 	src->x = 0;
 	src->y = 0;
-	Drawable* fSlashDrawable = new Drawable(owner, flyingSlashIMG, "fslash", Globals::Layers::PLAYER, src);
+	Drawable* fSlashDrawable = new Drawable(fSlashEntity, flyingSlashIMG, "fslash", Globals::Layers::PLAYER, src);
 	fSlashEntity->addComponent(fSlashDrawable);
 	fSlashAnimator = new Animator(fSlashEntity);
-	int slashSpeed = 30;
-	Animator::Animation slashStart("fSlashStart", { 0, 1, 2 }, slashSpeed, false);
+	int slashAnimSpeed = 60;
+	float slashFlySpeed = 0.6f;
+	Animator::Animation slashStart("fSlashStart", { 0, 1, 2 }, slashAnimSpeed, false);
 	fSlashAnimator->addAnimation(slashStart);
-	Animator::Animation fslashing("fSlashing", { 1, 2 }, slashSpeed, true);
+	Animator::Animation fslashing("fSlashing", { 1, 2 }, slashAnimSpeed, true);
 	fSlashAnimator->addAnimation(fslashing);
 	fSlashEntity->addComponent(fSlashAnimator);
-
-	// TODO implement movement cols and stuf
+	fSlashAnimator->playAnimation("fSlashStart");
+	fSlashCollider = new Collider(fSlashEntity);
+	CollisionSystem::collidersInScene.push_back(fSlashCollider);
+	fSlashEntity->addComponent(fSlashCollider);
+	fSlashMovement = new Movement(fSlashEntity, dx / slashFlySpeed, dy / slashFlySpeed);//idek velX ir velY ir tada checkink collisionus
+	fSlashEntity->addComponent(fSlashMovement);
+	graphics->addToDraw(fSlashEntity);
+	flyingSlashing = true;
 }
 
 void PlayerAbilities::slashAttack() {
@@ -94,7 +101,7 @@ void PlayerAbilities::slashAttack() {
 	if (playerAnimator->direction == PlayerAnimator::LookDirection::UP) {
 		dir = 24;
 	}
-	Animator::Animation slashingAnim("slashing", { dir + 0, dir + 1, dir + 2, dir + 3 }, slashSpeed, false, 4);
+	Animator::Animation slashingAnim("slashing", { dir + 0, dir + 1, dir + 2, dir + 3 }, slashSpeed, 4);
 	slashAnimator->addAnimation(slashingAnim);
 	slashEntity->addComponent(slashAnimator);
 	slashAnimator->playAnimation("slashing");
@@ -111,15 +118,15 @@ void PlayerAbilities::dashMove() {
 	if (dashing) return;
 	int mouseX, mouseY;
 	SDL_GetMouseState(&mouseX, &mouseY);
-	
+
 	dashEntity = new Entity();
 	int dashWidth, dashHeight;
 	SDL_QueryTexture(dashIMG, NULL, NULL, &dashWidth, &dashHeight);
 	dashHeight = 50;
-	float dx = mouseX - (playerTransform->globalPosX + playerTransform->width/2 - CameraSystem::posX);
-	float dy = mouseY - (playerTransform->globalPosY + playerTransform->height/2 - CameraSystem::posY);
+	float dx = mouseX - (playerTransform->globalPosX + playerTransform->width / 2 - CameraSystem::posX);
+	float dy = mouseY - (playerTransform->globalPosY + playerTransform->height / 2 - CameraSystem::posY);
 	float angle = atan2(dy, dx) * 180 / M_PI;
-	dashTransform = new Transform(dashEntity, sqrt(dx*dx + dy*dy), dashHeight, playerTransform->globalPosX + playerTransform->width / 2 + 10 * cos(angle * M_PI / 180), playerTransform->globalPosY + 10 * sin(angle * M_PI / 180));
+	dashTransform = new Transform(dashEntity, sqrt(dx*dx + dy * dy), dashHeight, playerTransform->globalPosX + playerTransform->width / 2 + 10 * cos(angle * M_PI / 180), playerTransform->globalPosY + 10 * sin(angle * M_PI / 180));
 	SDL_Point center;
 	center.y = dashHeight / 2;
 	center.x = 0;
@@ -130,7 +137,7 @@ void PlayerAbilities::dashMove() {
 	src->w = dashWidth;
 	src->x = 0;
 	src->y = 0;
-	Drawable* dashDrawable = new Drawable(owner, dashIMG, "dash", Globals::Layers::PLAYER, src);
+	Drawable* dashDrawable = new Drawable(dashEntity, dashIMG, "dash", Globals::Layers::PLAYER, src);
 	dashEntity->addComponent(dashDrawable);
 	dashAnimator = new Animator(dashEntity);
 	int dashSpeed = 30;
@@ -140,8 +147,8 @@ void PlayerAbilities::dashMove() {
 	dashAnimator->addAnimation(notdashingAnim);
 	dashEntity->addComponent(dashAnimator);
 	SDL_Rect testCol;
-	testCol.x = mouseX - Globals::TILE_SIZE/2;
-	testCol.y = mouseY - Globals::TILE_SIZE/2;
+	testCol.x = mouseX - Globals::TILE_SIZE / 2;
+	testCol.y = mouseY - Globals::TILE_SIZE / 2;
 	testCol.h = Globals::TILE_SIZE;
 	testCol.w = Globals::TILE_SIZE;
 	if (CollisionSystem::isCollidingWithEnv(testCol) || CollisionSystem::isCollidingWithObjects(testCol, { "" })) {
@@ -166,20 +173,20 @@ void PlayerAbilities::dashMove() {
 					Stats* enemyStats = (Stats*)collision->owner->findComponent(ComponentType::STATS);
 					PlayerStats* playerStats = (PlayerStats*)player->findComponent(ComponentType::STATS);
 					enemyStats->curHealth -= playerStats->dashAttackDmg;
-					break; // Change if want multiple knocks
+					break; // Change if want multiple knocks have a temp value recording which was the knock to
 				}
 			}
 		}
 		playerTransform->globalPosX += dx;
 		playerTransform->globalPosY += dy;
-		
+
 		dashStart = SDL_GetTicks();
 		CameraSystem::detachCamera();
 	}
 
 	graphics->addToDraw(dashEntity);
 	dashing = true;
-	
+
 }
 
 void PlayerAbilities::update(float deltaTime) {
@@ -210,13 +217,23 @@ void PlayerAbilities::dashUpdates(float deltaTime) {
 		delete dashEntity;
 		dashStart = 0;
 		dashEntity = NULL;
-		CameraSystem::moveAndFollow(playerTransform->globalPosX - Globals::SCREEN_WIDTH/2, playerTransform->globalPosY - Globals::SCREEN_HEIGHT / 2,&playerTransform->globalPosX, &playerTransform->globalPosY, 1200);
+		CameraSystem::moveAndFollow(playerTransform->globalPosX - Globals::SCREEN_WIDTH / 2, playerTransform->globalPosY - Globals::SCREEN_HEIGHT / 2, &playerTransform->globalPosX, &playerTransform->globalPosY, 1200);
 	}
 
 }
 
 void PlayerAbilities::fSlashUpdates(float deltaTime) {
-
+	fSlashEntity->update(deltaTime);
+	if (!fSlashAnimator->isAnimating()) {
+		fSlashAnimator->playAnimation("fSlashing", true);
+	}
+	if (CollisionSystem::isCollidingWithEnv(fSlashCollider) || CollisionSystem::isCollidingWithObjects(fSlashCollider, { "player" })) {
+		CollisionSystem::removeCollider(fSlashCollider);
+		graphics->removeFromDraw(fSlashEntity);
+		flyingSlashing = false;
+		delete fSlashEntity;
+		fSlashEntity = NULL;
+	}
 }
 
 void PlayerAbilities::slashUpdates(float deltaTime) {
@@ -263,7 +280,7 @@ void PlayerAbilities::slashUpdates(float deltaTime) {
 				ai->knockBack(200, 500, playerAnimator->direction, slashDrawable->ID);
 			}
 		}
-		
+
 	}
 
 	if (!slashAnimator->isAnimating()) {

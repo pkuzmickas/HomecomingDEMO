@@ -140,7 +140,6 @@ void EncounterScene::preFightScenario(float deltaTime) {
 		blackBox1T->height = 0;
 		blackBox2T->height = 0;
 		wait(1, "find action");
-		//curAction = "find action";
 	}
 	if (curAction == "find action") {
 		Transform* oldmanT = (Transform*)oldmanAI->owner->findComponent(ComponentType::TRANSFORM);
@@ -211,7 +210,6 @@ void EncounterScene::preFightScenario(float deltaTime) {
 		}
 	}
 	if (curAction == "move camera to player") {
-		//DialogueSystem::closeDialogueBox();
 		Transform* playerTransform = (Transform*)(player->findComponent(ComponentType::TRANSFORM));
 		CameraSystem::moveCamera(playerTransform->globalPosX - Globals::SCREEN_WIDTH / 2, CameraSystem::posY, 400);
 		curAction = "camera moving 2";
