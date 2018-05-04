@@ -18,17 +18,25 @@ public:
 	bool isWalking() { return walking; }
 	bool isKnocked() { return knocked; }
 	void knockBack(int dist, int speed, Animator::LookDirection dir, std::string attackName);
-private:
-	bool walking, knocked;
-	int destX, destY, walkingSpeed;
-	Movement* movement;
+	void attack(Entity* target);
+protected:
+	void stopWalking();
+	void calculatePath(int destX, int destY);
+
+	Movement * movement;
 	Animator* animator;
 	Transform* transform;
 	Collider* collider;
 	Stats* stats;
+	Entity* target;
+	Transform* targetTransform;
+	bool walking, knocked;
+	int destX, destY, walkingSpeed, walkingDir;
+	
 	std::vector<SDL_Point> path;
 	int curPathIndex;
 	int result; // for some computation (temp global int)
 	Animator::LookDirection knockDir;
 	std::string knockedByAttackName = "";
+
 };

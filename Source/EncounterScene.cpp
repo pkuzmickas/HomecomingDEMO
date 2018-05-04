@@ -16,18 +16,18 @@ void EncounterScene::setup() {
 	oldman = IMG_LoadTexture(renderer, ASSET_DIR CHARACTER_DIR "oldman.png");
 	soldier = IMG_LoadTexture(renderer, ASSET_DIR CHARACTER_DIR "soldier.png");
 	Entity* oldmanEntity = NPCSystem::createNPC(270, 700, 48, 48, Globals::Layers::PLAYER, oldman, "oldman");
-	Entity* soldierEntity = NPCSystem::createNPC(200, 700, 48, 48, Globals::Layers::PLAYER, soldier, "soldier1");
-	Entity* soldier2Entity = NPCSystem::createNPC(340, 700, 48, 48, Globals::Layers::PLAYER, soldier, "soldier2");
-	oldmanAI = (AIComponent*)oldmanEntity->findComponent(ComponentType::AI);
-	soldierAI = (AIComponent*)soldierEntity->findComponent(ComponentType::AI);
-	soldier2AI = (AIComponent*)soldier2Entity->findComponent(ComponentType::AI);
+	Entity* soldierEntity = NPCSystem::createSoldier(200, 700, 48, 48, Globals::Layers::PLAYER, soldier, "soldier1");
+	Entity* soldier2Entity = NPCSystem::createSoldier(340, 700, 48, 48, Globals::Layers::PLAYER, soldier, "soldier2");
+	//oldmanAI = (AIComponent*)oldmanEntity->findComponent(ComponentType::AI);
+	soldierAI = (AISoldier*)soldierEntity->findComponent(ComponentType::AI);
+	soldier2AI = (AISoldier*)soldier2Entity->findComponent(ComponentType::AI);
 	graphics->addToDraw(oldmanEntity);
 	graphics->addToDraw(soldierEntity);
 	graphics->addToDraw(soldier2Entity);
 	entities.push_back(oldmanEntity);
 	entities.push_back(soldierEntity);
 	entities.push_back(soldier2Entity);
-	
+
 	createPlayer(1800, 700, Animator::LookDirection::LEFT);
 	PlayerSystem::disableMovement();
 
@@ -35,7 +35,7 @@ void EncounterScene::setup() {
 	tree = IMG_LoadTexture(renderer, ASSET_DIR LEVEL_DESIGN_DIR "tree.png");
 	for (int j = 0; j < 2; j++) {
 		for (int i = 0; i < MapSystem::getWidth() / 103 + 1; i++) {
-			
+
 			SDL_Rect colOffset; //0, 100, 103, 25
 			SDL_Rect* colPtr = &colOffset;
 			if (j == 0) {
@@ -70,7 +70,7 @@ void EncounterScene::setup() {
 					colOffset.y = 50;
 					colOffset.w = 0;
 					colOffset.h = 0;
-					
+
 				}
 				SDL_Rect* srcRect = new SDL_Rect();
 				srcRect->h = 156;
@@ -84,25 +84,26 @@ void EncounterScene::setup() {
 		}
 	}
 
-	
+
 	CameraSystem::posY = MapSystem::getHeight() - Globals::SCREEN_HEIGHT;
-	Entity* blackBox1 = SceneDesignSystem::createRect(CameraSystem::posX, CameraSystem::posY, Globals::SCREEN_WIDTH + 10, Globals::SCREEN_HEIGHT/2, Globals::Layers::UI, true); // -85 is a good number
-	Entity* blackBox2 = SceneDesignSystem::createRect(CameraSystem::posX, CameraSystem::posY + Globals::SCREEN_HEIGHT / 2, Globals::SCREEN_WIDTH + 10, Globals::SCREEN_HEIGHT/2, Globals::Layers::UI, true);
-	blackBox1T = (Transform*) blackBox1->findComponent(ComponentType::TRANSFORM);
+	Entity* blackBox1 = SceneDesignSystem::createRect(CameraSystem::posX, CameraSystem::posY, Globals::SCREEN_WIDTH + 10, Globals::SCREEN_HEIGHT / 2, Globals::Layers::UI, true); // -85 is a good number
+	Entity* blackBox2 = SceneDesignSystem::createRect(CameraSystem::posX, CameraSystem::posY + Globals::SCREEN_HEIGHT / 2, Globals::SCREEN_WIDTH + 10, Globals::SCREEN_HEIGHT / 2, Globals::Layers::UI, true);
+	blackBox1T = (Transform*)blackBox1->findComponent(ComponentType::TRANSFORM);
 	blackBox2T = (Transform*)blackBox2->findComponent(ComponentType::TRANSFORM);
 	//graphics->addToDraw(blackBox1);
 	//graphics->addToDraw(blackBox2);
 	entities.push_back(blackBox1);
 	entities.push_back(blackBox2);
-	
+
 	wait(2, "intro text");
-	
+
 	//for testing
 	Transform* playerTransform = (Transform*)(player->findComponent(ComponentType::TRANSFORM));
 	CameraSystem::follow(&playerTransform->globalPosX, &playerTransform->globalPosY);
 	PlayerSystem::enableMovement();
 	Transform* solt = (Transform*)(soldier2Entity->findComponent(ComponentType::TRANSFORM));
 	solt->globalPosX = 1500;
+	soldier2AI->attack(player);
 
 }
 
@@ -134,7 +135,7 @@ void EncounterScene::preFightScenario(float deltaTime) {
 			graphics->addToDraw(textEntity);
 			textProgress++;
 		}
-		
+
 
 		if (textProgress > introText.length()) {
 			wait(2, "delete text");
@@ -155,10 +156,10 @@ void EncounterScene::preFightScenario(float deltaTime) {
 	}
 	if (curAction == "find action") {
 		Transform* oldmanT = (Transform*)oldmanAI->owner->findComponent(ComponentType::TRANSFORM);
-		CameraSystem::moveCamera(CameraSystem::posX, oldmanT->globalPosY - Globals::SCREEN_HEIGHT/2, 1000);
+		CameraSystem::moveCamera(CameraSystem::posX, oldmanT->globalPosY - Globals::SCREEN_HEIGHT / 2, 1000);
 		curAction = "start walking";
 	}
-	if (curAction!= "camera moving 1") {
+	if (curAction != "camera moving 1") {
 		blackBox1T->globalPosX = CameraSystem::posX;
 		blackBox2T->globalPosX = CameraSystem::posX;
 	}
@@ -238,28 +239,22 @@ void EncounterScene::preFightScenario(float deltaTime) {
 
 void EncounterScene::update(float deltaTime) {
 	Scene::update(deltaTime);
-	for(int i=0; i<(int)entities.size(); i++) {
+	for (int i = 0; i < (int)entities.size(); i++) {
 		Entity* ent = entities[i];
-		if (ent->hasComponent(ComponentType::ANIMATOR)) {
-			Animator* anim = (Animator*)ent->findComponent(ComponentType::ANIMATOR);
-			if ((!ent->active && anim->isAnimating()) || ent->active) ent->update(deltaTime);
-			else if (!ent->active && !anim->isAnimating()) {
-
-				graphics->removeFromDraw(ent);
-				iter_swap(entities.begin() + i, entities.begin() + entities.size() - 1);
-				entities.pop_back();
-				delete ent;
-				
-			}
+		if (!ent->active) {
+			graphics->removeFromDraw(ent);
+			iter_swap(entities.begin() + i, entities.begin() + entities.size() - 1);
+			entities.pop_back();
+			delete ent;
 		}
 		else {
 			ent->update(deltaTime);
 		}
-		
+
 	}
-	
+
 	//preFightScenario(deltaTime);
-	
+
 }
 
 EncounterScene::~EncounterScene() {

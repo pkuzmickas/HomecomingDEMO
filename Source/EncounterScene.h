@@ -12,8 +12,8 @@ private:
 	SDL_Texture* oldman;
 	SDL_Texture* soldier;
 	AIComponent* oldmanAI;
-	AIComponent* soldierAI;
-	AIComponent* soldier2AI;
+	AISoldier* soldierAI;
+	AISoldier* soldier2AI;
 	Transform* blackBox1T;
 	Transform* blackBox2T;
 	std::vector<Entity*> entities;

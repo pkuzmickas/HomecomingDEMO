@@ -119,6 +119,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\AIComponent.cpp" />
+    <ClCompile Include="Source\AISoldier.cpp" />
     <ClCompile Include="Source\Animator.cpp" />
     <ClCompile Include="Source\CameraSystem.cpp" />
     <ClCompile Include="Source\CollisionSystem.cpp" />
@@ -142,6 +143,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AIComponent.h" />
+    <ClInclude Include="Source\AISoldier.h" />
     <ClInclude Include="Source\Animator.h" />
     <ClInclude Include="Source\Collider.h" />
     <ClInclude Include="Source\CollisionSystem.h" />

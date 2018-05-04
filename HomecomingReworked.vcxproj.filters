@@ -37,6 +37,12 @@
     <Filter Include="Source Files\Components\Player">
       <UniqueIdentifier>{5812d643-a037-45f0-b123-6d3609a16f58}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Components\NPCs">
+      <UniqueIdentifier>{f5c7ab20-3024-47f2-a2fd-e19a967d78d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components\NPCs">
+      <UniqueIdentifier>{622aab8f-f746-445a-bb99-d096bf73eec8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Director.cpp">
@@ -101,6 +107,9 @@
     </ClCompile>
     <ClCompile Include="Source\UIDesignSystem.cpp">
       <Filter>Source Files\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\AISoldier.cpp">
+      <Filter>Source Files\Components\NPCs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -178,6 +187,9 @@
     </ClInclude>
     <ClInclude Include="Source\UIDesignSystem.h">
       <Filter>Header Files\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\AISoldier.h">
+      <Filter>Header Files\Components\NPCs</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

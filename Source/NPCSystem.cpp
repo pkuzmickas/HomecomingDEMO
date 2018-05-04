@@ -1,6 +1,6 @@
 #include "NPCSystem.h"
 
-Entity* NPCSystem::createNPC(int posX, int posY, int width, int height, Globals::Layers layer, SDL_Texture * texture, std::string spriteName, std::string* speakerID, Abilities* abilities) {
+Entity* NPCSystem::createNPC(int posX, int posY, int width, int height, Globals::Layers layer, SDL_Texture * texture, std::string spriteName, std::string* speakerID) {
 	Entity* npc = new Entity();
 	Transform* transform = new Transform(npc, width, height, posX, posY);
 	npc->addComponent(transform);
@@ -28,12 +28,7 @@ Entity* NPCSystem::createNPC(int posX, int posY, int width, int height, Globals:
 	animator->addAnimation(walkingr);
 	Animator::Animation walkingu("walking3", { 9, 10, 11, 10 }, walkAnimSpeed, false);
 	animator->addAnimation(walkingu);
-	Stats* stats = new Stats(npc);
-	npc->addComponent(stats);
-	stats->totalHealth = 300;
-	stats->curHealth = 300;
-	AIComponent* ai = new AIComponent(npc);
-	npc->addComponent(ai);
+	
 	
 	// TODO DIALOGUE IMPLEMENTATION FOR STATIC AI
 	/*if (speakerID) { 
@@ -41,4 +36,15 @@ Entity* NPCSystem::createNPC(int posX, int posY, int width, int height, Globals:
 		npc->addComponent(talkable);
 	}*/
 	return npc;
+}
+
+Entity * NPCSystem::createSoldier(int posX, int posY, int width, int height, Globals::Layers layer, SDL_Texture * texture, std::string spriteName, std::string * speakerID) {
+	Entity* soldier = createNPC(posX, posY, width, height, layer, texture, spriteName, speakerID);
+	Stats* stats = new Stats(soldier);
+	soldier->addComponent(stats);
+	stats->totalHealth = 300;
+	stats->curHealth = 300;
+	AISoldier* ai = new AISoldier(soldier);
+	soldier->addComponent(ai);
+	return soldier;
 }
