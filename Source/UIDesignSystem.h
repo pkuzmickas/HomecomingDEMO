@@ -11,15 +11,24 @@ private:
 	static SDL_Texture* healthBarFull;
 	static SDL_Texture* healthBarEmpty;
 	static SDL_Texture* bloodshotIMG;
+	static SDL_Texture* playerHealthBarFull;
+	static SDL_Texture* playerHealthBarEmpty;
 	static unordered_map<Entity*, Entity*> emptyBars; // gameObject to its healthbar
 	static unordered_map<Entity*, Entity*> fullBars; // gameObject to its healthbar
 	static vector<Entity*> bloodShots;
 	static int healthbarHeight;
 	static int healthbarWidth;
+	static int playerHealthbarWidth;
+	static int playerHealthbarHeight;
+	static Entity* playerEmptyBar;
+	static Entity* playerFullBar;
+	static bool showingPlayerHealth;
 public:
 	static void setup(SDL_Renderer* renderer, Graphics* graphics);
 	static void showHealth(Entity * entity);
 	static void removeHealth(Entity * entity);
+	static void showPlayerHealth();
+	static void hidePlayerHealth();
 	static void update(float deltaTime);
 	static bool isHealthShowing(Entity* entity);
 	static void createBloodshot(Entity* entity);

@@ -5,11 +5,19 @@ Graphics* UIDesignSystem::graphics;
 SDL_Texture* UIDesignSystem::healthBarFull;
 SDL_Texture* UIDesignSystem::healthBarEmpty;
 SDL_Texture* UIDesignSystem::bloodshotIMG;
+SDL_Texture* UIDesignSystem::playerHealthBarEmpty;
+SDL_Texture* UIDesignSystem::playerHealthBarFull;
+Entity* UIDesignSystem::playerEmptyBar = NULL;
+Entity* UIDesignSystem::playerFullBar = NULL;
 unordered_map<Entity*, Entity*> UIDesignSystem::emptyBars;
 unordered_map<Entity*, Entity*> UIDesignSystem::fullBars;
 vector<Entity*> UIDesignSystem::bloodShots;
 int UIDesignSystem::healthbarHeight;
 int UIDesignSystem::healthbarWidth;
+int UIDesignSystem::playerHealthbarWidth;
+int UIDesignSystem::playerHealthbarHeight;
+bool UIDesignSystem::showingPlayerHealth = false;
+
 
 bool UIDesignSystem::isHealthShowing(Entity * entity) {
 	if (emptyBars.find(entity) != emptyBars.end()) {
@@ -51,6 +59,14 @@ void UIDesignSystem::cleanup() {
 	SDL_DestroyTexture(healthBarFull);
 	SDL_DestroyTexture(healthBarEmpty);
 	SDL_DestroyTexture(bloodshotIMG);
+	SDL_DestroyTexture(playerHealthBarEmpty);
+	SDL_DestroyTexture(playerHealthBarFull);
+	if (playerFullBar) {
+		delete playerFullBar;
+	}
+	if (playerEmptyBar) {
+		delete playerEmptyBar;
+	}
 }
 
 void UIDesignSystem::setup(SDL_Renderer * renderer, Graphics * graphics) {
@@ -59,7 +75,11 @@ void UIDesignSystem::setup(SDL_Renderer * renderer, Graphics * graphics) {
 	healthBarFull = IMG_LoadTexture(renderer, ASSET_DIR UI_DIR "healthBarFull.png");
 	healthBarEmpty = IMG_LoadTexture(renderer, ASSET_DIR UI_DIR "healthBarEmpty.png");
 	bloodshotIMG = IMG_LoadTexture(renderer, ASSET_DIR UI_DIR "blood.png");
+	playerHealthBarEmpty = IMG_LoadTexture(renderer, ASSET_DIR UI_DIR "playerHealthBarEmpty.png");
+	playerHealthBarFull = IMG_LoadTexture(renderer, ASSET_DIR UI_DIR "playerHealthBarFull.png");
 	SDL_QueryTexture(healthBarFull, NULL, NULL, &healthbarWidth, &healthbarHeight);
+	playerHealthbarWidth = Globals::SCREEN_WIDTH / 3;
+	playerHealthbarHeight = Globals::SCREEN_HEIGHT / 15;
 }
 
 void UIDesignSystem::showHealth(Entity * entity) {
@@ -97,6 +117,37 @@ void UIDesignSystem::removeHealth(Entity * entity) {
 	fullBars.erase(entity);
 }
 
+void UIDesignSystem::showPlayerHealth() {
+	if (showingPlayerHealth) return;
+	showingPlayerHealth = true;
+	playerEmptyBar = new Entity();
+	Transform* t = new Transform(playerEmptyBar, playerHealthbarWidth, playerHealthbarHeight, CameraSystem::posX + Globals::SCREEN_WIDTH/20, CameraSystem::posY + Globals::SCREEN_HEIGHT/16);
+	playerEmptyBar->addComponent(t);
+	Drawable* d = new Drawable(playerEmptyBar, playerHealthBarEmpty, "emptyPlayerHealthbar", Globals::Layers::UI);
+	playerEmptyBar->addComponent(d);
+	graphics->addToDraw(playerEmptyBar);
+
+	playerFullBar = new Entity();
+	t = new Transform(playerFullBar, playerHealthbarWidth, playerHealthbarHeight, CameraSystem::posX + Globals::SCREEN_WIDTH / 20, CameraSystem::posY + Globals::SCREEN_HEIGHT / 16);
+	playerFullBar->addComponent(t);
+	SDL_Rect* src = new SDL_Rect();
+	src->h = playerHealthbarHeight;
+	src->w = playerHealthbarWidth;
+	src->x = 0;
+	src->y = 0;
+	d = new Drawable(playerFullBar, playerHealthBarFull, "fullPlayerHealthbar", Globals::Layers::UI, src);
+	playerFullBar->addComponent(d);
+	graphics->addToDraw(playerFullBar);
+}
+
+void UIDesignSystem::hidePlayerHealth() {
+	if (showingPlayerHealth) {
+		graphics->removeFromDraw(playerFullBar);
+		graphics->removeFromDraw(playerEmptyBar);
+		showingPlayerHealth = false;
+	}
+}
+
 void UIDesignSystem::update(float deltaTime) {
 	for (auto it : emptyBars) {
 		Transform* gameobjectTransform = (Transform*)it.first->findComponent(ComponentType::TRANSFORM);
@@ -128,4 +179,13 @@ void UIDesignSystem::update(float deltaTime) {
 			delete blood;
 		}
 	}
+	if (showingPlayerHealth) {
+		Transform* t1 = (Transform*)playerFullBar->findComponent(ComponentType::TRANSFORM);
+		Transform* t2 = (Transform*)playerEmptyBar->findComponent(ComponentType::TRANSFORM);
+		t1->globalPosX = CameraSystem::posX + Globals::SCREEN_WIDTH / 20;
+		t1->globalPosY = CameraSystem::posY + Globals::SCREEN_HEIGHT / 16;
+		t2->globalPosX = CameraSystem::posX + Globals::SCREEN_WIDTH / 20;
+		t2->globalPosY = CameraSystem::posY + Globals::SCREEN_HEIGHT / 16;
+	}
+	
 }
