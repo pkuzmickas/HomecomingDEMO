@@ -10,21 +10,20 @@ void AISoldier::update(float deltaTime) {
 		int chaseSpeed = 200;
 		if (subState == NONE) {
 			subState = FINDING;
-			walkTo(targetTransform->globalPosX, targetTransform->globalPosY, chaseSpeed);
+			if (!isKnocked()) {
+				walkTo(targetTransform->globalPosX, targetTransform->globalPosY, chaseSpeed);
+			}
 		}
 		if (subState == FINDING) {
-			if (curPathIndex == path.size()-3) {
-				calculatePath(targetTransform->globalPosX, targetTransform->globalPosY);
-				if (!walking) {
-					walkTo(targetTransform->globalPosX, targetTransform->globalPosY, chaseSpeed);
-				}
+			if (!walking && !isKnocked()) {
+				walkTo(targetTransform->globalPosX, targetTransform->globalPosY, chaseSpeed);
 			}
-			else if(path.size()==3) {
+			if (curPathIndex <= path.size()-3) {
+				calculatePath(targetTransform->globalPosX, targetTransform->globalPosY);
+			}
+			if(path.size()<=3) {
 				stopWalking();
 				subState = SLASHING;
-			}
-			if (isKnocked()) {
-				calculatePath(targetTransform->globalPosX, targetTransform->globalPosY);
 			}
 		}
 		if (subState == SLASHING) {
@@ -32,7 +31,7 @@ void AISoldier::update(float deltaTime) {
 			if (path.size() > 3) {
 				subState = NONE;
 			}
-			cout << "SLASH ATTACK!" << endl; //TODO instead of stopwalking have recalculate(), check the direction bug
+			//cout << "SLASH ATTACK!" << endl; //TODO instead of stopwalking have recalculate(), check the direction bug
 		}
 	}
 	

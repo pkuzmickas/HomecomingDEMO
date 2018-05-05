@@ -117,6 +117,7 @@ void AIComponent::knockBack(int dist, int speed, Animator::LookDirection dir, st
 	knockedByAttackName = attackName;
 	knocked = true;
 	knockDir = dir;
+	stopWalking();
 	if (!UIDesignSystem::isHealthShowing(owner)) {
 		UIDesignSystem::showHealth(owner);
 	}

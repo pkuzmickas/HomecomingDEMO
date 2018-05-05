@@ -84,7 +84,7 @@ Collider* CollisionSystem::isCollidingWithObjects(Collider* object, vector<strin
 		if (isExcepted) continue;
 		if (object2 != object && isColliding(object->colBox, object2->colBox)) {
 
-			cout << d1->ID << " is colliding with " << d2->ID << endl;
+			//cout << d1->ID << " is colliding with " << d2->ID << endl;
 			return object2;
 		}
 	}
