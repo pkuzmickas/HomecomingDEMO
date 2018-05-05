@@ -9,6 +9,8 @@ Entity * PlayerSystem::createPlayer(int globalPosX, int globalPosY, SDL_Texture*
 	PlayerStats* playerStats = new PlayerStats(player);
 	player->addComponent(playerStats);
 	playerStats->mainAttackDmg = 30;
+	playerStats->totalHealth = 200;
+	playerStats->curHealth = 200;
 	SDL_Rect* srcRect = new SDL_Rect();
 	srcRect->h = 48;
 	srcRect->w = 48;
@@ -18,6 +20,7 @@ Entity * PlayerSystem::createPlayer(int globalPosX, int globalPosY, SDL_Texture*
 	player->addComponent(playerDrawable);
 	Collider* playerCollider = new Collider(player);
 	player->addComponent(playerCollider);
+	CollisionSystem::collidersInScene.push_back(playerCollider);
 	Movement* playerMovement = new PlayerMovement(player);
 	player->addComponent(playerMovement);
 	PlayerAnimator* animator = new PlayerAnimator(player, lookDirection);

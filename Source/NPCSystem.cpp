@@ -38,13 +38,14 @@ Entity* NPCSystem::createNPC(int posX, int posY, int width, int height, Globals:
 	return npc;
 }
 
-Entity * NPCSystem::createSoldier(int posX, int posY, int width, int height, Globals::Layers layer, SDL_Texture * texture, std::string spriteName, std::string * speakerID) {
+Entity * NPCSystem::createSoldier(int posX, int posY, int width, int height, Globals::Layers layer, SDL_Texture * texture, std::string spriteName, SDL_Renderer* renderer, Graphics* graphics, std::string * speakerID) {
 	Entity* soldier = createNPC(posX, posY, width, height, layer, texture, spriteName, speakerID);
 	Stats* stats = new Stats(soldier);
 	soldier->addComponent(stats);
 	stats->totalHealth = 300;
 	stats->curHealth = 300;
-	AISoldier* ai = new AISoldier(soldier);
+	stats->mainAttackDmg = 100;
+	AISoldier* ai = new AISoldier(soldier, renderer, graphics);
 	soldier->addComponent(ai);
 	return soldier;
 }
