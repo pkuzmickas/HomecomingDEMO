@@ -28,7 +28,7 @@ public:
 	virtual void update(float deltaTime) { std::cout << "Component's update function was not defined! TYPE:" << type << std::endl; };
 	Entity* owner;
 	Component(Entity* owner, bool updatable = false) { this->owner = owner; enabled = true; this->updatable = updatable; }
-
+	virtual ~Component() {};
 };
 
 class Transform : public Component {
@@ -93,7 +93,7 @@ public:
 		type = DRAWABLE;
 	}
 	~Drawable() {
-		SDL_DestroyTexture(image);
+		//SDL_DestroyTexture(image);
 		if (srcRect) delete srcRect;
 	}
 

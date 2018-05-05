@@ -50,6 +50,7 @@ void UIDesignSystem::cleanup() {
 	fullBars.clear();
 	SDL_DestroyTexture(healthBarFull);
 	SDL_DestroyTexture(healthBarEmpty);
+	SDL_DestroyTexture(bloodshotIMG);
 }
 
 void UIDesignSystem::setup(SDL_Renderer * renderer, Graphics * graphics) {

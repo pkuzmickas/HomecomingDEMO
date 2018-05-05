@@ -15,6 +15,8 @@ PlayerAbilities::PlayerAbilities(Entity * owner, SDL_Renderer* renderer, Graphic
 
 PlayerAbilities::~PlayerAbilities() {
 	SDL_DestroyTexture(slashAttackIMG);
+	SDL_DestroyTexture(dashIMG);
+	SDL_DestroyTexture(flyingSlashIMG);
 }
 
 void PlayerAbilities::flyingSlashAttack() {
@@ -200,6 +202,50 @@ void PlayerAbilities::update(float deltaTime) {
 	if (flyingSlashing) {
 		fSlashUpdates(deltaTime);
 	}
+	if (isKnocked()) {
+		PlayerMovement* movement = (PlayerMovement*)player->findComponent(ComponentType::MOVEMENT);
+		Collider* collider = (Collider*)player->findComponent(ComponentType::COLLIDER);
+		Collider* didCollide = CollisionSystem::isCollidingWithObjects(collider, { knockedByAttackName });
+		if (!didCollide) {
+			didCollide = CollisionSystem::isCollidingWithEnv(collider);
+		}
+		if (didCollide) {
+			knocked = false;
+			movement->velX = 0;
+			movement->velY = 0;
+		}
+		if (knockDir == Animator::LookDirection::LEFT) {
+			if (playerTransform->globalPosX <= result) {
+				knocked = false;
+				movement->velX = 0;
+			}
+		}
+		if (knockDir == Animator::LookDirection::RIGHT) {
+			if (playerTransform->globalPosX >= result) {
+				knocked = false;
+				movement->velX = 0;
+			}
+		}
+		if (knockDir == Animator::LookDirection::UP) {
+			if (playerTransform->globalPosY <= result) {
+				knocked = false;
+				movement->velY = 0;
+			}
+		}
+		if (knockDir == Animator::LookDirection::DOWN) {
+			if (playerTransform->globalPosY >= result) {
+				knocked = false;
+				movement->velY = 0;
+			}
+		}
+		if (!knocked) {
+			movement->movementEnabled = true;
+			playerAnimator->enabled = true;
+			collider->offset.x = 0;
+			collider->offset.y = 0;
+		}
+
+	}
 }
 
 void PlayerAbilities::dashUpdates(float deltaTime) {
@@ -262,6 +308,39 @@ void PlayerAbilities::fSlashUpdates(float deltaTime) {
 		flyingSlashing = false;
 		delete fSlashEntity;
 		fSlashEntity = NULL;
+	}
+}
+
+void PlayerAbilities::knockBack(int dist, int speed, Animator::LookDirection dir, std::string attackName) {
+	knockedByAttackName = attackName;
+	knocked = true;
+	knockDir = dir;
+	playerAnimator->stopAnimation();
+	playerAnimator->enabled = false;
+	PlayerMovement* pm = (PlayerMovement*)player->findComponent(ComponentType::MOVEMENT);
+	pm->movementEnabled = false;
+	Collider* pc = (Collider*)player->findComponent(ComponentType::COLLIDER);
+
+	int colBoxChangeVal = 10; // Changing the collision box a bit to test whether or not it will collide so to not get "stuck"
+	if (dir == Animator::LookDirection::LEFT) {
+		result = playerTransform->globalPosX - dist;
+		pm->velX -= speed;
+		pc->offset.x -= colBoxChangeVal;
+	}
+	if (dir == Animator::LookDirection::RIGHT) {
+		result = playerTransform->globalPosX + dist;
+		pm->velX += speed;
+		pc->offset.x += colBoxChangeVal;
+	}
+	if (dir == Animator::LookDirection::UP) {
+		result = playerTransform->globalPosY - dist;
+		pm->velY -= speed;
+		pc->offset.y -= colBoxChangeVal;
+	}
+	if (dir == Animator::LookDirection::DOWN) {
+		result = playerTransform->globalPosY + dist;
+		pm->velY += speed;
+		pc->offset.y += colBoxChangeVal;
 	}
 }
 

@@ -6,6 +6,7 @@
 #include "Graphics.h"
 #include "CollisionSystem.h"
 #include "AIComponent.h"
+#include "PlayerMovement.h"
 
 class PlayerAbilities : public Abilities {
 public:
@@ -18,10 +19,20 @@ public:
 	bool isSlashing() { return slashing; }
 	bool isDashing() { return dashing; }
 	bool isFSlashing() { return flyingSlashing; }
+
+	bool isKnocked() { return knocked; }
+	void knockBack(int dist, int speed, Animator::LookDirection dir, std::string attackName);
+
 private:
 	void slashUpdates(float deltaTime);
 	void dashUpdates(float deltaTime);
 	void fSlashUpdates(float deltaTime);
+
+	Animator::LookDirection knockDir;
+	std::string knockedByAttackName = "";
+	int result;
+	bool knocked;
+
 	SDL_Renderer * renderer;
 	Graphics* graphics;
 

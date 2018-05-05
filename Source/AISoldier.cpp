@@ -7,6 +7,15 @@ AISoldier::AISoldier(Entity * owner, SDL_Renderer* renderer, Graphics* graphics)
 
 }
 
+AISoldier::~AISoldier() {
+	SDL_DestroyTexture(slashAttackIMG);
+	if (slashing) {
+		graphics->removeFromDraw(slashEntity);
+		CollisionSystem::removeCollider(slashCollider);
+		delete slashEntity;
+	}
+}
+
 void AISoldier::update(float deltaTime) {
 	AIComponent::update(deltaTime);
 	if (state == ATTACKING) {
@@ -142,6 +151,8 @@ void AISoldier::slashUpdates(float deltaTime) {
 			Drawable* slashDrawable = (Drawable*)slashEntity->findComponent(ComponentType::DRAWABLE);
 			//ai->knockBack(100, 500, walkingDir, slashDrawable->ID);
 			cout << "Player HP: " << playerStats->curHealth << endl;
+			PlayerAbilities* pa = (PlayerAbilities*)slashCollision->owner->findComponent(ComponentType::ABILITIES);
+			pa->knockBack(100, 300, (Animator::LookDirection)walkingDir, "slashAttack");
 		}
 
 

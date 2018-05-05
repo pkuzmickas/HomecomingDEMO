@@ -46,11 +46,13 @@ Entity * PlayerSystem::createPlayer(int globalPosX, int globalPosY, SDL_Texture*
 
 void PlayerSystem::disableMovement() {
 	player->findComponent(ComponentType::ANIMATOR)->enabled = false;
-	player->findComponent(ComponentType::MOVEMENT)->enabled = false;
+	PlayerMovement* pm = (PlayerMovement*)player->findComponent(ComponentType::MOVEMENT);
+	pm->movementEnabled = false;
 }
 
 void PlayerSystem::enableMovement() {
-	player->findComponent(ComponentType::MOVEMENT)->enabled = true;
+	PlayerMovement* pm = (PlayerMovement*)player->findComponent(ComponentType::MOVEMENT);
+	pm->movementEnabled = true;
 	player->findComponent(ComponentType::ANIMATOR)->enabled = true;
 }
 

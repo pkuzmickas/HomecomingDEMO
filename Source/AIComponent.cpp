@@ -9,6 +9,9 @@ AIComponent::AIComponent(Entity * owner) : Component(owner, true) {
 	type = AI;
 }
 
+AIComponent::~AIComponent() {
+}
+
 void AIComponent::walkTo(int destX, int destY, int walkingSpeed) {
 
 	this->walkingSpeed = walkingSpeed;
@@ -76,6 +79,9 @@ void AIComponent::update(float deltaTime) {
 
 	if (isKnocked()) {
 		Collider* didCollide = CollisionSystem::isCollidingWithObjects(collider, { knockedByAttackName });
+		if (!didCollide) {
+			didCollide = CollisionSystem::isCollidingWithEnv(collider);
+		}
 		if (didCollide) {
 			knocked = false;
 			movement->velX = 0;

@@ -12,6 +12,7 @@ public:
 		DEAD
 	};
 	AIComponent(Entity* owner);
+	virtual ~AIComponent();
 	State state = NORMAL;
 	void walkTo(int destX, int destY, int speed);
 	virtual void update(float deltaTime);
@@ -35,7 +36,7 @@ protected:
 	
 	std::vector<SDL_Point> path;
 	int curPathIndex;
-	int result; // for some computation (temp global int)
+	int result; 
 	Animator::LookDirection knockDir;
 	std::string knockedByAttackName = "";
 

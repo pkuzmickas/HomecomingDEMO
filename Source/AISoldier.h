@@ -1,9 +1,11 @@
 #pragma once
 #include "AIComponent.h"
+#include "PlayerAbilities.h"
 
 class AISoldier : public AIComponent {
 public:
 	AISoldier(Entity* owner, SDL_Renderer* renderer, Graphics* graphics);
+	~AISoldier();
 	void update(float deltaTime);
 private:
 	enum subStates {

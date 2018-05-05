@@ -13,7 +13,7 @@ public:
 	std::vector<bool> moving = { false, false, false, false };
 	
 	bool isMoving();
-
+	bool movementEnabled = true;
 	void update(float deltaTime);
 
 	PlayerMovement(Entity* owner, std::vector<bool>* moving = NULL) : Movement(owner) {
@@ -28,4 +28,5 @@ private:
 	Transform* transform;
 	PlayerStats* stats;
 	Collider* collider;
+	
 };
