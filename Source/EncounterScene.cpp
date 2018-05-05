@@ -241,7 +241,22 @@ void EncounterScene::update(float deltaTime) {
 	Scene::update(deltaTime);
 	for (int i = 0; i < (int)entities.size(); i++) {
 		Entity* ent = entities[i];
-		if (!ent->active) {
+		
+		if (!ent->active && ent->hasComponent(ComponentType::ANIMATOR)) {
+			Animator* anim = (Animator*)ent->findComponent(ComponentType::ANIMATOR);
+			Drawable* drw = (Drawable*)ent->findComponent(ComponentType::DRAWABLE);
+
+			if ((!anim->isAnimating() && drw->ID == "tree") || drw->ID != "tree") {
+				graphics->removeFromDraw(ent);
+				iter_swap(entities.begin() + i, entities.begin() + entities.size() - 1);
+				entities.pop_back();
+				delete ent;
+			}
+			else {
+				ent->update(deltaTime);
+			}
+		}
+		else if (!ent->active) {
 			graphics->removeFromDraw(ent);
 			iter_swap(entities.begin() + i, entities.begin() + entities.size() - 1);
 			entities.pop_back();

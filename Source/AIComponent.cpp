@@ -30,25 +30,27 @@ void AIComponent::update(float deltaTime) {
 		UIDesignSystem::removeHealth(owner);
 		UIDesignSystem::createBloodshot(owner);
 	}
-	if (walking) {
-		walkingDir = 2;
+	if (walking && !isKnocked()) {
+		walkingDir = lastDir;
 		int mapCoordX = (int)transform->globalPosX / Globals::TILE_SIZE;
 		int mapCoordY = ((int)transform->globalPosY + transform->height - Globals::TILE_SIZE) / Globals::TILE_SIZE;
 		if (path[curPathIndex].x > mapCoordX) {
 			walkingDir = (int)Animator::LookDirection::RIGHT;
 		}
-		if (path[curPathIndex].x < mapCoordX) {
+		else if (path[curPathIndex].x < mapCoordX) {
 			walkingDir = (int)Animator::LookDirection::LEFT;
 		}
-		if (path[curPathIndex].y > mapCoordY) {
+		else if (path[curPathIndex].y > mapCoordY) {
 			walkingDir = (int)Animator::LookDirection::DOWN;
 		}
-		if (path[curPathIndex].y < mapCoordY) {
+		else if (path[curPathIndex].y < mapCoordY) {
 			walkingDir = (int)Animator::LookDirection::UP;
 		}
+		
 		std::string animName = "walking" + std::to_string(walkingDir);
 		if (animator->curAnimName() != animName) {
 			animator->playAnimation(animName, true);
+			lastDir = walkingDir;
 		}
 		if (mapCoordX < path[curPathIndex].x) {
 			movement->velX = walkingSpeed;

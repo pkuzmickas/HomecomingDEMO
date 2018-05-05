@@ -31,7 +31,7 @@ protected:
 	Entity* target;
 	Transform* targetTransform;
 	bool walking, knocked;
-	int destX, destY, walkingSpeed, walkingDir;
+	int destX, destY, walkingSpeed, walkingDir, lastDir=2;
 	
 	std::vector<SDL_Point> path;
 	int curPathIndex;
