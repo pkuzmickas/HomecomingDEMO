@@ -40,8 +40,20 @@ void Director::getInput() {
 				if (e.key.keysym.sym == SDLK_t) {
 					graphics->debug = !graphics->debug;
 				}
-				if (e.key.keysym.sym == SDLK_y) {
-					
+				if (e.key.keysym.sym == SDLK_ESCAPE) {
+					if (curScene->isGameOver()) {
+						gameRunning = false;
+					}
+				}
+				if (e.key.keysym.sym == SDLK_RETURN) {
+					if (curScene->isGameOver()) {
+						delete graphics;
+						graphics = new Graphics(renderer);
+						delete curScene;
+						curScene = new EncounterScene(renderer, graphics);
+
+						curScene->loadAction("restart");
+					}
 				}
 				break;
 		}

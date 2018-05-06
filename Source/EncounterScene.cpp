@@ -104,6 +104,7 @@ void EncounterScene::setup() {
 	Transform* solt = (Transform*)(soldier2Entity->findComponent(ComponentType::TRANSFORM));
 	solt->globalPosX = 1500;
 	soldier2AI->attack(player);
+	//soldierAI->attack(player);
 	UIDesignSystem::showPlayerHealth(player);
 }
 
@@ -167,7 +168,7 @@ void EncounterScene::preFightScenario(float deltaTime) {
 		Transform* oldmanT = (Transform*)oldmanAI->owner->findComponent(ComponentType::TRANSFORM);
 		soldier2AI->walkTo(1250, 700, 80);
 		oldmanAI->walkTo(1180, 700, 80);
-		soldierAI->walkTo(1110, 700, 80);
+		soldierAI->walkTo(1110, 700, 80); 
 		curAction = "npcs walking";
 	}
 	if (curAction == "npcs walking") {
@@ -233,6 +234,9 @@ void EncounterScene::preFightScenario(float deltaTime) {
 			CameraSystem::follow(&playerTransform->globalPosX, &playerTransform->globalPosY);
 			PlayerSystem::enableMovement();
 			curAction = "";
+			soldier2AI->attack(player);
+			soldierAI->attack(player);
+			UIDesignSystem::showPlayerHealth(player);
 		}
 	}
 }
@@ -269,6 +273,20 @@ void EncounterScene::update(float deltaTime) {
 	}
 
 	//preFightScenario(deltaTime);
+	if (curAction == "restart") {
+		Transform* playerTransform = (Transform*)(player->findComponent(ComponentType::TRANSFORM));
+		CameraSystem::follow(&playerTransform->globalPosX, &playerTransform->globalPosY);
+		PlayerSystem::enableMovement();
+		curAction = ""; //1110 1180 1250
+		Transform* solt = (Transform*)(soldierAI->owner->findComponent(ComponentType::TRANSFORM));
+		solt->globalPosX = 1110;
+		Transform* solt2 = (Transform*)(soldier2AI->owner->findComponent(ComponentType::TRANSFORM));
+		solt->globalPosX = 1250;
+		Transform* oldt = (Transform*)(oldmanAI->owner->findComponent(ComponentType::TRANSFORM));
+		solt->globalPosX = 1180;
+		soldier2AI->attack(player);
+		soldierAI->attack(player);
+	}
 
 }
 

@@ -10,8 +10,10 @@
 
 class Scene {
 public:
-	~Scene();
+	virtual ~Scene();
 	virtual void update(float deltaTime);
+	bool isGameOver() { return gameOver; }
+	void loadAction(std::string actionName) { curAction = actionName; }
 protected:
 	SDL_Renderer* renderer;
 	Graphics* graphics;
@@ -28,6 +30,10 @@ protected:
 	float waitSeconds;
 	float waitTimePassed;
 	std::string nextAction;
+
+	bool gameOver = false;
+	SDL_Texture* diedIMG;
+	void showLoseScreen();
 
 	
 

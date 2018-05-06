@@ -31,7 +31,9 @@ private:
 	Animator::LookDirection knockDir;
 	std::string knockedByAttackName = "";
 	int result;
+
 	bool knocked;
+	bool isAlive = true;
 
 	SDL_Renderer * renderer;
 	Graphics* graphics;
@@ -39,6 +41,7 @@ private:
 	Entity * player;
 	Transform * playerTransform;
 	PlayerAnimator* playerAnimator;
+	PlayerStats* playerStats;
 	
 	SDL_Texture* slashAttackIMG; // generalize this to some sort of Attack struct
 	bool slashing;

@@ -22,6 +22,14 @@ void AIComponent::walkTo(int destX, int destY, int walkingSpeed) {
 }
 
 void AIComponent::update(float deltaTime) {
+	if (target) {
+		Stats* ts = (Stats*)target->findComponent(ComponentType::STATS);
+		if (ts->curHealth <= 0) {
+			state = NORMAL;
+			target = NULL;
+		}
+		
+	}
 	if (stats && stats->curHealth <= 0 && state != DEAD) {
 		state = DEAD;
 		Collider* col = (Collider*)owner->findComponent(ComponentType::COLLIDER);

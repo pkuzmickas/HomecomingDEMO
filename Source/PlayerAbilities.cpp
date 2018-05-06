@@ -3,6 +3,7 @@
 PlayerAbilities::PlayerAbilities(Entity * owner, SDL_Renderer* renderer, Graphics* graphics) : Abilities(owner) {
 	playerTransform = (Transform*)owner->findComponent(ComponentType::TRANSFORM);
 	playerAnimator = (PlayerAnimator*)owner->findComponent(ComponentType::ANIMATOR);
+	playerStats = (PlayerStats*)owner->findComponent(ComponentType::STATS);
 	player = owner;
 	this->renderer = renderer;
 	this->graphics = graphics;
@@ -201,6 +202,12 @@ void PlayerAbilities::update(float deltaTime) {
 	}
 	if (flyingSlashing) {
 		fSlashUpdates(deltaTime);
+	}
+	if (playerStats->curHealth <= 0 && isAlive) {
+		UIDesignSystem::createBloodshot(player);
+		graphics->removeFromDraw(player);
+		isAlive = false;
+		
 	}
 	if (isKnocked()) {
 		PlayerMovement* movement = (PlayerMovement*)player->findComponent(ComponentType::MOVEMENT);
