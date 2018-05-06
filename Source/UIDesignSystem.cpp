@@ -17,6 +17,7 @@ int UIDesignSystem::healthbarWidth;
 int UIDesignSystem::playerHealthbarWidth;
 int UIDesignSystem::playerHealthbarHeight;
 bool UIDesignSystem::showingPlayerHealth = false;
+Entity* UIDesignSystem::playerEntity = NULL;
 
 
 bool UIDesignSystem::isHealthShowing(Entity * entity) {
@@ -78,8 +79,7 @@ void UIDesignSystem::setup(SDL_Renderer * renderer, Graphics * graphics) {
 	playerHealthBarEmpty = IMG_LoadTexture(renderer, ASSET_DIR UI_DIR "playerHealthBarEmpty.png");
 	playerHealthBarFull = IMG_LoadTexture(renderer, ASSET_DIR UI_DIR "playerHealthBarFull.png");
 	SDL_QueryTexture(healthBarFull, NULL, NULL, &healthbarWidth, &healthbarHeight);
-	playerHealthbarWidth = Globals::SCREEN_WIDTH / 3;
-	playerHealthbarHeight = Globals::SCREEN_HEIGHT / 15;
+	SDL_QueryTexture(playerHealthBarFull, NULL, NULL, &playerHealthbarWidth, &playerHealthbarHeight);
 }
 
 void UIDesignSystem::showHealth(Entity * entity) {
@@ -117,8 +117,10 @@ void UIDesignSystem::removeHealth(Entity * entity) {
 	fullBars.erase(entity);
 }
 
-void UIDesignSystem::showPlayerHealth() {
+
+void UIDesignSystem::showPlayerHealth(Entity * player) {
 	if (showingPlayerHealth) return;
+	if (!playerEntity) playerEntity = player;
 	showingPlayerHealth = true;
 	playerEmptyBar = new Entity();
 	Transform* t = new Transform(playerEmptyBar, playerHealthbarWidth, playerHealthbarHeight, CameraSystem::posX + Globals::SCREEN_WIDTH/20, CameraSystem::posY + Globals::SCREEN_HEIGHT/16);
@@ -186,6 +188,14 @@ void UIDesignSystem::update(float deltaTime) {
 		t1->globalPosY = CameraSystem::posY + Globals::SCREEN_HEIGHT / 16;
 		t2->globalPosX = CameraSystem::posX + Globals::SCREEN_WIDTH / 20;
 		t2->globalPosY = CameraSystem::posY + Globals::SCREEN_HEIGHT / 16;
+		PlayerStats* ps = (PlayerStats*)playerEntity->findComponent(ComponentType::STATS);
+		int headWidth = 50;
+		float healthPercentage = (float)(ps->curHealth) / (float)(ps->totalHealth);
+		float newWidth = headWidth + (float)(playerHealthbarWidth-50) * healthPercentage;
+		Transform* barTransform = (Transform*)playerFullBar->findComponent(ComponentType::TRANSFORM);
+		Drawable* barDrawable = (Drawable*)playerFullBar->findComponent(ComponentType::DRAWABLE);
+		barDrawable->srcRect->w = newWidth;
+		barTransform->width = newWidth;
 	}
 	
 }

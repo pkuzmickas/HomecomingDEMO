@@ -18,7 +18,7 @@ void Scene::update(float deltaTime) {
 		}
 	}
 	DialogueSystem::update(deltaTime);
-	UIDesignSystem::update(deltaTime);
+	
 }
 
 Scene::Scene(SDL_Renderer * renderer, Graphics * graphics) {

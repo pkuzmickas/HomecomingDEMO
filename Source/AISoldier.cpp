@@ -150,7 +150,6 @@ void AISoldier::slashUpdates(float deltaTime) {
 			playerStats->curHealth -= enemyStats->mainAttackDmg;
 			Drawable* slashDrawable = (Drawable*)slashEntity->findComponent(ComponentType::DRAWABLE);
 			//ai->knockBack(100, 500, walkingDir, slashDrawable->ID);
-			cout << "Player HP: " << playerStats->curHealth << endl;
 			PlayerAbilities* pa = (PlayerAbilities*)slashCollision->owner->findComponent(ComponentType::ABILITIES);
 			pa->knockBack(100, 300, (Animator::LookDirection)walkingDir, "slashAttack");
 		}

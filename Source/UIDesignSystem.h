@@ -2,6 +2,7 @@
 #include "Entity.h"
 #include "Graphics.h"
 #include "Animator.h"
+#include "PlayerStats.h"
 #include <unordered_map>
 class UIDesignSystem {
 private:
@@ -22,12 +23,13 @@ private:
 	static int playerHealthbarHeight;
 	static Entity* playerEmptyBar;
 	static Entity* playerFullBar;
+	static Entity* playerEntity;
 	static bool showingPlayerHealth;
 public:
 	static void setup(SDL_Renderer* renderer, Graphics* graphics);
 	static void showHealth(Entity * entity);
 	static void removeHealth(Entity * entity);
-	static void showPlayerHealth();
+	static void showPlayerHealth(Entity* player);
 	static void hidePlayerHealth();
 	static void update(float deltaTime);
 	static bool isHealthShowing(Entity* entity);

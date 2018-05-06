@@ -104,7 +104,7 @@ void EncounterScene::setup() {
 	Transform* solt = (Transform*)(soldier2Entity->findComponent(ComponentType::TRANSFORM));
 	solt->globalPosX = 1500;
 	soldier2AI->attack(player);
-	UIDesignSystem::showPlayerHealth();
+	UIDesignSystem::showPlayerHealth(player);
 }
 
 void EncounterScene::preFightScenario(float deltaTime) {

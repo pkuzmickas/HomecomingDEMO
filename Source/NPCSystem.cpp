@@ -44,7 +44,7 @@ Entity * NPCSystem::createSoldier(int posX, int posY, int width, int height, Glo
 	soldier->addComponent(stats);
 	stats->totalHealth = 300;
 	stats->curHealth = 300;
-	stats->mainAttackDmg = 100;
+	stats->mainAttackDmg = 50;
 	AISoldier* ai = new AISoldier(soldier, renderer, graphics);
 	soldier->addComponent(ai);
 	return soldier;

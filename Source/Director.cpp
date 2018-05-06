@@ -59,7 +59,7 @@ void Director::update() {
 	
 	curScene->update(deltaTimeInSeconds);
 	CameraSystem::update(deltaTimeInSeconds);
-	
+	UIDesignSystem::update(deltaTime);
 
 	Globals::GetFrameEvents().clear();
 }
