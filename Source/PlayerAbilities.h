@@ -20,6 +20,7 @@ public:
 	bool isDashing() { return dashing; }
 	bool isFSlashing() { return flyingSlashing; }
 
+	bool isAlive = true;
 	bool isKnocked() { return knocked; }
 	void knockBack(int dist, int speed, Animator::LookDirection dir, std::string attackName);
 
@@ -33,7 +34,7 @@ private:
 	int result;
 
 	bool knocked;
-	bool isAlive = true;
+	
 
 	SDL_Renderer * renderer;
 	Graphics* graphics;

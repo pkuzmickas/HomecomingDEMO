@@ -169,4 +169,5 @@ void MapSystem::deleteMap() {
 			}
 		}
 	}
+	mapMatrix.clear();
 }

@@ -7,7 +7,7 @@ Director::Director(SDL_Renderer* renderer) {
 	graphics = new Graphics(renderer);
 	
 	curScene = new EncounterScene(renderer, graphics);
-	
+	curScene->loadAction("restart");
 	// Starts to calculate the running time of the game to create the deltaTime (time passed since last frame)
 	runTime = SDL_GetTicks();
 }
@@ -47,11 +47,6 @@ void Director::getInput() {
 				}
 				if (e.key.keysym.sym == SDLK_RETURN) {
 					if (curScene->isGameOver()) {
-						delete graphics;
-						graphics = new Graphics(renderer);
-						delete curScene;
-						curScene = new EncounterScene(renderer, graphics);
-
 						curScene->loadAction("restart");
 					}
 				}

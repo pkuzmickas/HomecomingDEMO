@@ -13,6 +13,7 @@ public:
 	static void disableMovement();
 	static void enableMovement();
 	static Entity* getPlayer();
+	static void resetPlayer();
 private:
 	PlayerSystem();
 	static Entity* player;

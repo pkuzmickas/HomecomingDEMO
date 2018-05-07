@@ -98,14 +98,15 @@ void EncounterScene::setup() {
 	wait(2, "intro text");
 
 	//for testing
-	Transform* playerTransform = (Transform*)(player->findComponent(ComponentType::TRANSFORM));
+	graphics->removeFromDraw(player);
+	/*Transform* playerTransform = (Transform*)(player->findComponent(ComponentType::TRANSFORM));
 	CameraSystem::follow(&playerTransform->globalPosX, &playerTransform->globalPosY);
 	PlayerSystem::enableMovement();
 	Transform* solt = (Transform*)(soldier2Entity->findComponent(ComponentType::TRANSFORM));
 	solt->globalPosX = 1500;
 	soldier2AI->attack(player);
 	//soldierAI->attack(player);
-	UIDesignSystem::showPlayerHealth(player);
+	UIDesignSystem::showPlayerHealth(player);*/
 }
 
 void EncounterScene::preFightScenario(float deltaTime) {
@@ -235,7 +236,7 @@ void EncounterScene::preFightScenario(float deltaTime) {
 			PlayerSystem::enableMovement();
 			curAction = "";
 			soldier2AI->attack(player);
-			soldierAI->attack(player);
+			//soldierAI->attack(player);
 			UIDesignSystem::showPlayerHealth(player);
 		}
 	}
@@ -274,6 +275,9 @@ void EncounterScene::update(float deltaTime) {
 
 	//preFightScenario(deltaTime);
 	if (curAction == "restart") {
+		hideLoseScreen();
+		PlayerSystem::resetPlayer();
+		graphics->addToDraw(player);
 		Transform* playerTransform = (Transform*)(player->findComponent(ComponentType::TRANSFORM));
 		CameraSystem::follow(&playerTransform->globalPosX, &playerTransform->globalPosY);
 		PlayerSystem::enableMovement();
@@ -281,11 +285,22 @@ void EncounterScene::update(float deltaTime) {
 		Transform* solt = (Transform*)(soldierAI->owner->findComponent(ComponentType::TRANSFORM));
 		solt->globalPosX = 1110;
 		Transform* solt2 = (Transform*)(soldier2AI->owner->findComponent(ComponentType::TRANSFORM));
-		solt->globalPosX = 1250;
-		Transform* oldt = (Transform*)(oldmanAI->owner->findComponent(ComponentType::TRANSFORM));
-		solt->globalPosX = 1180;
+		solt2->globalPosX = 1250;
+		//Transform* oldt = (Transform*)(oldmanAI->owner->findComponent(ComponentType::TRANSFORM));
+		//solt->globalPosX = 1180;
 		soldier2AI->attack(player);
-		soldierAI->attack(player);
+		//soldierAI->attack(player);
+		UIDesignSystem::showPlayerHealth(player);
+		//do not delete on kill, remove from draw and remove colliders
+		/* change all of their states and shit below and then from encounter scene update remove the delete if isActive = false lol and change back is active and its gucci ok
+		state = DEAD;
+		Collider* col = (Collider*)owner->findComponent(ComponentType::COLLIDER);
+		col->enabled = false;
+		CollisionSystem::removeCollider(col);
+		/*Animator* anim = (Animator*)owner->findComponent(ComponentType::ANIMATOR);
+		anim->playAnimation("walking0");
+		owner->active = false;
+		*/
 	}
 
 }

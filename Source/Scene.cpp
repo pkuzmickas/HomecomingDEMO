@@ -6,6 +6,8 @@ Scene::~Scene() {
 	DialogueSystem::cleanup();
 	UIDesignSystem::cleanup();
 	SDL_DestroyTexture(diedIMG);
+	if (loseBox) delete loseBox;
+	if (loseText) delete loseText;
 }
 
 void Scene::update(float deltaTime) {
@@ -54,16 +56,26 @@ void Scene::wait(float waitSeconds, std::string nextAction) {
 }
 
 void Scene::showLoseScreen() {
-	
-	Entity* e = SceneDesignSystem::createRect(CameraSystem::posX, CameraSystem::posY, Globals::SCREEN_WIDTH, Globals::SCREEN_HEIGHT,Globals::Layers::UI, true);
-	graphics->addToDraw(e);
-	Entity* d = new Entity();
+	loseBox = SceneDesignSystem::createRect(CameraSystem::posX, CameraSystem::posY, Globals::SCREEN_WIDTH, Globals::SCREEN_HEIGHT,Globals::Layers::UI, true);
+	graphics->addToDraw(loseBox);
+	loseText = new Entity();
 	int width, height;
 	SDL_QueryTexture(diedIMG, NULL, NULL, &width, &height);
-	Transform* t = new Transform(d, width, height, CameraSystem::posX + Globals::SCREEN_WIDTH / 2 - width / 2, CameraSystem::posY + Globals::SCREEN_HEIGHT / 2 - height / 2);
-	d->addComponent(t);
-	Drawable* drw = new Drawable(d, diedIMG, "youdiedtext", Globals::Layers::UI);
-	d->addComponent(drw);
-	graphics->addToDraw(d);
-	
+	Transform* t = new Transform(loseText, width, height, CameraSystem::posX + Globals::SCREEN_WIDTH / 2 - width / 2, CameraSystem::posY + Globals::SCREEN_HEIGHT / 2 - height / 2);
+	loseText->addComponent(t);
+	Drawable* drw = new Drawable(loseText, diedIMG, "youdiedtext", Globals::Layers::UI);
+	loseText->addComponent(drw);
+	graphics->addToDraw(loseText);
+}
+
+void Scene::hideLoseScreen() {
+	if (gameOver) {
+		graphics->removeFromDraw(loseBox);
+		graphics->removeFromDraw(loseText);
+		gameOver = false;
+		delete loseBox;
+		loseBox = NULL;
+		delete loseText;
+		loseText = NULL;
+	}
 }

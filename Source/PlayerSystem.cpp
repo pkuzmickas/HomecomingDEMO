@@ -59,3 +59,11 @@ void PlayerSystem::enableMovement() {
 Entity * PlayerSystem::getPlayer() {
 	return player;
 }
+
+void PlayerSystem::resetPlayer() {
+	PlayerStats* ps = (PlayerStats*)player->findComponent(ComponentType::STATS);
+	ps->curHealth = 200;
+	ps->totalHealth = 200;
+	PlayerAbilities* pa = (PlayerAbilities*)player->findComponent(ComponentType::ABILITIES);
+	pa->isAlive = true;
+}

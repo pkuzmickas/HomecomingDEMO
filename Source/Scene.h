@@ -33,7 +33,10 @@ protected:
 
 	bool gameOver = false;
 	SDL_Texture* diedIMG;
+	Entity* loseBox = NULL;
+	Entity* loseText = NULL;
 	void showLoseScreen();
+	void hideLoseScreen();
 
 	
 

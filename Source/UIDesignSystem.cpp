@@ -64,10 +64,13 @@ void UIDesignSystem::cleanup() {
 	SDL_DestroyTexture(playerHealthBarFull);
 	if (playerFullBar) {
 		delete playerFullBar;
+		playerFullBar = NULL;
 	}
 	if (playerEmptyBar) {
 		delete playerEmptyBar;
+		playerEmptyBar = NULL;
 	}
+	showingPlayerHealth = false;
 }
 
 void UIDesignSystem::setup(SDL_Renderer * renderer, Graphics * graphics) {
