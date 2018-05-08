@@ -18,7 +18,7 @@ void PlayerMovement::update(float deltaTime) {
 		velF *= SIN45;
 	}
 	if (numOfDirs != 0) {
-
+		
 		if (moving[DOWN]) {
 			int prev = collider->colBox.y;
 			collider->colBox.y += (int)velF + 1; // Adding one to remove getting stuck at the walls

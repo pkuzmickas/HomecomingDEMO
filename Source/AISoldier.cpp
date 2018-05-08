@@ -17,7 +17,15 @@ AISoldier::~AISoldier() {
 }
 
 void AISoldier::update(float deltaTime) {
+	if (slashing && stats->curHealth<=0) {
+		slashing = false;
+		CollisionSystem::removeCollider(slashCollider);
+		graphics->removeFromDraw(slashEntity);
+		delete slashEntity;
+		slashEntity = NULL;
+	}
 	AIComponent::update(deltaTime);
+
 	if (state == NORMAL) {
 		if (slashing) {
 			slashCollider->enabled = true;

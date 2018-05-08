@@ -70,9 +70,21 @@ void PlayerSystem::resetPlayer() {
 	PlayerMovement* pm = (PlayerMovement*)player->findComponent(ComponentType::MOVEMENT);
 	pm->velX = 0;
 	pm->velY = 0;
+	pm->movementEnabled = true;
+	
+	
 	for (auto dir : pm->moving) {
 		dir = false;
 	}
 	Animator* anim = (PlayerAnimator*)player->findComponent(ComponentType::ANIMATOR);
 	anim->stopAnimation();
+	anim->enabled = true;
+	Collider* col = (Collider*)player->findComponent(ComponentType::COLLIDER);
+	Transform* transform = (Transform*)player->findComponent(ComponentType::TRANSFORM);
+	col->offset.x = 0;
+	col->offset.y = 0;
+	col->colBox.x = (int)(transform->globalPosX - CameraSystem::posX) + col->offset.x;
+	col->colBox.y = (int)(transform->globalPosY - CameraSystem::posY) + col->offset.y;
+	col->enabled = true;
 }
+

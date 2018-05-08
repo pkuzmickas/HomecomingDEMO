@@ -72,9 +72,12 @@ Collider * CollisionSystem::isCollidingWithEnv(SDL_Rect object) {
 
 Collider* CollisionSystem::isCollidingWithObjects(Collider* object, vector<string> exceptions) {
 	for (auto object2 : collidersInScene) {
-		object2->update(0);
+		
 		Drawable* d1 = (Drawable*)(object->owner->findComponent(ComponentType::DRAWABLE));
 		Drawable* d2 = (Drawable*)(object2->owner->findComponent(ComponentType::DRAWABLE));
+		if (d2->ID != "player") {
+			object2->update(0);
+		}
 		bool isExcepted = false;
 		for (auto name : exceptions) {
 			if (name == d2->ID) {
@@ -93,8 +96,12 @@ Collider* CollisionSystem::isCollidingWithObjects(Collider* object, vector<strin
 
 Collider* CollisionSystem::isCollidingWithObjects(SDL_Rect object, vector<string> exceptions) {
 	for (auto object2 : collidersInScene) {
-		object2->update(0);
+
+		
 		Drawable* d2 = (Drawable*)(object2->owner->findComponent(ComponentType::DRAWABLE));
+		if (d2->ID != "player") {
+			object2->update(0);
+		}
 		bool isExcepted = false;
 		for (auto name : exceptions) {
 			if (name == d2->ID) {

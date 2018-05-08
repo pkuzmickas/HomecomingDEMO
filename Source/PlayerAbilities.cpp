@@ -128,6 +128,10 @@ void PlayerAbilities::dashMove() {
 		pm->velX = 0;
 		pm->velY = 0;
 		pm->movementEnabled = true;
+		playerAnimator->enabled = true;
+		Collider* collider = (Collider*)player->findComponent(ComponentType::COLLIDER);
+		collider->offset.x = 0;
+		collider->offset.y = 0;
 	}
 	dashEntity = new Entity();
 	int dashWidth, dashHeight;
@@ -189,8 +193,12 @@ void PlayerAbilities::dashMove() {
 		}
 		playerTransform->globalPosX += dx;
 		playerTransform->globalPosY += dy;
+		Collider* pc = (Collider*)player->findComponent(ComponentType::COLLIDER);
+		pc->colBox.x = (int)(playerTransform->globalPosX - CameraSystem::posX) + pc->offset.x;
+		pc->colBox.y = (int)(playerTransform->globalPosY - CameraSystem::posY) + pc->offset.y;
 
 		dashStart = SDL_GetTicks();
+		if(CameraSystem::isCameraFollowing())
 		CameraSystem::detachCamera();
 	}
 
@@ -233,6 +241,10 @@ void PlayerAbilities::update(float deltaTime) {
 			knocked = false;
 			movement->velX = 0;
 			movement->velY = 0;
+			movement->movementEnabled = true;
+			playerAnimator->enabled = true;
+			collider->offset.x = 0;
+			collider->offset.y = 0;
 		}
 		if (knockDir == Animator::LookDirection::LEFT) {
 			if (playerTransform->globalPosX <= result) {
@@ -284,6 +296,7 @@ void PlayerAbilities::dashUpdates(float deltaTime) {
 		delete dashEntity;
 		dashStart = 0;
 		dashEntity = NULL;
+		if(CameraSystem::isCameraFollowing())
 		CameraSystem::moveAndFollow(playerTransform->globalPosX - Globals::SCREEN_WIDTH / 2, playerTransform->globalPosY - Globals::SCREEN_HEIGHT / 2, &playerTransform->globalPosX, &playerTransform->globalPosY, 1200);
 	}
 

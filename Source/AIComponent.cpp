@@ -43,6 +43,7 @@ void AIComponent::update(float deltaTime) {
 		knocked = false;
 		movement->velX = 0;
 		movement->velY = 0;
+		
 	}
 	if (walking && !isKnocked()) {
 		walkingDir = lastDir;

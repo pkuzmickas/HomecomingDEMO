@@ -37,7 +37,6 @@ protected:
 	Entity* loseText = NULL;
 	void showLoseScreen();
 	void hideLoseScreen();
-
 	
 
 };

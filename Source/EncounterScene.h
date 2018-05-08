@@ -24,4 +24,7 @@ private:
 
 	vector<Entity*> removedEntities;
 	vector<Entity*> affectedEntities;
+
+	Entity* boundary1 = NULL;
+	Entity* boundary2 = NULL;
 };

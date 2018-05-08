@@ -105,7 +105,7 @@ void EncounterScene::setup() {
 	PlayerSystem::enableMovement();
 	Transform* solt = (Transform*)(soldier2Entity->findComponent(ComponentType::TRANSFORM));
 	solt->globalPosX = 1500;
-	soldier2AI->attack(player);
+	//soldier2AI->attack(player);
 	//soldierAI->attack(player);
 	UIDesignSystem::showPlayerHealth(player);*/
 }
@@ -238,12 +238,17 @@ void EncounterScene::preFightScenario(float deltaTime) {
 			curAction = "";
 			soldier2AI->attack(player);
 			UIDesignSystem::showPlayerHealth(player);
+			boundary1 = SceneDesignSystem::createBoundary(CameraSystem::posX, CameraSystem::posY, Globals::TILE_SIZE, Globals::SCREEN_HEIGHT);
+			boundary2 = SceneDesignSystem::createBoundary(CameraSystem::posX + Globals::SCREEN_WIDTH - Globals::TILE_SIZE, CameraSystem::posY, Globals::TILE_SIZE, Globals::SCREEN_HEIGHT);
+			CameraSystem::detachCamera();
 		}
 	}
 }
 
 void EncounterScene::update(float deltaTime) {
+	
 	Scene::update(deltaTime);
+
 	for (int i = 0; i < (int)entities.size(); i++) {
 		Entity* ent = entities[i];
 
@@ -283,19 +288,24 @@ void EncounterScene::update(float deltaTime) {
 		else {
 			ent->update(deltaTime);
 		}
+		if (boundary1) {
+			boundary1->update(deltaTime);
+			boundary2->update(deltaTime);
+		}
 
-
+		
 	}
-
+	
 	//preFightScenario(deltaTime);
 	if (curAction == "restart") {
+		
 		hideLoseScreen();
 		PlayerSystem::resetPlayer();
 		graphics->addToDraw(player);
 		Transform* playerTransform = (Transform*)(player->findComponent(ComponentType::TRANSFORM));
 		playerTransform->globalPosX = 1800;
 		playerTransform->globalPosY = 700;
-		CameraSystem::follow(&playerTransform->globalPosX, &playerTransform->globalPosY);
+		//CameraSystem::follow(&playerTransform->globalPosX, &playerTransform->globalPosY);
 		PlayerSystem::enableMovement();
 		curAction = ""; //1110 1180 1250
 		Transform* solt = (Transform*)(soldierAI->owner->findComponent(ComponentType::TRANSFORM));
@@ -350,6 +360,16 @@ void EncounterScene::update(float deltaTime) {
 		}
 		affectedEntities.clear();
 		soldier2AI->attack(player);
+		if (!boundary1) {
+			CameraSystem::detachCamera();
+			CameraSystem::posX = playerTransform->globalPosX - Globals::SCREEN_WIDTH / 2;
+			CameraSystem::posY = playerTransform->globalPosY - Globals::SCREEN_HEIGHT / 2;
+			boundary1 = SceneDesignSystem::createBoundary(CameraSystem::posX, CameraSystem::posY, Globals::TILE_SIZE, Globals::SCREEN_HEIGHT);
+			boundary2 = SceneDesignSystem::createBoundary(CameraSystem::posX + Globals::SCREEN_WIDTH - Globals::TILE_SIZE, CameraSystem::posY, Globals::TILE_SIZE, Globals::SCREEN_HEIGHT);
+			graphics->addToDraw(boundary1);
+			graphics->addToDraw(boundary2);
+			
+		}
 	}
 
 }
@@ -358,6 +378,12 @@ EncounterScene::~EncounterScene() {
 	SDL_DestroyTexture(tree);
 	SDL_DestroyTexture(oldman);
 	SDL_DestroyTexture(soldier);
+	if (boundary1) {
+		delete boundary1;
+		delete boundary2;
+		boundary1 = NULL;
+		boundary2 = NULL;
+	}
 	for (auto tree : entities) {
 		delete tree;
 	}

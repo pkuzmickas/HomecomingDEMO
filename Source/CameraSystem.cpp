@@ -92,6 +92,4 @@ void CameraSystem::follow(float * posX, float * posY) {
 void CameraSystem::moveAndFollow(int moveToX, int moveToY, float* followPosX, float* followPosY, int speed) {
 	follow(followPosX, followPosY);
 	moveCamera(moveToX, moveToY, speed);
-
-	cameraAttached = true;
 }

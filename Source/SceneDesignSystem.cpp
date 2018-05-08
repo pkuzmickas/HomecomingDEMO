@@ -69,6 +69,19 @@ Entity * SceneDesignSystem::createText(std::string text, int posX, int posY, int
 	return textEntity;
 }
 
+Entity * SceneDesignSystem::createBoundary(int posX, int posY, int width, int height)
+{
+	Entity* entity = new Entity();
+	Transform* t = new Transform(entity, width, height, posX, posY);
+	entity->addComponent(t);
+	Drawable* d = new Drawable(entity, NULL, "boundary", Globals::Layers::PLAYER);
+	entity->addComponent(d);
+	Collider* col = new Collider(entity, Collider::LOW);
+	entity->addComponent(col);
+	CollisionSystem::collidersInScene.push_back(col);
+	return entity;
+}
+
 void SceneDesignSystem::cleanupText(Entity* text) {
 	if (text) {
 		SDL_Texture* texture = ((Drawable*)text->findComponent(ComponentType::DRAWABLE))->image;
