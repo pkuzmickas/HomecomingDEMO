@@ -11,6 +11,7 @@ public:
 		ATTACKING,
 		DEAD
 	};
+	
 	AIComponent(Entity* owner);
 	virtual ~AIComponent();
 	State state = NORMAL;

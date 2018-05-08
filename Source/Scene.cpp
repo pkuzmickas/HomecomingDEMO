@@ -70,12 +70,18 @@ void Scene::showLoseScreen() {
 
 void Scene::hideLoseScreen() {
 	if (gameOver) {
-		graphics->removeFromDraw(loseBox);
-		graphics->removeFromDraw(loseText);
+		if (loseBox) {
+			graphics->removeFromDraw(loseBox);
+			delete loseBox;
+			loseBox = NULL;
+		}
+		if (loseText) {
+			graphics->removeFromDraw(loseText);
+			delete loseText;
+			loseText = NULL;
+		}
 		gameOver = false;
-		delete loseBox;
-		loseBox = NULL;
-		delete loseText;
-		loseText = NULL;
+		
+		
 	}
 }

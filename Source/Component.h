@@ -73,6 +73,7 @@ class Drawable : public Component {
 public:
 	SDL_Texture* image;
 	SDL_Rect* srcRect;
+	SDL_Rect startingSrcRect;
 	std::string ID;
 	Globals::Layers layer;
 	SDL_RendererFlip flip;
@@ -83,6 +84,8 @@ public:
 		this->ID = ID;
 		this->layer = layer;
 		this->srcRect = srcRect;
+		if(srcRect)
+		this->startingSrcRect = *srcRect;
 		this->flip = flip;
 		type = DRAWABLE;
 	}

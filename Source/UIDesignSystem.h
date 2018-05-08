@@ -28,7 +28,7 @@ private:
 public:
 	static void setup(SDL_Renderer* renderer, Graphics* graphics);
 	static void showHealth(Entity * entity);
-	static void removeHealth(Entity * entity);
+	static void hideHealth(Entity * entity);
 	static void showPlayerHealth(Entity* player);
 	static void hidePlayerHealth();
 	static void update(float deltaTime);

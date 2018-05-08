@@ -58,6 +58,7 @@ void EncounterScene::setup() {
 			//tree no leaves
 			Entity* e = SceneDesignSystem::createTree(i * srcRect->w, 550 + j * srcRect->h, (Globals::Layers)(Globals::Layers::BACKGROUND2 + j), tree, colPtr, srcRect);
 			Stats* treeStats = (Stats*)e->findComponent(ComponentType::STATS);
+			treeStats->totalHealth = 50;
 			treeStats->curHealth = 50;
 			graphics->addToDraw(e);
 			entities.push_back(e);
@@ -169,7 +170,7 @@ void EncounterScene::preFightScenario(float deltaTime) {
 		Transform* oldmanT = (Transform*)oldmanAI->owner->findComponent(ComponentType::TRANSFORM);
 		soldier2AI->walkTo(1250, 700, 80);
 		oldmanAI->walkTo(1180, 700, 80);
-		soldierAI->walkTo(1110, 700, 80); 
+		soldierAI->walkTo(1110, 700, 80);
 		curAction = "npcs walking";
 	}
 	if (curAction == "npcs walking") {
@@ -236,7 +237,6 @@ void EncounterScene::preFightScenario(float deltaTime) {
 			PlayerSystem::enableMovement();
 			curAction = "";
 			soldier2AI->attack(player);
-			//soldierAI->attack(player);
 			UIDesignSystem::showPlayerHealth(player);
 		}
 	}
@@ -246,16 +246,28 @@ void EncounterScene::update(float deltaTime) {
 	Scene::update(deltaTime);
 	for (int i = 0; i < (int)entities.size(); i++) {
 		Entity* ent = entities[i];
-		
+
 		if (!ent->active && ent->hasComponent(ComponentType::ANIMATOR)) {
 			Animator* anim = (Animator*)ent->findComponent(ComponentType::ANIMATOR);
 			Drawable* drw = (Drawable*)ent->findComponent(ComponentType::DRAWABLE);
 
 			if ((!anim->isAnimating() && drw->ID == "tree") || drw->ID != "tree") {
+				if (drw->ID == "tree") {
+					Stats* treeStats = (Stats*)ent->findComponent(ComponentType::STATS);
+					if (treeStats->curHealth == 50) {
+						ent->active = true;
+						affectedEntities.push_back(ent);
+						continue;
+					}
+				}
 				graphics->removeFromDraw(ent);
 				iter_swap(entities.begin() + i, entities.begin() + entities.size() - 1);
 				entities.pop_back();
-				delete ent;
+				//delete ent;
+				removedEntities.push_back(ent);
+				if (drw->ID == "soldier2") {
+					soldierAI->attack(player);
+				}
 			}
 			else {
 				ent->update(deltaTime);
@@ -265,11 +277,13 @@ void EncounterScene::update(float deltaTime) {
 			graphics->removeFromDraw(ent);
 			iter_swap(entities.begin() + i, entities.begin() + entities.size() - 1);
 			entities.pop_back();
-			delete ent;
+			//delete ent;
+			removedEntities.push_back(ent);
 		}
 		else {
 			ent->update(deltaTime);
 		}
+
 
 	}
 
@@ -279,28 +293,63 @@ void EncounterScene::update(float deltaTime) {
 		PlayerSystem::resetPlayer();
 		graphics->addToDraw(player);
 		Transform* playerTransform = (Transform*)(player->findComponent(ComponentType::TRANSFORM));
+		playerTransform->globalPosX = 1800;
+		playerTransform->globalPosY = 700;
 		CameraSystem::follow(&playerTransform->globalPosX, &playerTransform->globalPosY);
 		PlayerSystem::enableMovement();
 		curAction = ""; //1110 1180 1250
 		Transform* solt = (Transform*)(soldierAI->owner->findComponent(ComponentType::TRANSFORM));
 		solt->globalPosX = 1110;
+		solt->globalPosY = 700;
 		Transform* solt2 = (Transform*)(soldier2AI->owner->findComponent(ComponentType::TRANSFORM));
 		solt2->globalPosX = 1250;
+		solt2->globalPosY = 700;
 		//Transform* oldt = (Transform*)(oldmanAI->owner->findComponent(ComponentType::TRANSFORM));
 		//solt->globalPosX = 1180;
-		soldier2AI->attack(player);
+
 		//soldierAI->attack(player);
 		UIDesignSystem::showPlayerHealth(player);
 		//do not delete on kill, remove from draw and remove colliders
-		/* change all of their states and shit below and then from encounter scene update remove the delete if isActive = false lol and change back is active and its gucci ok
-		state = DEAD;
-		Collider* col = (Collider*)owner->findComponent(ComponentType::COLLIDER);
-		col->enabled = false;
-		CollisionSystem::removeCollider(col);
-		/*Animator* anim = (Animator*)owner->findComponent(ComponentType::ANIMATOR);
-		anim->playAnimation("walking0");
-		owner->active = false;
-		*/
+		/* change all of their states and shit below and then from encounter scene update remove the delete if isActive = false lol and change back is active and its gucci ok*/
+		soldier2AI->state = AIComponent::State::NORMAL;
+		soldierAI->state = AIComponent::State::NORMAL;
+		soldier2AI->subState = AISoldier::subStates::NONE;
+		soldierAI->subState = AISoldier::subStates::NONE;
+		Stats* stats = (Stats*)soldier2AI->owner->findComponent(ComponentType::STATS);
+		stats->curHealth = stats->totalHealth;
+		stats = (Stats*)soldierAI->owner->findComponent(ComponentType::STATS);
+		stats->curHealth = stats->totalHealth;
+		UIDesignSystem::hideHealth(soldier2AI->owner);
+		UIDesignSystem::hideHealth(soldierAI->owner);
+
+		for (auto ent : removedEntities) {
+			graphics->addToDraw(ent);
+			entities.push_back(ent);
+			Collider* col = (Collider*)ent->findComponent(ComponentType::COLLIDER);
+			if (!col->enabled) {
+				col->enabled = true;
+				CollisionSystem::collidersInScene.push_back(col);
+				ent->active = true;
+			}
+			Drawable* drw = (Drawable*)ent->findComponent(ComponentType::DRAWABLE);
+			if (drw->ID == "tree") {
+				/*Animator* anim = (Animator*)ent->findComponent(ComponentType::ANIMATOR);
+				anim->stopAnimation();*/
+				//drw->srcRect = drw->startingSrcRect;
+				*drw->srcRect = drw->startingSrcRect;
+			}
+			Stats* stats = (Stats*)ent->findComponent(ComponentType::STATS);
+			stats->curHealth = stats->totalHealth;
+		}
+		removedEntities.clear();
+		for (auto ent : affectedEntities) {
+			Stats* stats = (Stats*)ent->findComponent(ComponentType::STATS);
+			stats->curHealth = stats->totalHealth;
+			Drawable* drw = (Drawable*)ent->findComponent(ComponentType::DRAWABLE);
+			*drw->srcRect = drw->startingSrcRect;
+		}
+		affectedEntities.clear();
+		soldier2AI->attack(player);
 	}
 
 }

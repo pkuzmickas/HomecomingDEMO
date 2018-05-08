@@ -18,6 +18,16 @@ AISoldier::~AISoldier() {
 
 void AISoldier::update(float deltaTime) {
 	AIComponent::update(deltaTime);
+	if (state == NORMAL) {
+		if (slashing) {
+			slashCollider->enabled = true;
+			CollisionSystem::removeCollider(slashCollider);
+			slashing = false;
+			graphics->removeFromDraw(slashEntity);
+			delete slashEntity;
+			slashEntity = NULL;
+		}
+	}
 	if (state == ATTACKING) {
 		int chaseSpeed = 200;
 		if (subState == NONE) {
@@ -43,7 +53,6 @@ void AISoldier::update(float deltaTime) {
 			if (path.size() > 3) {
 				subState = NONE;
 			}
-			//cout << "SLASH ATTACK!" << endl; //TODO instead of stopwalking have recalculate(), check the direction bug
 			if (!slashing) {
 				slashAttack();
 			}

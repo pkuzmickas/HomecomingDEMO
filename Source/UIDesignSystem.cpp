@@ -111,13 +111,16 @@ void UIDesignSystem::showHealth(Entity * entity) {
 	fullBars[entity] = fullBar;
 }
 
-void UIDesignSystem::removeHealth(Entity * entity) {
-	graphics->removeFromDraw(emptyBars[entity]);
-	graphics->removeFromDraw(fullBars[entity]);
-	delete emptyBars[entity];
-	delete fullBars[entity];
-	emptyBars.erase(entity);
-	fullBars.erase(entity);
+void UIDesignSystem::hideHealth(Entity * entity) {
+	if (emptyBars.find(entity) != emptyBars.end()) {
+		graphics->removeFromDraw(emptyBars[entity]);
+		graphics->removeFromDraw(fullBars[entity]);
+		delete emptyBars[entity];
+		delete fullBars[entity];
+		emptyBars.erase(entity);
+		fullBars.erase(entity);
+	}
+	
 }
 
 

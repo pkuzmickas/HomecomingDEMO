@@ -122,7 +122,13 @@ void PlayerAbilities::dashMove() {
 	if (dashing) return;
 	int mouseX, mouseY;
 	SDL_GetMouseState(&mouseX, &mouseY);
-
+	if (knocked) {
+		knocked = false;
+		PlayerMovement* pm = (PlayerMovement*)player->findComponent(ComponentType::MOVEMENT);
+		pm->velX = 0;
+		pm->velY = 0;
+		pm->movementEnabled = true;
+	}
 	dashEntity = new Entity();
 	int dashWidth, dashHeight;
 	SDL_QueryTexture(dashIMG, NULL, NULL, &dashWidth, &dashHeight);
@@ -207,6 +213,13 @@ void PlayerAbilities::update(float deltaTime) {
 		UIDesignSystem::createBloodshot(player);
 		graphics->removeFromDraw(player);
 		isAlive = false;
+		if (fSlashEntity) {
+			CollisionSystem::removeCollider(fSlashCollider);
+			graphics->removeFromDraw(fSlashEntity);
+			flyingSlashing = false;
+			delete fSlashEntity;
+			fSlashEntity = NULL;
+		}
 		
 	}
 	if (isKnocked()) {
@@ -302,11 +315,13 @@ void PlayerAbilities::fSlashUpdates(float deltaTime) {
 				if (treeStats->curHealth == 0) {
 					anim->playAnimation("treeHit");
 					Collider* col = (Collider*)collision->owner->findComponent(ComponentType::COLLIDER);
+					col->enabled = false;
 					CollisionSystem::removeCollider(col);
 					collision->owner->active = false;
 				}
 				else {
 					anim->playAnimation("treeHit2");
+					collision->owner->active = false;
 				}
 			}
 		}

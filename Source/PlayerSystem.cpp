@@ -66,4 +66,13 @@ void PlayerSystem::resetPlayer() {
 	ps->totalHealth = 200;
 	PlayerAbilities* pa = (PlayerAbilities*)player->findComponent(ComponentType::ABILITIES);
 	pa->isAlive = true;
+	pa->knocked = false;
+	PlayerMovement* pm = (PlayerMovement*)player->findComponent(ComponentType::MOVEMENT);
+	pm->velX = 0;
+	pm->velY = 0;
+	for (auto dir : pm->moving) {
+		dir = false;
+	}
+	Animator* anim = (PlayerAnimator*)player->findComponent(ComponentType::ANIMATOR);
+	anim->stopAnimation();
 }

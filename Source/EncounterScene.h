@@ -17,8 +17,11 @@ private:
 	Transform* blackBox1T;
 	Transform* blackBox2T;
 	std::vector<Entity*> entities;
-	std::string introText = "\"I WILL SAVE EVERYONE\"";
+	std::string introText = "\"I WILL COME BACK FOR YOU\"";
 	int textProgress = 1;
 	SDL_Texture* textTexture;
 	Entity* textEntity;
+
+	vector<Entity*> removedEntities;
+	vector<Entity*> affectedEntities;
 };

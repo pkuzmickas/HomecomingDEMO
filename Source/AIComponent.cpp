@@ -38,8 +38,11 @@ void AIComponent::update(float deltaTime) {
 		/*Animator* anim = (Animator*)owner->findComponent(ComponentType::ANIMATOR);
 		anim->playAnimation("walking0");*/
 		owner->active = false;
-		UIDesignSystem::removeHealth(owner);
+		UIDesignSystem::hideHealth(owner);
 		UIDesignSystem::createBloodshot(owner);
+		knocked = false;
+		movement->velX = 0;
+		movement->velY = 0;
 	}
 	if (walking && !isKnocked()) {
 		walkingDir = lastDir;
