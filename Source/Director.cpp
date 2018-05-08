@@ -7,7 +7,7 @@ Director::Director(SDL_Renderer* renderer) {
 	graphics = new Graphics(renderer);
 	
 	curScene = new EncounterScene(renderer, graphics);
-	curScene->loadAction("restart");
+	//curScene->loadAction("restart");
 	// Starts to calculate the running time of the game to create the deltaTime (time passed since last frame)
 	runTime = SDL_GetTicks();
 }

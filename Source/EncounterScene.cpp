@@ -15,10 +15,10 @@ void EncounterScene::setup() {
 	// Spawning npcs
 	oldman = IMG_LoadTexture(renderer, ASSET_DIR CHARACTER_DIR "oldman.png");
 	soldier = IMG_LoadTexture(renderer, ASSET_DIR CHARACTER_DIR "soldier.png");
-	Entity* oldmanEntity = NPCSystem::createNPC(270, 700, 48, 48, Globals::Layers::PLAYER, oldman, "oldman");
+	Entity* oldmanEntity = NPCSystem::createBoss(270, 700, 48, 48, Globals::Layers::PLAYER, oldman, "oldman", renderer, graphics);
 	Entity* soldierEntity = NPCSystem::createSoldier(200, 700, 48, 48, Globals::Layers::PLAYER, soldier, "soldier1", renderer, graphics);
 	Entity* soldier2Entity = NPCSystem::createSoldier(340, 700, 48, 48, Globals::Layers::PLAYER, soldier, "soldier2", renderer, graphics);
-	//oldmanAI = (AIComponent*)oldmanEntity->findComponent(ComponentType::AI);
+	oldmanAI = (AIComponent*)oldmanEntity->findComponent(ComponentType::AI);
 	soldierAI = (AISoldier*)soldierEntity->findComponent(ComponentType::AI);
 	soldier2AI = (AISoldier*)soldier2Entity->findComponent(ComponentType::AI);
 	graphics->addToDraw(oldmanEntity);
@@ -91,15 +91,15 @@ void EncounterScene::setup() {
 	Entity* blackBox2 = SceneDesignSystem::createRect(CameraSystem::posX, CameraSystem::posY + Globals::SCREEN_HEIGHT / 2, Globals::SCREEN_WIDTH + 10, Globals::SCREEN_HEIGHT / 2, Globals::Layers::UI, true);
 	blackBox1T = (Transform*)blackBox1->findComponent(ComponentType::TRANSFORM);
 	blackBox2T = (Transform*)blackBox2->findComponent(ComponentType::TRANSFORM);
-	//graphics->addToDraw(blackBox1);
-	//graphics->addToDraw(blackBox2);
+	graphics->addToDraw(blackBox1);
+	graphics->addToDraw(blackBox2);
 	entities.push_back(blackBox1);
 	entities.push_back(blackBox2);
 
 	wait(2, "intro text");
 
 	//for testing
-	graphics->removeFromDraw(player);
+	//graphics->removeFromDraw(player);
 	/*Transform* playerTransform = (Transform*)(player->findComponent(ComponentType::TRANSFORM));
 	CameraSystem::follow(&playerTransform->globalPosX, &playerTransform->globalPosY);
 	PlayerSystem::enableMovement();
@@ -241,6 +241,8 @@ void EncounterScene::preFightScenario(float deltaTime) {
 			boundary1 = SceneDesignSystem::createBoundary(CameraSystem::posX, CameraSystem::posY, Globals::TILE_SIZE, Globals::SCREEN_HEIGHT);
 			boundary2 = SceneDesignSystem::createBoundary(CameraSystem::posX + Globals::SCREEN_WIDTH - Globals::TILE_SIZE, CameraSystem::posY, Globals::TILE_SIZE, Globals::SCREEN_HEIGHT);
 			CameraSystem::detachCamera();
+			graphics->addToDraw(boundary1);
+			graphics->addToDraw(boundary2);
 		}
 	}
 }
@@ -296,7 +298,7 @@ void EncounterScene::update(float deltaTime) {
 		
 	}
 	
-	//preFightScenario(deltaTime);
+	preFightScenario(deltaTime);
 	if (curAction == "restart") {
 		
 		hideLoseScreen();

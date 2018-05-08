@@ -42,10 +42,24 @@ Entity * NPCSystem::createSoldier(int posX, int posY, int width, int height, Glo
 	Entity* soldier = createNPC(posX, posY, width, height, layer, texture, spriteName, speakerID);
 	Stats* stats = new Stats(soldier);
 	soldier->addComponent(stats);
-	stats->totalHealth = 300;
-	stats->curHealth = 300;
-	stats->mainAttackDmg = 50;
+	stats->totalHealth = 100;
+	stats->curHealth = 100;
+	stats->mainAttackDmg = 100;
 	AISoldier* ai = new AISoldier(soldier, renderer, graphics);
 	soldier->addComponent(ai);
 	return soldier;
+}
+
+Entity * NPCSystem::createBoss(int posX, int posY, int width, int height, Globals::Layers layer, SDL_Texture * texture, std::string spriteName, SDL_Renderer * renderer, Graphics * graphics, std::string * speakerID) {
+	Entity* boss = createNPC(posX, posY, width, height, layer, texture, spriteName, speakerID);
+	Stats* stats = new Stats(boss);
+	boss->addComponent(stats);
+	stats->totalHealth = 500;
+	stats->curHealth = 500;
+	stats->mainAttackDmg = 100;
+	//AISoldier* ai = new AISoldier(soldier, renderer, graphics);
+	AIComponent* ai = new AIComponent(boss);
+	boss->addComponent(ai);
+	return boss;
+	
 }

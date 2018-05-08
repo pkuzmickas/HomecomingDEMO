@@ -16,12 +16,15 @@ void PlayerInput::update(float deltaTime) {
 
 		case SDL_MOUSEBUTTONDOWN: {
 			if (e.button.button == SDL_BUTTON_LEFT) {
-				if (playerMovement->enabled && !playerAbilities->isSlashing()) {
+				if (playerMovement->movementEnabled && !playerAbilities->isSlashing()) {
 					playerAbilities->slashAttack();
 				}
 			}
 			if (e.button.button == SDL_BUTTON_RIGHT) {
-				playerAbilities->flyingSlashAttack();
+				if (playerMovement->movementEnabled && !playerAbilities->isSlashing()) {
+					playerAbilities->flyingSlashAttack();
+				}
+				
 			}
 		}
 			break;
@@ -45,7 +48,10 @@ void PlayerInput::update(float deltaTime) {
 				playerAnimator->animateMovement();
 			}
 			if (e.key.keysym.sym == SDLK_SPACE) {
-				playerAbilities->dashMove();
+				if (playerMovement->movementEnabled && !playerAbilities->isSlashing()) {
+					playerAbilities->dashMove();
+				}
+				
 			}
 
 		}
