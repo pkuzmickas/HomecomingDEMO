@@ -11,6 +11,7 @@ int CameraSystem::destY = 0;
 int CameraSystem::speed = 0;
 int CameraSystem::levelHeight = 0;
 int CameraSystem::levelWidth = 0;
+bool CameraSystem::allowedToMove = true;
 
 void CameraSystem::setUp(int levelWidth, int levelHeight) {
 	CameraSystem::levelWidth = levelWidth;

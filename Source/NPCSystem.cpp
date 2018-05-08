@@ -38,7 +38,7 @@ Entity* NPCSystem::createNPC(int posX, int posY, int width, int height, Globals:
 	return npc;
 }
 
-Entity * NPCSystem::createSoldier(int posX, int posY, int width, int height, Globals::Layers layer, SDL_Texture * texture, std::string spriteName, SDL_Renderer* renderer, Graphics* graphics, std::string * speakerID) {
+Entity * NPCSystem::createSoldier(int posX, int posY, int width, int height, Globals::Layers layer, SDL_Texture * texture, std::string spriteName, SDL_Renderer* renderer, Graphics* graphics, int hp, std::string * speakerID) {
 	Entity* soldier = createNPC(posX, posY, width, height, layer, texture, spriteName, speakerID);
 	Stats* stats = new Stats(soldier);
 	soldier->addComponent(stats);

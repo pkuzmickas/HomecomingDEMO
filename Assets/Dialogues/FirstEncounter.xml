@@ -13,3 +13,7 @@
 	<text speaker="morgan">What did you do to Elly, old man?</text>
 	<text speaker="oldman">I have had enough of this, kill him!</text>
 </dialogue>
+<dialogue id="fight1">
+	<text speaker="morgan">Prepare to die, old man.</text>
+	<text speaker="oldman">Don't get so cocky!</text>
+</dialogue>

@@ -118,10 +118,9 @@ void PlayerAbilities::slashAttack() {
 	graphics->addToDraw(slashEntity);
 }
 
-void PlayerAbilities::dashMove() {
+void PlayerAbilities::dashMove(int localPosX, int localPosY) {
 	if (dashing) return;
-	int mouseX, mouseY;
-	SDL_GetMouseState(&mouseX, &mouseY);
+	
 	if (knocked) {
 		knocked = false;
 		PlayerMovement* pm = (PlayerMovement*)player->findComponent(ComponentType::MOVEMENT);
@@ -137,8 +136,8 @@ void PlayerAbilities::dashMove() {
 	int dashWidth, dashHeight;
 	SDL_QueryTexture(dashIMG, NULL, NULL, &dashWidth, &dashHeight);
 	dashHeight = 50;
-	float dx = mouseX - (playerTransform->globalPosX + playerTransform->width / 2 - CameraSystem::posX);
-	float dy = mouseY - (playerTransform->globalPosY + playerTransform->height / 2 - CameraSystem::posY);
+	float dx = localPosX - (playerTransform->globalPosX + playerTransform->width / 2 - CameraSystem::posX);
+	float dy = localPosY - (playerTransform->globalPosY + playerTransform->height / 2 - CameraSystem::posY);
 	float angle = atan2(dy, dx) * 180 / M_PI;
 	dashTransform = new Transform(dashEntity, sqrt(dx*dx + dy * dy), dashHeight, playerTransform->globalPosX + playerTransform->width / 2 + 10 * cos(angle * M_PI / 180), playerTransform->globalPosY + 10 * sin(angle * M_PI / 180));
 	SDL_Point center;
@@ -161,8 +160,8 @@ void PlayerAbilities::dashMove() {
 	dashAnimator->addAnimation(notdashingAnim);
 	dashEntity->addComponent(dashAnimator);
 	SDL_Rect testCol;
-	testCol.x = mouseX - Globals::TILE_SIZE / 2;
-	testCol.y = mouseY - Globals::TILE_SIZE / 2;
+	testCol.x = localPosX - Globals::TILE_SIZE / 2;
+	testCol.y = localPosY - Globals::TILE_SIZE / 2;
 	testCol.h = Globals::TILE_SIZE;
 	testCol.w = Globals::TILE_SIZE;
 	if (CollisionSystem::isCollidingWithEnv(testCol) || CollisionSystem::isCollidingWithObjects(testCol, { "" })) {
@@ -296,7 +295,7 @@ void PlayerAbilities::dashUpdates(float deltaTime) {
 		delete dashEntity;
 		dashStart = 0;
 		dashEntity = NULL;
-		if(CameraSystem::isCameraFollowing())
+		if(CameraSystem::allowedToMove)
 		CameraSystem::moveAndFollow(playerTransform->globalPosX - Globals::SCREEN_WIDTH / 2, playerTransform->globalPosY - Globals::SCREEN_HEIGHT / 2, &playerTransform->globalPosX, &playerTransform->globalPosY, 1200);
 	}
 

@@ -13,6 +13,7 @@ public:
 	static void follow(float* posX, float* posY);
 	static void moveAndFollow(int moveToX, int moveToY, float* followPosX, float* followPosY, int speed);
 	static void detachCamera() { cameraAttached = false; }
+	static bool allowedToMove;
 private:
 	CameraSystem();
 	static bool cameraMoving;

@@ -49,7 +49,9 @@ void PlayerInput::update(float deltaTime) {
 			}
 			if (e.key.keysym.sym == SDLK_SPACE) {
 				if (playerMovement->movementEnabled && !playerAbilities->isSlashing()) {
-					playerAbilities->dashMove();
+					int mouseX, mouseY;
+					SDL_GetMouseState(&mouseX, &mouseY);
+					playerAbilities->dashMove(mouseX, mouseY);
 				}
 				
 			}

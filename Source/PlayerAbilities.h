@@ -14,7 +14,7 @@ public:
 	~PlayerAbilities();
 	void slashAttack();
 	void flyingSlashAttack();
-	void dashMove(); // add mana to this later
+	void dashMove(int localPosX, int localPosY); // add mana to this later
 	void update(float deltaTime);
 	bool isSlashing() { return slashing; }
 	bool isDashing() { return dashing; }

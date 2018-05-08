@@ -16,8 +16,8 @@ void EncounterScene::setup() {
 	oldman = IMG_LoadTexture(renderer, ASSET_DIR CHARACTER_DIR "oldman.png");
 	soldier = IMG_LoadTexture(renderer, ASSET_DIR CHARACTER_DIR "soldier.png");
 	Entity* oldmanEntity = NPCSystem::createBoss(270, 700, 48, 48, Globals::Layers::PLAYER, oldman, "oldman", renderer, graphics);
-	Entity* soldierEntity = NPCSystem::createSoldier(200, 700, 48, 48, Globals::Layers::PLAYER, soldier, "soldier1", renderer, graphics);
-	Entity* soldier2Entity = NPCSystem::createSoldier(340, 700, 48, 48, Globals::Layers::PLAYER, soldier, "soldier2", renderer, graphics);
+	Entity* soldierEntity = NPCSystem::createSoldier(200, 700, 48, 48, Globals::Layers::PLAYER, soldier, "soldier1", renderer, graphics, 200);
+	Entity* soldier2Entity = NPCSystem::createSoldier(340, 700, 48, 48, Globals::Layers::PLAYER, soldier, "soldier2", renderer, graphics, 100);
 	oldmanAI = (AIComponent*)oldmanEntity->findComponent(ComponentType::AI);
 	soldierAI = (AISoldier*)soldierEntity->findComponent(ComponentType::AI);
 	soldier2AI = (AISoldier*)soldier2Entity->findComponent(ComponentType::AI);
@@ -235,7 +235,7 @@ void EncounterScene::preFightScenario(float deltaTime) {
 			Transform* playerTransform = (Transform*)(player->findComponent(ComponentType::TRANSFORM));
 			CameraSystem::follow(&playerTransform->globalPosX, &playerTransform->globalPosY);
 			PlayerSystem::enableMovement();
-			curAction = "";
+			curAction = "fighting soldiers";
 			soldier2AI->attack(player);
 			UIDesignSystem::showPlayerHealth(player);
 			boundary1 = SceneDesignSystem::createBoundary(CameraSystem::posX, CameraSystem::posY, Globals::TILE_SIZE, Globals::SCREEN_HEIGHT);
@@ -243,6 +243,58 @@ void EncounterScene::preFightScenario(float deltaTime) {
 			CameraSystem::detachCamera();
 			graphics->addToDraw(boundary1);
 			graphics->addToDraw(boundary2);
+		}
+	}
+	if (curAction == "fighting soldiers") {
+		CameraSystem::allowedToMove = false;
+		if (soldierAI->state == AISoldier::DEAD) {
+			graphics->removeFromDraw(boundary1);
+			graphics->removeFromDraw(boundary2);
+			Collider* c1 = (Collider*)boundary1->findComponent(ComponentType::COLLIDER);
+			Collider* c2 = (Collider*)boundary2->findComponent(ComponentType::COLLIDER);
+			CollisionSystem::removeCollider(c1);
+			CollisionSystem::removeCollider(c2);
+			Transform* ot = (Transform*)oldmanAI->owner->findComponent(ComponentType::TRANSFORM);
+			CameraSystem::moveCamera(ot->globalPosX - 100, ot->globalPosY - Globals::SCREEN_HEIGHT / 2, 200);
+			PlayerSystem::disableMovement();
+			
+			curAction = "camera moving 3";
+		}
+	}
+	if (curAction == "camera moving 3") {
+		if (!CameraSystem::isCameraMoving()) {
+			curAction = "pre talk";
+			PlayerAbilities* pa = (PlayerAbilities*)player->findComponent(ComponentType::ABILITIES);
+			Transform* ot = (Transform*)oldmanAI->owner->findComponent(ComponentType::TRANSFORM);
+			pa->dashMove(ot->globalPosX + Globals::SCREEN_WIDTH - 200 - CameraSystem::posX, ot->globalPosY - CameraSystem::posY + ot->height / 2);
+			Drawable* drw = (Drawable*)player->findComponent(ComponentType::DRAWABLE);
+			drw->srcRect->y = PlayerAnimator::LookDirection::LEFT * drw->srcRect->h;
+			PlayerAnimator* panim = (PlayerAnimator*)player->findComponent(ComponentType::ANIMATOR);
+			panim->direction = PlayerAnimator::LookDirection::LEFT;
+			panim->update(deltaTime);
+			wait(1, "open dialogue fight1");	
+		}
+	}
+	if (curAction == "open dialogue fight1") {
+		DialogueSystem::openDialogueBox("fight1");
+		curAction = "pre talk";
+	}
+	if (curAction == "pre talk") {
+		if (!DialogueSystem::isOpen()) {
+			CameraSystem::allowedToMove = true;
+			/*Collider* c1 = (Collider*)boundary1->findComponent(ComponentType::COLLIDER);
+			Collider* c2 = (Collider*)boundary2->findComponent(ComponentType::COLLIDER);
+			CollisionSystem::collidersInScene.push_back(c1);
+			CollisionSystem::collidersInScene.push_back(c2);
+			Transform* t1 = (Transform*)boundary1->findComponent(ComponentType::TRANSFORM);
+			Transform* t2 = (Transform*)boundary2->findComponent(ComponentType::TRANSFORM);
+			Transform* ot = (Transform*)oldmanAI->owner->findComponent(ComponentType::TRANSFORM);
+			t1->globalPosX = CameraSystem::posX;
+			t1->globalPosY = CameraSystem::posY*/
+			Transform* pt = (Transform*)player->findComponent(ComponentType::TRANSFORM);
+			CameraSystem::moveAndFollow(pt->globalPosX - Globals::SCREEN_WIDTH / 2, pt->globalPosY - Globals::SCREEN_HEIGHT / 2, &pt->globalPosX, &pt->globalPosY, 400);
+			curAction = "";
+			PlayerSystem::enableMovement();
 		}
 	}
 }
@@ -300,7 +352,7 @@ void EncounterScene::update(float deltaTime) {
 	
 	preFightScenario(deltaTime);
 	if (curAction == "restart") {
-		
+		curAction = "fighting soldiers";
 		hideLoseScreen();
 		PlayerSystem::resetPlayer();
 		graphics->addToDraw(player);
@@ -309,7 +361,6 @@ void EncounterScene::update(float deltaTime) {
 		playerTransform->globalPosY = 700;
 		//CameraSystem::follow(&playerTransform->globalPosX, &playerTransform->globalPosY);
 		PlayerSystem::enableMovement();
-		curAction = ""; //1110 1180 1250
 		Transform* solt = (Transform*)(soldierAI->owner->findComponent(ComponentType::TRANSFORM));
 		solt->globalPosX = 1110;
 		solt->globalPosY = 700;
