@@ -118,6 +118,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\AIBoss.cpp" />
     <ClCompile Include="Source\AIComponent.cpp" />
     <ClCompile Include="Source\AISoldier.cpp" />
     <ClCompile Include="Source\Animator.cpp" />
@@ -142,6 +143,7 @@
     <ClCompile Include="Source\UIDesignSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\AIBoss.h" />
     <ClInclude Include="Source\AIComponent.h" />
     <ClInclude Include="Source\AISoldier.h" />
     <ClInclude Include="Source\Animator.h" />

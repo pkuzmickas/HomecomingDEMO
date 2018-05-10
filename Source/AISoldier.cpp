@@ -37,7 +37,7 @@ void AISoldier::update(float deltaTime) {
 		}
 	}
 	if (state == ATTACKING) {
-		int chaseSpeed = 200;
+		int chaseSpeed = stats->speed;
 		if (subState == NONE) {
 			subState = FINDING;
 			if (!isKnocked()) {

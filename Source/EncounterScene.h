@@ -11,7 +11,7 @@ private:
 	SDL_Texture* tree;
 	SDL_Texture* oldman;
 	SDL_Texture* soldier;
-	AIComponent* oldmanAI;
+	AIBoss* oldmanAI;
 	AISoldier* soldierAI;
 	AISoldier* soldier2AI;
 	Transform* blackBox1T;

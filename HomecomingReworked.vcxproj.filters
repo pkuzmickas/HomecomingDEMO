@@ -111,6 +111,9 @@
     <ClCompile Include="Source\AISoldier.cpp">
       <Filter>Source Files\Components\NPCs</Filter>
     </ClCompile>
+    <ClCompile Include="Source\AIBoss.cpp">
+      <Filter>Source Files\Components\NPCs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Entity.h">
@@ -189,6 +192,9 @@
       <Filter>Header Files\Systems</Filter>
     </ClInclude>
     <ClInclude Include="Source\AISoldier.h">
+      <Filter>Header Files\Components\NPCs</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\AIBoss.h">
       <Filter>Header Files\Components\NPCs</Filter>
     </ClInclude>
   </ItemGroup>

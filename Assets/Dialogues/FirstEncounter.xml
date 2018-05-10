@@ -14,6 +14,14 @@
 	<text speaker="oldman">I have had enough of this, kill him!</text>
 </dialogue>
 <dialogue id="fight1">
-	<text speaker="morgan">Prepare to die, old man.</text>
+	<text speaker="morgan">Oak village massacre, do you remember it?</text>
+	<text speaker="oldman">Oh! Hahaha. So you are a survivor of the village then? And so you have come for revenge.</text>
+	<text speaker="morgan">I will make sure you pay for what you have done.</text>
 	<text speaker="oldman">Don't get so cocky!</text>
+</dialogue>
+<dialogue id="fight2">
+	<text speaker="oldman">Kill him!!!</text>
+</dialogue>
+<dialogue id="fight3">
+	<text speaker="morgan">Prepare to die, old man.</text>
 </dialogue>

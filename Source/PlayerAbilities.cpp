@@ -153,8 +153,8 @@ void PlayerAbilities::dashMove(int localPosX, int localPosY) {
 	Drawable* dashDrawable = new Drawable(dashEntity, dashIMG, "dash", Globals::Layers::PLAYER, src);
 	dashEntity->addComponent(dashDrawable);
 	dashAnimator = new Animator(dashEntity);
-	int dashSpeed = 30;
-	Animator::Animation dashingAnim("dashing", { 0, 1, 2 }, dashSpeed, false);
+	int dashSpeed = 50;
+	Animator::Animation dashingAnim("dashing", { 0, 1, 2  }, dashSpeed, false);
 	dashAnimator->addAnimation(dashingAnim);
 	Animator::Animation notdashingAnim("notDashing", { 3, 3 }, dashSpeed, false);
 	dashAnimator->addAnimation(notdashingAnim);

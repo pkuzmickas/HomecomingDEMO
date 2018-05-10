@@ -4,6 +4,7 @@
 #include "Animator.h"
 #include "PathfindingSystem.h"
 #include "UIDesignSystem.h"
+#include "PlayerAbilities.h"
 class AIComponent : public Component {
 public:
 	enum State {

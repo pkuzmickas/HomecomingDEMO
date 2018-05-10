@@ -38,13 +38,14 @@ Entity* NPCSystem::createNPC(int posX, int posY, int width, int height, Globals:
 	return npc;
 }
 
-Entity * NPCSystem::createSoldier(int posX, int posY, int width, int height, Globals::Layers layer, SDL_Texture * texture, std::string spriteName, SDL_Renderer* renderer, Graphics* graphics, int hp, std::string * speakerID) {
+Entity * NPCSystem::createSoldier(int posX, int posY, int width, int height, Globals::Layers layer, SDL_Texture * texture, std::string spriteName, SDL_Renderer* renderer, Graphics* graphics, int hp, int speed, std::string * speakerID) {
 	Entity* soldier = createNPC(posX, posY, width, height, layer, texture, spriteName, speakerID);
 	Stats* stats = new Stats(soldier);
 	soldier->addComponent(stats);
-	stats->totalHealth = 100;
-	stats->curHealth = 100;
+	stats->totalHealth = hp;
+	stats->curHealth = hp;
 	stats->mainAttackDmg = 100;
+	stats->speed = speed;
 	AISoldier* ai = new AISoldier(soldier, renderer, graphics);
 	soldier->addComponent(ai);
 	return soldier;
@@ -56,9 +57,9 @@ Entity * NPCSystem::createBoss(int posX, int posY, int width, int height, Global
 	boss->addComponent(stats);
 	stats->totalHealth = 500;
 	stats->curHealth = 500;
-	stats->mainAttackDmg = 100;
+	stats->mainAttackDmg = 200;
 	//AISoldier* ai = new AISoldier(soldier, renderer, graphics);
-	AIComponent* ai = new AIComponent(boss);
+	AIBoss* ai = new AIBoss(boss, renderer, graphics);
 	boss->addComponent(ai);
 	return boss;
 	

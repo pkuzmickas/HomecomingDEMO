@@ -1,6 +1,6 @@
 #pragma once
 #include "AIComponent.h"
-#include "PlayerAbilities.h"
+
 
 class AISoldier : public AIComponent {
 

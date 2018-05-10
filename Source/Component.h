@@ -115,6 +115,7 @@ public:
 	int totalHealth;
 	int curHealth;
 	int mainAttackDmg;
+	int speed;
 	Stats(Entity* owner) : Component(owner) {
 		type = STATS;
 	}
