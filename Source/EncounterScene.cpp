@@ -15,8 +15,9 @@ void EncounterScene::setup() {
 	// Spawning npcs
 	oldman = IMG_LoadTexture(renderer, ASSET_DIR CHARACTER_DIR "oldman.png");
 	soldier = IMG_LoadTexture(renderer, ASSET_DIR CHARACTER_DIR "soldier.png");
+	zoro = IMG_LoadTexture(renderer, ASSET_DIR CHARACTER_DIR "zoro.png");
 	Entity* oldmanEntity = NPCSystem::createBoss(270, 700, 48, 48, Globals::Layers::PLAYER, oldman, "oldman", renderer, graphics);
-	Entity* soldierEntity = NPCSystem::createSoldier(200, 700, 48, 48, Globals::Layers::PLAYER, soldier, "soldier1", renderer, graphics, 300, 400);
+	Entity* soldierEntity = NPCSystem::createSoldier(200, 700, 48, 48, Globals::Layers::PLAYER, zoro, "soldier1", renderer, graphics, 300, 400);
 	Entity* soldier2Entity = NPCSystem::createSoldier(340, 700, 48, 48, Globals::Layers::PLAYER, soldier, "soldier2", renderer, graphics, 200, 200);
 	oldmanAI = (AIBoss*)oldmanEntity->findComponent(ComponentType::AI);
 	soldierAI = (AISoldier*)soldierEntity->findComponent(ComponentType::AI);
@@ -96,15 +97,15 @@ void EncounterScene::setup() {
 	entities.push_back(blackBox1);
 	entities.push_back(blackBox2);
 
-	//wait(2, "intro text");
+	wait(2, "intro text");
 
 	//for testing
 	
-	graphics->removeFromDraw(player);
+	/*graphics->removeFromDraw(player);
 	curAction = "restart";
 	Transform* solt = (Transform*)(oldmanEntity->findComponent(ComponentType::TRANSFORM));
 	solt->globalPosX = 1180;
-	/*Transform* playerTransform = (Transform*)(player->findComponent(ComponentType::TRANSFORM));
+	Transform* playerTransform = (Transform*)(player->findComponent(ComponentType::TRANSFORM));
 	CameraSystem::follow(&playerTransform->globalPosX, &playerTransform->globalPosY);
 	PlayerSystem::enableMovement();
 	Transform* solt = (Transform*)(soldier2Entity->findComponent(ComponentType::TRANSFORM));
@@ -515,6 +516,7 @@ EncounterScene::~EncounterScene() {
 	SDL_DestroyTexture(tree);
 	SDL_DestroyTexture(oldman);
 	SDL_DestroyTexture(soldier);
+	SDL_DestroyTexture(zoro);
 	if (boundary1) {
 		delete boundary1;
 		delete boundary2;

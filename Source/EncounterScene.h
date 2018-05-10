@@ -11,6 +11,7 @@ private:
 	SDL_Texture* tree;
 	SDL_Texture* oldman;
 	SDL_Texture* soldier;
+	SDL_Texture* zoro;
 	AIBoss* oldmanAI;
 	AISoldier* soldierAI;
 	AISoldier* soldier2AI;
