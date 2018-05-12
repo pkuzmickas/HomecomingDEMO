@@ -17,8 +17,8 @@ void EncounterScene::setup() {
 	soldier = IMG_LoadTexture(renderer, ASSET_DIR CHARACTER_DIR "soldier.png");
 	zoro = IMG_LoadTexture(renderer, ASSET_DIR CHARACTER_DIR "zoro.png");
 	Entity* oldmanEntity = NPCSystem::createBoss(270, 700, 48, 48, Globals::Layers::PLAYER, oldman, "oldman", renderer, graphics);
-	Entity* soldierEntity = NPCSystem::createSoldier(200, 700, 48, 48, Globals::Layers::PLAYER, zoro, "soldier1", renderer, graphics, 300, 400);
-	Entity* soldier2Entity = NPCSystem::createSoldier(340, 700, 48, 48, Globals::Layers::PLAYER, soldier, "soldier2", renderer, graphics, 200, 200);
+	Entity* soldierEntity = NPCSystem::createSoldier(200, 700, 48, 48, Globals::Layers::PLAYER, zoro, "soldier1", renderer, graphics, 50, 400); //zoro
+	Entity* soldier2Entity = NPCSystem::createSoldier(340, 700, 48, 48, Globals::Layers::PLAYER, soldier, "soldier2", renderer, graphics, 50, 200);
 	oldmanAI = (AIBoss*)oldmanEntity->findComponent(ComponentType::AI);
 	soldierAI = (AISoldier*)soldierEntity->findComponent(ComponentType::AI);
 	soldier2AI = (AISoldier*)soldier2Entity->findComponent(ComponentType::AI);
@@ -97,15 +97,15 @@ void EncounterScene::setup() {
 	entities.push_back(blackBox1);
 	entities.push_back(blackBox2);
 
-	wait(2, "intro text");
+	//wait(2, "intro text");
 
 	//for testing
 	
-	/*graphics->removeFromDraw(player);
+	graphics->removeFromDraw(player);
 	curAction = "restart";
 	Transform* solt = (Transform*)(oldmanEntity->findComponent(ComponentType::TRANSFORM));
 	solt->globalPosX = 1180;
-	Transform* playerTransform = (Transform*)(player->findComponent(ComponentType::TRANSFORM));
+	/*Transform* playerTransform = (Transform*)(player->findComponent(ComponentType::TRANSFORM));
 	CameraSystem::follow(&playerTransform->globalPosX, &playerTransform->globalPosY);
 	PlayerSystem::enableMovement();
 	Transform* solt = (Transform*)(soldier2Entity->findComponent(ComponentType::TRANSFORM));
@@ -379,7 +379,7 @@ void EncounterScene::preFightScenario(float deltaTime) {
 			PlayerSystem::enableMovement();
 			CameraSystem::allowedToMove = true;
 
-			cout << "oldman attacking player" << endl;
+			oldmanAI->attack(player);
 			curAction = "";
 		}
 	}
@@ -451,23 +451,31 @@ void EncounterScene::update(float deltaTime) {
 		Transform* solt2 = (Transform*)(soldier2AI->owner->findComponent(ComponentType::TRANSFORM));
 		solt2->globalPosX = 1250;
 		solt2->globalPosY = 700;
+		Transform* ot = (Transform*)(oldmanAI->owner->findComponent(ComponentType::TRANSFORM));
+		solt2->globalPosX = 1250;
+		solt2->globalPosY = 700;
 		//Transform* oldt = (Transform*)(oldmanAI->owner->findComponent(ComponentType::TRANSFORM));
 		//solt->globalPosX = 1180;
 
 		//soldierAI->attack(player);
 		UIDesignSystem::showPlayerHealth(player);
 		//do not delete on kill, remove from draw and remove colliders
-		/* change all of their states and shit below and then from encounter scene update remove the delete if isActive = false lol and change back is active and its gucci ok*/
+
 		soldier2AI->state = AIComponent::State::NORMAL;
 		soldierAI->state = AIComponent::State::NORMAL;
 		soldier2AI->subState = AISoldier::subStates::NONE;
 		soldierAI->subState = AISoldier::subStates::NONE;
+		oldmanAI->state = AIComponent::State::NORMAL;
+		oldmanAI->subState = AIBoss::subStates::NONE;
 		Stats* stats = (Stats*)soldier2AI->owner->findComponent(ComponentType::STATS);
 		stats->curHealth = stats->totalHealth;
 		stats = (Stats*)soldierAI->owner->findComponent(ComponentType::STATS);
 		stats->curHealth = stats->totalHealth;
+		stats = (Stats*)oldmanAI->owner->findComponent(ComponentType::STATS);
+		stats->curHealth = stats->totalHealth;
 		UIDesignSystem::hideHealth(soldier2AI->owner);
 		UIDesignSystem::hideHealth(soldierAI->owner);
+		UIDesignSystem::hideHealth(oldmanAI->owner);
 
 		for (auto ent : removedEntities) {
 			graphics->addToDraw(ent);

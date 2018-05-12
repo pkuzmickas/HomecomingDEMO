@@ -40,7 +40,9 @@ AIBoss::AIBoss(Entity * owner, SDL_Renderer * renderer, Graphics * graphics) : A
 }
 
 void AIBoss::slashAttack(int localPosX, int localPosY) {
-	if (slashPool.size() == 0) return;
+	if (slashPool.size() == 0) {
+		return;
+	}
 	float dx = localPosX - (transform->globalPosX + transform->width / 2 - CameraSystem::posX);
 	float dy = localPosY - (transform->globalPosY + transform->height / 2 - CameraSystem::posY);
 	float angle = atan2(dy, dx) * 180 / M_PI;
@@ -146,4 +148,57 @@ void AIBoss::update(float deltaTime) {
 	if (slashesInUse.size()>0) {
 		slashUpdates(deltaTime);
 	}
+
+	/*if (state == NORMAL) {
+		if (slashing) {
+			slashCollider->enabled = true;
+			CollisionSystem::removeCollider(slashCollider);
+			slashing = false;
+			graphics->removeFromDraw(slashEntity);
+			delete slashEntity;
+			slashEntity = NULL;
+		}
+	}*/
+	if (state == ATTACKING) {
+		int chaseSpeed = stats->speed;
+		if (subState == NONE) {
+			subState = FINDING;
+			if (!isKnocked()) {
+				walkTo(targetTransform->globalPosX, targetTransform->globalPosY, chaseSpeed);
+			}
+		}
+		if (subState == FINDING) {
+			if (!walking && !isKnocked()) {
+				walkTo(targetTransform->globalPosX, targetTransform->globalPosY, chaseSpeed);
+			}
+			if (curPathIndex <= path.size() - 3) {
+				calculatePath(targetTransform->globalPosX, targetTransform->globalPosY);
+			}
+			if (path.size() <= 16) {
+				stopWalking();
+				subState = SLASHING;
+			}
+		}
+		if (subState == SLASHING) {
+			calculatePath(targetTransform->globalPosX, targetTransform->globalPosY);
+			if (path.size() > 16) {
+				subState = NONE;
+			}
+			if (path.size() > 10) {
+				if (SDL_GetTicks() > cooldown + lastSlashAttack) {
+					if (slashPool.size() > 0) {
+						lastSlashAttack = SDL_GetTicks();
+					} 
+					slashAttack(targetTransform->globalPosX - CameraSystem::posX + targetTransform->width / 2, targetTransform->globalPosY - CameraSystem::posY + targetTransform->height / 2);
+
+
+				}
+			}
+			else {
+				cout << "meelee att" << endl;
+			}
+			
+		}
+	}
+
 }

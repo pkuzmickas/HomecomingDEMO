@@ -58,6 +58,7 @@ Entity * NPCSystem::createBoss(int posX, int posY, int width, int height, Global
 	stats->totalHealth = 500;
 	stats->curHealth = 500;
 	stats->mainAttackDmg = 200;
+	stats->speed = 300;
 	//AISoldier* ai = new AISoldier(soldier, renderer, graphics);
 	AIBoss* ai = new AIBoss(boss, renderer, graphics);
 	boss->addComponent(ai);

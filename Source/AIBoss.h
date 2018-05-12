@@ -8,8 +8,9 @@ private:
 	Graphics* graphics;
 	SDL_Texture* slashAttackIMG; // generalize this to some sort of Attack struct
 
-	
-	
+	int cooldown = 2000; //in miliseconds
+	int lastSlashAttack = 0;
+
 	struct SlashObject {
 		Entity* entity;
 		Animator* animator;
