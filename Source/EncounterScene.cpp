@@ -17,7 +17,7 @@ void EncounterScene::setup() {
 	soldier = IMG_LoadTexture(renderer, ASSET_DIR CHARACTER_DIR "soldier.png");
 	zoro = IMG_LoadTexture(renderer, ASSET_DIR CHARACTER_DIR "zoro.png");
 	Entity* oldmanEntity = NPCSystem::createBoss(270, 700, 48, 48, Globals::Layers::PLAYER, oldman, "oldman", renderer, graphics);
-	Entity* soldierEntity = NPCSystem::createSoldier(200, 700, 48, 48, Globals::Layers::PLAYER, zoro, "soldier1", renderer, graphics, 50, 400); //zoro
+	Entity* soldierEntity = NPCSystem::createSoldier(200, 700, 48, 48, Globals::Layers::PLAYER, zoro, "soldier1", renderer, graphics, 300, 400); //zoro
 	Entity* soldier2Entity = NPCSystem::createSoldier(340, 700, 48, 48, Globals::Layers::PLAYER, soldier, "soldier2", renderer, graphics, 50, 200);
 	oldmanAI = (AIBoss*)oldmanEntity->findComponent(ComponentType::AI);
 	soldierAI = (AISoldier*)soldierEntity->findComponent(ComponentType::AI);
@@ -301,9 +301,10 @@ void EncounterScene::preFightScenario(float deltaTime) {
 		}
 	}
 	if (curAction == "oldman slashing") {
-		if (oldmanAI->slashesInUse.size() == 0) {
+		Transform* pt = (Transform*)player->findComponent(ComponentType::TRANSFORM);
+		Transform* ot = (Transform*)oldmanAI->owner->findComponent(ComponentType::TRANSFORM);
+		if (oldmanAI->slashesInUse.size() == 0 || pt->globalPosX < ot->globalPosX + 500) {
 			CameraSystem::detachCamera();
-			Transform* ot = (Transform*)oldmanAI->owner->findComponent(ComponentType::TRANSFORM);
 			CameraSystem::moveCamera(ot->globalPosX - 100, CameraSystem::posY, 400);
 			PlayerSystem::disableMovement();
 			curAction = "camera moving 4";
@@ -443,6 +444,12 @@ void EncounterScene::update(float deltaTime) {
 		Transform* playerTransform = (Transform*)(player->findComponent(ComponentType::TRANSFORM));
 		playerTransform->globalPosX = 1800;
 		playerTransform->globalPosY = 700;
+		soldier2AI->state = AIComponent::State::NORMAL;
+		soldierAI->state = AIComponent::State::NORMAL;
+		soldier2AI->subState = AISoldier::subStates::NONE;
+		soldierAI->subState = AISoldier::subStates::NONE;
+		oldmanAI->state = AIComponent::State::NORMAL;
+		oldmanAI->subState = AIBoss::subStates::NONE;
 		//CameraSystem::follow(&playerTransform->globalPosX, &playerTransform->globalPosY);
 		PlayerSystem::enableMovement();
 		Transform* solt = (Transform*)(soldierAI->owner->findComponent(ComponentType::TRANSFORM));
@@ -452,21 +459,25 @@ void EncounterScene::update(float deltaTime) {
 		solt2->globalPosX = 1250;
 		solt2->globalPosY = 700;
 		Transform* ot = (Transform*)(oldmanAI->owner->findComponent(ComponentType::TRANSFORM));
-		solt2->globalPosX = 1250;
-		solt2->globalPosY = 700;
-		//Transform* oldt = (Transform*)(oldmanAI->owner->findComponent(ComponentType::TRANSFORM));
-		//solt->globalPosX = 1180;
-
-		//soldierAI->attack(player);
+		ot->globalPosX = 1180;
+		ot->globalPosY = 700;
+		
 		UIDesignSystem::showPlayerHealth(player);
-		//do not delete on kill, remove from draw and remove colliders
 
-		soldier2AI->state = AIComponent::State::NORMAL;
-		soldierAI->state = AIComponent::State::NORMAL;
-		soldier2AI->subState = AISoldier::subStates::NONE;
-		soldierAI->subState = AISoldier::subStates::NONE;
-		oldmanAI->state = AIComponent::State::NORMAL;
-		oldmanAI->subState = AIBoss::subStates::NONE;
+		Drawable* soldierDrw = (Drawable*)soldierAI->owner->findComponent(ComponentType::DRAWABLE);
+		soldierDrw->srcRect->y = Animator::LookDirection::RIGHT * soldierDrw->srcRect->h;
+		Drawable* oldmanDrw = (Drawable*)oldmanAI->owner->findComponent(ComponentType::DRAWABLE);
+		oldmanDrw->srcRect->y = Animator::LookDirection::RIGHT * oldmanDrw->srcRect->h;
+
+		for (int i = 0; i < (int)oldmanAI->slashesInUse.size(); i++) {
+			AIBoss::SlashObject slash = oldmanAI->slashesInUse[i];
+			graphics->removeFromDraw(slash.entity);
+			CollisionSystem::removeCollider(slash.collider);
+			iter_swap(oldmanAI->slashesInUse.begin() + i, oldmanAI->slashesInUse.begin() + oldmanAI->slashesInUse.size() - 1);
+			oldmanAI->slashPool.push_back(oldmanAI->slashesInUse[oldmanAI->slashesInUse.size() - 1]);
+			oldmanAI->slashesInUse.pop_back();
+		}
+
 		Stats* stats = (Stats*)soldier2AI->owner->findComponent(ComponentType::STATS);
 		stats->curHealth = stats->totalHealth;
 		stats = (Stats*)soldierAI->owner->findComponent(ComponentType::STATS);

@@ -48,7 +48,7 @@ void AISoldier::update(float deltaTime) {
 			if (!walking && !isKnocked()) {
 				walkTo(targetTransform->globalPosX, targetTransform->globalPosY, chaseSpeed);
 			}
-			if (curPathIndex <= path.size() - 3) {
+			if (curPathIndex <= path.size() - 6) {
 				calculatePath(targetTransform->globalPosX, targetTransform->globalPosY);
 			}
 			if (path.size() <= 3) {

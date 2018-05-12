@@ -4,8 +4,8 @@ AIBoss::AIBoss(Entity * owner, SDL_Renderer * renderer, Graphics * graphics) : A
 	this->renderer = renderer;
 	this->graphics = graphics;
 	slashAttackIMG = IMG_LoadTexture(renderer, ASSET_DIR ATTACKS_DIR "enemyFlyingSlash.png");
+	smashAttackIMG = IMG_LoadTexture(renderer, ASSET_DIR ATTACKS_DIR "enemySlash.png");
 
-	// Creates the slash object pool with 3 objects
 	for (int i = 0; i < 3; i++) {
 		SlashObject so;
 		so.entity = new Entity();
@@ -64,6 +64,61 @@ void AIBoss::slashAttack(int localPosX, int localPosY) {
 	so.slashDir = (Animator::LookDirection)walkingDir;
 	slashPool.pop_back();
 	slashesInUse.push_back(so);
+}
+
+void AIBoss::smashAttack() {
+	smashEntity = new Entity();
+	int width, height;
+	if (walkingDir == Animator::LookDirection::DOWN || walkingDir == Animator::LookDirection::UP) {
+		width = 90;
+		height = 50;
+	}
+	else {
+		width = 50;
+		height = 90;
+	}
+	if (walkingDir == Animator::LookDirection::UP) {
+		smashTransform = new Transform(smashEntity, width, height, transform->globalPosX + transform->width / 2 - width / 2, transform->globalPosY - height * 2 / 3);
+	}
+	if (walkingDir == Animator::LookDirection::DOWN) {
+		smashTransform = new Transform(smashEntity, width, height, transform->globalPosX + transform->width / 2 - width / 2, transform->globalPosY + transform->height);
+	}
+	if (walkingDir == Animator::LookDirection::LEFT) {
+		smashTransform = new Transform(smashEntity, width, height, transform->globalPosX - width, transform->globalPosY + transform->height / 2 - width * 2 / 3);
+	}
+	if (walkingDir == Animator::LookDirection::RIGHT) {
+		smashTransform = new Transform(smashEntity, width, height, transform->globalPosX + transform->width, transform->globalPosY + transform->height / 2 - width * 2 / 3);
+	}
+	smashEntity->addComponent(smashTransform);
+	SDL_Rect* src = new SDL_Rect();
+	src->h = height;
+	src->w = width;
+	src->x = 0;
+	src->y = walkingDir * src->h;
+	if (walkingDir == Animator::LookDirection::UP) {
+		src->y = walkingDir * 90 + 90 - src->h;
+	}
+	Drawable* drawable = new Drawable(smashEntity, smashAttackIMG, "smashAttack", Globals::PLAYER, src);
+	smashEntity->addComponent(drawable);
+
+	smashAnimator = new Animator(smashEntity);
+	int slashSpeed = 30;
+	// playerAnimator->direction * 4 + 0 + 1 + 2 + 3
+	int dir = walkingDir * 4;
+	if (walkingDir == Animator::LookDirection::UP) {
+		dir = 24;
+	}
+	Animator::Animation slashingAnim("slashing", { dir + 0, dir + 1, dir + 2, dir + 3 }, slashSpeed, 4);
+	smashAnimator->addAnimation(slashingAnim);
+	smashEntity->addComponent(smashAnimator);
+	smashAnimator->playAnimation("slashing");
+
+	smashCollider = new Collider(smashEntity, Collider::ColliderType::NORMAL);
+	CollisionSystem::collidersInScene.push_back(smashCollider);
+	smashEntity->addComponent(smashCollider);
+
+	smashing = true;
+	graphics->addToDraw(smashEntity);
 }
 
 void AIBoss::slashUpdates(float deltaTime) {
@@ -131,10 +186,68 @@ void AIBoss::slashUpdates(float deltaTime) {
 	}
 }
 
+void AIBoss::smashUpdates(float deltaTime) {
+	smashEntity->update(deltaTime);
+
+	int width, height;
+	if (walkingDir == Animator::LookDirection::DOWN || walkingDir == Animator::LookDirection::UP) {
+		width = 90;
+		height = 50;
+	}
+	else {
+		width = 50;
+		height = 90;
+	}
+	if (walkingDir == Animator::LookDirection::UP) {
+		smashTransform->globalPosX = transform->globalPosX + transform->width / 2 - width / 2;
+		smashTransform->globalPosY = transform->globalPosY - height * 2 / 3;
+	}
+	if (walkingDir == Animator::LookDirection::DOWN) {
+		smashTransform->globalPosX = transform->globalPosX + transform->width / 2 - width / 2;
+		smashTransform->globalPosY = transform->globalPosY + transform->height;
+	}
+	if (walkingDir == Animator::LookDirection::LEFT) {
+		smashTransform->globalPosX = transform->globalPosX - width;
+		smashTransform->globalPosY = transform->globalPosY + transform->height / 2 - width * 2 / 3;
+	}
+	if (walkingDir == Animator::LookDirection::RIGHT) {
+		smashTransform->globalPosX = transform->globalPosX + transform->width;
+		smashTransform->globalPosY = transform->globalPosY + transform->height / 2 - width * 2 / 3;
+	}
+
+	Collider* smashCollision = CollisionSystem::isCollidingWithObjects(smashCollider, {});
+	if (smashCollider->enabled && smashCollision) {
+		Drawable* draw = (Drawable*)smashCollision->owner->findComponent(ComponentType::DRAWABLE);
+		Transform* trans = (Transform*)smashCollision->owner->findComponent(ComponentType::TRANSFORM);
+		if (draw->ID == "player") { // can use substrings to know type (soldier)
+			smashCollider->enabled = false;
+			Stats* enemyStats = (Stats*)owner->findComponent(ComponentType::STATS);
+			PlayerStats* playerStats = (PlayerStats*)smashCollision->owner->findComponent(ComponentType::STATS);
+			playerStats->curHealth -= enemyStats->secondAttackDmg;
+			Drawable* slashDrawable = (Drawable*)smashEntity->findComponent(ComponentType::DRAWABLE);
+			//ai->knockBack(100, 500, walkingDir, slashDrawable->ID);
+			PlayerAbilities* pa = (PlayerAbilities*)smashCollision->owner->findComponent(ComponentType::ABILITIES);
+			pa->knockBack(500, 800, (Animator::LookDirection)walkingDir, "smashAttack");
+		}
+
+
+	}
+
+	if (!smashAnimator->isAnimating()) {
+		smashCollider->enabled = true;
+		CollisionSystem::removeCollider(smashCollider);
+		smashing = false;
+		graphics->removeFromDraw(smashEntity);
+		delete smashEntity;
+		smashEntity = NULL;
+	}
+}
+
 
 
 AIBoss::~AIBoss() {
 	SDL_DestroyTexture(slashAttackIMG);
+	SDL_DestroyTexture(smashAttackIMG);
 	for (auto slash : slashPool) {
 		delete slash.entity;
 	}
@@ -148,20 +261,40 @@ void AIBoss::update(float deltaTime) {
 	if (slashesInUse.size()>0) {
 		slashUpdates(deltaTime);
 	}
+	if (smashing) {
+		smashUpdates(deltaTime);
+	}
+	if (state == DEAD) {
+		if (smashing) {
 
-	/*if (state == NORMAL) {
-		if (slashing) {
-			slashCollider->enabled = true;
-			CollisionSystem::removeCollider(slashCollider);
-			slashing = false;
-			graphics->removeFromDraw(slashEntity);
-			delete slashEntity;
-			slashEntity = NULL;
+			smashCollider->enabled = true;
+			CollisionSystem::removeCollider(smashCollider);
+			smashing = false;
+			graphics->removeFromDraw(smashEntity);
+			delete smashEntity;
+			smashEntity = NULL;
 		}
-	}*/
+		for (auto slash : slashesInUse) {
+			graphics->removeFromDraw(slash.entity);
+			CollisionSystem::removeCollider(slash.collider);
+		}
+	}
+	if (state == NORMAL) {
+		
+		if (smashing) {
+
+			smashCollider->enabled = true;
+			CollisionSystem::removeCollider(smashCollider);
+			smashing = false;
+			graphics->removeFromDraw(smashEntity);
+			delete smashEntity;
+			smashEntity = NULL;
+		}
+	}
 	if (state == ATTACKING) {
 		int chaseSpeed = stats->speed;
 		if (subState == NONE) {
+			stopWalking();
 			subState = FINDING;
 			if (!isKnocked()) {
 				walkTo(targetTransform->globalPosX, targetTransform->globalPosY, chaseSpeed);
@@ -171,7 +304,7 @@ void AIBoss::update(float deltaTime) {
 			if (!walking && !isKnocked()) {
 				walkTo(targetTransform->globalPosX, targetTransform->globalPosY, chaseSpeed);
 			}
-			if (curPathIndex <= path.size() - 3) {
+			if (curPathIndex <= path.size() - 6) {
 				calculatePath(targetTransform->globalPosX, targetTransform->globalPosY);
 			}
 			if (path.size() <= 16) {
@@ -180,12 +313,15 @@ void AIBoss::update(float deltaTime) {
 			}
 		}
 		if (subState == SLASHING) {
-			calculatePath(targetTransform->globalPosX, targetTransform->globalPosY);
+			if (!walking || curPathIndex <= path.size() - 3) {
+				calculatePath(targetTransform->globalPosX, targetTransform->globalPosY);
+			}
+			
 			if (path.size() > 16) {
 				subState = NONE;
 			}
 			if (path.size() > 10) {
-				if (SDL_GetTicks() > cooldown + lastSlashAttack) {
+				if (SDL_GetTicks() > slashCooldown + lastSlashAttack) {
 					if (slashPool.size() > 0) {
 						lastSlashAttack = SDL_GetTicks();
 					} 
@@ -194,8 +330,15 @@ void AIBoss::update(float deltaTime) {
 
 				}
 			}
-			else {
-				cout << "meelee att" << endl;
+			else if (path.size() > 3 && !walking && !knocked) {
+				walkTo(targetTransform->globalPosX, targetTransform->globalPosY, chaseSpeed);
+			}
+			else if(path.size() <= 3) {
+				stopWalking();
+				if (!smashing && lastSlashAttack + smashCooldown < SDL_GetTicks()) {
+					smashAttack();
+					lastSlashAttack = SDL_GetTicks();
+				}
 			}
 			
 		}

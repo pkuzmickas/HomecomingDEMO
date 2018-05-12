@@ -6,25 +6,22 @@ private:
 
 	SDL_Renderer * renderer;
 	Graphics* graphics;
-	SDL_Texture* slashAttackIMG; // generalize this to some sort of Attack struct
+	SDL_Texture* slashAttackIMG; 
+	SDL_Texture* smashAttackIMG;
 
-	int cooldown = 2000; //in miliseconds
+
+	int slashCooldown = 1500; //in miliseconds
+	int smashCooldown = 1000;
 	int lastSlashAttack = 0;
 
-	struct SlashObject {
-		Entity* entity;
-		Animator* animator;
-		Collider* collider;
-		Transform* transform = NULL;
-		Movement* movement;
-		Animator::LookDirection slashDir;
-	};
-
-	vector<SlashObject> slashPool;
-
-	
+	Entity* smashEntity;
+	Animator* smashAnimator;
+	Collider* smashCollider;
+	Transform* smashTransform;
+	bool smashing = false;
 
 	void slashUpdates(float deltaTime);
+	void smashUpdates(float deltaTime);
 public:
 	AIBoss(Entity* owner, SDL_Renderer* renderer, Graphics* graphics);
 	~AIBoss();
@@ -35,9 +32,23 @@ public:
 		SLASHING,
 		SMASHING
 	};
+	struct SlashObject {
+		Entity* entity;
+		Animator* animator;
+		Collider* collider;
+		Transform* transform;
+		Movement* movement;
+		Animator::LookDirection slashDir;
+	};
+
+	vector<SlashObject> slashPool;
+	vector<SlashObject> slashesInUse;
+
 	subStates subState = NONE;
 	void slashAttack(int localPosX, int localPosY);
-	vector<SlashObject> slashesInUse;
+	
+
+	void smashAttack();
 	
 
 

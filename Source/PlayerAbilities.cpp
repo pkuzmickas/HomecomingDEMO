@@ -31,7 +31,7 @@ void PlayerAbilities::flyingSlashAttack() {
 	float dx = mouseX - (playerTransform->globalPosX + playerTransform->width / 2 - CameraSystem::posX);
 	float dy = mouseY - (playerTransform->globalPosY + playerTransform->height / 2 - CameraSystem::posY);
 	float angle = atan2(dy, dx) * 180 / M_PI;
-	fSlashTransform = new Transform(fSlashEntity, width, height, playerTransform->globalPosX + 20 * cos(angle * M_PI / 180), playerTransform->globalPosY - playerTransform->height/2 + 20 * sin(angle * M_PI / 180));
+	fSlashTransform = new Transform(fSlashEntity, width, height, playerTransform->globalPosX + 20 * cos(angle * M_PI / 180), playerTransform->globalPosY - playerTransform->height / 2 + 20 * sin(angle * M_PI / 180));
 	SDL_Point center;
 	center.y = height / 2;
 	center.x = width / 2;
@@ -53,7 +53,7 @@ void PlayerAbilities::flyingSlashAttack() {
 	fSlashAnimator->addAnimation(fslashing);
 	fSlashEntity->addComponent(fSlashAnimator);
 	fSlashAnimator->playAnimation("fSlashStart");
-	fSlashCollider = new Collider(fSlashEntity,Collider::NORMAL, 0, 20, 50, 50);
+	fSlashCollider = new Collider(fSlashEntity, Collider::NORMAL, 0, 20, 50, 50);
 	CollisionSystem::collidersInScene.push_back(fSlashCollider);
 	fSlashEntity->addComponent(fSlashCollider);
 	fSlashMovement = new Movement(fSlashEntity, 500 * cos(angle * M_PI / 180), 500 * sin(angle * M_PI / 180));//idek velX ir velY ir tada checkink collisionus
@@ -120,7 +120,7 @@ void PlayerAbilities::slashAttack() {
 
 void PlayerAbilities::dashMove(int localPosX, int localPosY) {
 	if (dashing) return;
-	
+
 	if (knocked) {
 		knocked = false;
 		PlayerMovement* pm = (PlayerMovement*)player->findComponent(ComponentType::MOVEMENT);
@@ -154,7 +154,7 @@ void PlayerAbilities::dashMove(int localPosX, int localPosY) {
 	dashEntity->addComponent(dashDrawable);
 	dashAnimator = new Animator(dashEntity);
 	int dashSpeed = 50;
-	Animator::Animation dashingAnim("dashing", { 0, 1, 2  }, dashSpeed, false);
+	Animator::Animation dashingAnim("dashing", { 0, 1, 2 }, dashSpeed, false);
 	dashAnimator->addAnimation(dashingAnim);
 	Animator::Animation notdashingAnim("notDashing", { 3, 3 }, dashSpeed, false);
 	dashAnimator->addAnimation(notdashingAnim);
@@ -182,7 +182,14 @@ void PlayerAbilities::dashMove(int localPosX, int localPosY) {
 				Drawable* drw = (Drawable*)collision->owner->findComponent(ComponentType::DRAWABLE);
 				if (drw->ID == "soldier1" || drw->ID == "oldman" || drw->ID == "soldier2") {
 					AIComponent* ai = (AIComponent*)collision->owner->findComponent(ComponentType::AI);
-					ai->knockBack(20, 100, playerAnimator->direction, "dash");
+					if (drw->ID != "oldman") {
+						ai->knockBack(20, 100, playerAnimator->direction, "dash");
+					}
+					else {
+						if (!UIDesignSystem::isHealthShowing(collision->owner)) {
+							UIDesignSystem::showHealth(collision->owner);
+						}
+					}
 					Stats* enemyStats = (Stats*)collision->owner->findComponent(ComponentType::STATS);
 					PlayerStats* playerStats = (PlayerStats*)player->findComponent(ComponentType::STATS);
 					enemyStats->curHealth -= playerStats->dashAttackDmg;
@@ -197,8 +204,8 @@ void PlayerAbilities::dashMove(int localPosX, int localPosY) {
 		pc->colBox.y = (int)(playerTransform->globalPosY - CameraSystem::posY) + pc->offset.y;
 
 		dashStart = SDL_GetTicks();
-		if(CameraSystem::isCameraFollowing())
-		CameraSystem::detachCamera();
+		if (CameraSystem::isCameraFollowing())
+			CameraSystem::detachCamera();
 	}
 
 	graphics->addToDraw(dashEntity);
@@ -227,7 +234,7 @@ void PlayerAbilities::update(float deltaTime) {
 			delete fSlashEntity;
 			fSlashEntity = NULL;
 		}
-		
+
 	}
 	if (isKnocked()) {
 		PlayerMovement* movement = (PlayerMovement*)player->findComponent(ComponentType::MOVEMENT);
@@ -295,8 +302,8 @@ void PlayerAbilities::dashUpdates(float deltaTime) {
 		delete dashEntity;
 		dashStart = 0;
 		dashEntity = NULL;
-		if(CameraSystem::allowedToMove)
-		CameraSystem::moveAndFollow(playerTransform->globalPosX - Globals::SCREEN_WIDTH / 2, playerTransform->globalPosY - Globals::SCREEN_HEIGHT / 2, &playerTransform->globalPosX, &playerTransform->globalPosY, 1200);
+		if (CameraSystem::allowedToMove)
+			CameraSystem::moveAndFollow(playerTransform->globalPosX - Globals::SCREEN_WIDTH / 2, playerTransform->globalPosY - Globals::SCREEN_HEIGHT / 2, &playerTransform->globalPosX, &playerTransform->globalPosY, 1200);
 	}
 
 }
@@ -306,7 +313,7 @@ void PlayerAbilities::fSlashUpdates(float deltaTime) {
 	if (!fSlashAnimator->isAnimating()) {
 		fSlashAnimator->playAnimation("fSlashing", true);
 	}
-		
+
 
 	Collider* collision = CollisionSystem::isCollidingWithObjects(fSlashCollider, { "player" });
 	if (CollisionSystem::isCollidingWithEnv(fSlashCollider) || collision) {
@@ -413,14 +420,20 @@ void PlayerAbilities::slashUpdates(float deltaTime) {
 		Transform* trans = (Transform*)slashCollision->owner->findComponent(ComponentType::TRANSFORM);
 		if (slashCollision->owner->hasComponent(ComponentType::AI)) {
 			AIComponent* ai = (AIComponent*)slashCollision->owner->findComponent(ComponentType::AI);
-			if ((draw->ID == "soldier2" || draw->ID == "soldier1" || draw->ID=="oldman") && !ai->isKnocked()) { // can use substrings to know type (soldier)
+			if ((draw->ID == "soldier2" || draw->ID == "soldier1" || draw->ID == "oldman") && !ai->isKnocked()) { // can use substrings to know type (soldier)
 				slashCollider->enabled = false;
 				Stats* enemyStats = (Stats*)slashCollision->owner->findComponent(ComponentType::STATS);
 				PlayerStats* playerStats = (PlayerStats*)player->findComponent(ComponentType::STATS);
 				enemyStats->curHealth -= playerStats->mainAttackDmg;
 				Drawable* slashDrawable = (Drawable*)slashEntity->findComponent(ComponentType::DRAWABLE);
-				ai->knockBack(100, 500, playerAnimator->direction, slashDrawable->ID);
-				
+				if (draw->ID != "oldman") {
+					ai->knockBack(100, 500, playerAnimator->direction, slashDrawable->ID);
+				}
+				else {
+					if (!UIDesignSystem::isHealthShowing(slashCollision->owner)) {
+						UIDesignSystem::showHealth(slashCollision->owner);
+					}
+				}
 			}
 		}
 
