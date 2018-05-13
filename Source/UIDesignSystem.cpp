@@ -7,6 +7,7 @@ SDL_Texture* UIDesignSystem::healthBarEmpty;
 SDL_Texture* UIDesignSystem::bloodshotIMG;
 SDL_Texture* UIDesignSystem::playerHealthBarEmpty;
 SDL_Texture* UIDesignSystem::playerHealthBarFull;
+SDL_Texture* UIDesignSystem::attackUI;
 Entity* UIDesignSystem::playerEmptyBar = NULL;
 Entity* UIDesignSystem::playerFullBar = NULL;
 unordered_map<Entity*, Entity*> UIDesignSystem::emptyBars;
@@ -16,9 +17,9 @@ int UIDesignSystem::healthbarHeight;
 int UIDesignSystem::healthbarWidth;
 int UIDesignSystem::playerHealthbarWidth;
 int UIDesignSystem::playerHealthbarHeight;
-bool UIDesignSystem::showingPlayerHealth = false;
+bool UIDesignSystem::showingPlayerUI = false;
 Entity* UIDesignSystem::playerEntity = NULL;
-
+vector<Entity*> UIDesignSystem::attackIcons;
 
 bool UIDesignSystem::isHealthShowing(Entity * entity) {
 	if (emptyBars.find(entity) != emptyBars.end()) {
@@ -70,7 +71,7 @@ void UIDesignSystem::cleanup() {
 		delete playerEmptyBar;
 		playerEmptyBar = NULL;
 	}
-	showingPlayerHealth = false;
+	showingPlayerUI = false;
 }
 
 void UIDesignSystem::setup(SDL_Renderer * renderer, Graphics * graphics) {
@@ -79,6 +80,7 @@ void UIDesignSystem::setup(SDL_Renderer * renderer, Graphics * graphics) {
 	healthBarFull = IMG_LoadTexture(renderer, ASSET_DIR UI_DIR "healthBarFull.png");
 	healthBarEmpty = IMG_LoadTexture(renderer, ASSET_DIR UI_DIR "healthBarEmpty.png");
 	bloodshotIMG = IMG_LoadTexture(renderer, ASSET_DIR UI_DIR "blood.png");
+	attackUI = IMG_LoadTexture(renderer, ASSET_DIR UI_DIR "attackIcons.png");
 	playerHealthBarEmpty = IMG_LoadTexture(renderer, ASSET_DIR UI_DIR "playerHealthBarEmpty.png");
 	playerHealthBarFull = IMG_LoadTexture(renderer, ASSET_DIR UI_DIR "playerHealthBarFull.png");
 	SDL_QueryTexture(healthBarFull, NULL, NULL, &healthbarWidth, &healthbarHeight);
@@ -124,10 +126,10 @@ void UIDesignSystem::hideHealth(Entity * entity) {
 }
 
 
-void UIDesignSystem::showPlayerHealth(Entity * player) {
-	if (showingPlayerHealth) return;
+void UIDesignSystem::showPlayerUI(Entity * player) {
+	if (showingPlayerUI) return;
 	if (!playerEntity) playerEntity = player;
-	showingPlayerHealth = true;
+	showingPlayerUI = true;
 	playerEmptyBar = new Entity();
 	Transform* t = new Transform(playerEmptyBar, playerHealthbarWidth, playerHealthbarHeight, CameraSystem::posX + Globals::SCREEN_WIDTH/20, CameraSystem::posY + Globals::SCREEN_HEIGHT/16);
 	playerEmptyBar->addComponent(t);
@@ -146,14 +148,41 @@ void UIDesignSystem::showPlayerHealth(Entity * player) {
 	d = new Drawable(playerFullBar, playerHealthBarFull, "fullPlayerHealthbar", Globals::Layers::UI, src);
 	playerFullBar->addComponent(d);
 	graphics->addToDraw(playerFullBar);
+
+	for (int i = 0; i < 3; i++) {
+		Entity* attIcon = new Entity();
+		SDL_Rect* src = new SDL_Rect();
+		src->h = 64;
+		src->w = 64;
+		src->x = 0;
+		src->y = i * src->h;
+		Transform* t = new Transform(attIcon, src->w, src->h, CameraSystem::posX + Globals::SCREEN_WIDTH - 100 - (3-i)*64 - 20, CameraSystem::posY + Globals::SCREEN_HEIGHT - 100 - 64 - 20);
+		attIcon->addComponent(t);
+		Drawable* d = new Drawable(attIcon, attackUI, "playerAttackUIElement", Globals::Layers::UI, src);
+		attIcon->addComponent(d);
+		graphics->addToDraw(attIcon);
+		attackIcons.push_back(attIcon);
+	}
 }
 
-void UIDesignSystem::hidePlayerHealth() {
-	if (showingPlayerHealth) {
+void UIDesignSystem::hidePlayerUI() {
+	if (showingPlayerUI) {
 		graphics->removeFromDraw(playerFullBar);
 		graphics->removeFromDraw(playerEmptyBar);
-		showingPlayerHealth = false;
+		for (auto el : attackIcons) {
+			graphics->removeFromDraw(el);
+		}
+		showingPlayerUI = false;
 	}
+}
+
+void UIDesignSystem::activateAttack(int id) {
+	Drawable* drw = (Drawable*)attackIcons[id]->findComponent(ComponentType::DRAWABLE);
+	drw->srcRect->x = 0;
+}
+void UIDesignSystem::deactivateAttack(int id) {
+	Drawable* drw = (Drawable*)attackIcons[id]->findComponent(ComponentType::DRAWABLE);
+	drw->srcRect->x = drw->srcRect->w;
 }
 
 void UIDesignSystem::update(float deltaTime) {
@@ -187,7 +216,7 @@ void UIDesignSystem::update(float deltaTime) {
 			delete blood;
 		}
 	}
-	if (showingPlayerHealth) {
+	if (showingPlayerUI) {
 		Transform* t1 = (Transform*)playerFullBar->findComponent(ComponentType::TRANSFORM);
 		Transform* t2 = (Transform*)playerEmptyBar->findComponent(ComponentType::TRANSFORM);
 		t1->globalPosX = CameraSystem::posX + Globals::SCREEN_WIDTH / 20;
@@ -202,6 +231,13 @@ void UIDesignSystem::update(float deltaTime) {
 		Drawable* barDrawable = (Drawable*)playerFullBar->findComponent(ComponentType::DRAWABLE);
 		barDrawable->srcRect->w = newWidth;
 		barTransform->width = newWidth;
+		for (int i = 0; i < (int)attackIcons.size(); i++) {
+			Entity* el = attackIcons[i];
+			Transform* t = (Transform*)el->findComponent(ComponentType::TRANSFORM);
+			//CameraSystem::posX + Globals::SCREEN_WIDTH - 100 - (3-i)*64, CameraSystem::posY + Globals::SCREEN_HEIGHT - 100 - 64
+			t->globalPosX = CameraSystem::posX + Globals::SCREEN_WIDTH - 100 - (3 - i) * 80;
+			t->globalPosY = CameraSystem::posY + Globals::SCREEN_HEIGHT - 50 - 64;
+		}
 	}
 	
 }

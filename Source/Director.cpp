@@ -19,6 +19,7 @@ Director::~Director() {
 }
 
 void Director::startGame() {
+	curScene->showStartScreen();
 	while (gameRunning) {
 		getInput();
 		update();
@@ -41,12 +42,16 @@ void Director::getInput() {
 					graphics->debug = !graphics->debug;
 				}
 				if (e.key.keysym.sym == SDLK_ESCAPE) {
-					if (curScene->isGameOver()) {
-						gameRunning = false;
-					}
+					
+					gameRunning = false;
+					
 				}
 				if (e.key.keysym.sym == SDLK_RETURN) {
 					if (curScene->isGameOver()) {
+						curScene->loadAction("restart");
+					}
+					if (!curScene->isGameStarted()) {
+						//curScene->startScene();
 						curScene->loadAction("restart");
 					}
 				}

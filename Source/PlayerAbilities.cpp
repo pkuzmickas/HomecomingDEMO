@@ -22,6 +22,7 @@ PlayerAbilities::~PlayerAbilities() {
 
 void PlayerAbilities::flyingSlashAttack() {
 	if (flyingSlashing) return;
+	UIDesignSystem::deactivateAttack(1);
 	int mouseX, mouseY;
 	SDL_GetMouseState(&mouseX, &mouseY);
 	fSlashEntity = new Entity();
@@ -65,6 +66,7 @@ void PlayerAbilities::flyingSlashAttack() {
 
 void PlayerAbilities::slashAttack() {
 	slashEntity = new Entity();
+	UIDesignSystem::deactivateAttack(0);
 	int width, height;
 	if (playerAnimator->direction == PlayerAnimator::LookDirection::DOWN || playerAnimator->direction == PlayerAnimator::LookDirection::UP) {
 		width = 90;
@@ -120,7 +122,7 @@ void PlayerAbilities::slashAttack() {
 
 void PlayerAbilities::dashMove(int localPosX, int localPosY) {
 	if (dashing) return;
-
+	UIDesignSystem::deactivateAttack(2);
 	if (knocked) {
 		knocked = false;
 		PlayerMovement* pm = (PlayerMovement*)player->findComponent(ComponentType::MOVEMENT);
@@ -294,6 +296,7 @@ void PlayerAbilities::dashUpdates(float deltaTime) {
 			dashing = false;
 			delete dashEntity;
 			dashEntity = NULL;
+			UIDesignSystem::activateAttack(2);
 		}
 	}
 	if (dashStart != 0 && SDL_GetTicks() - dashStart > 200) { //TODO figure out how to use players collider to do the attack's collision
@@ -302,6 +305,7 @@ void PlayerAbilities::dashUpdates(float deltaTime) {
 		delete dashEntity;
 		dashStart = 0;
 		dashEntity = NULL;
+		UIDesignSystem::activateAttack(2);
 		if (CameraSystem::allowedToMove)
 			CameraSystem::moveAndFollow(playerTransform->globalPosX - Globals::SCREEN_WIDTH / 2, playerTransform->globalPosY - Globals::SCREEN_HEIGHT / 2, &playerTransform->globalPosX, &playerTransform->globalPosY, 1200);
 	}
@@ -313,7 +317,7 @@ void PlayerAbilities::fSlashUpdates(float deltaTime) {
 	if (!fSlashAnimator->isAnimating()) {
 		fSlashAnimator->playAnimation("fSlashing", true);
 	}
-
+	UIDesignSystem::deactivateAttack(1);
 
 	Collider* collision = CollisionSystem::isCollidingWithObjects(fSlashCollider, { "player" });
 	if (CollisionSystem::isCollidingWithEnv(fSlashCollider) || collision) {
@@ -349,6 +353,7 @@ void PlayerAbilities::fSlashUpdates(float deltaTime) {
 		flyingSlashing = false;
 		delete fSlashEntity;
 		fSlashEntity = NULL;
+		UIDesignSystem::activateAttack(1);
 	}
 }
 
@@ -446,6 +451,7 @@ void PlayerAbilities::slashUpdates(float deltaTime) {
 		graphics->removeFromDraw(slashEntity);
 		delete slashEntity;
 		slashEntity = NULL;
+		UIDesignSystem::activateAttack(0);
 	}
 }
 

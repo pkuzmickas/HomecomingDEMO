@@ -13,7 +13,12 @@ public:
 	virtual ~Scene();
 	virtual void update(float deltaTime);
 	bool isGameOver() { return gameOver; }
+	bool isGameStarted() { return gameStarted; }
+	void startScene();
 	void loadAction(std::string actionName) { curAction = actionName; }
+	void showStartScreen();
+	void hideStartScreen();
+	void showEndScreen();
 protected:
 	SDL_Renderer* renderer;
 	Graphics* graphics;
@@ -32,11 +37,17 @@ protected:
 	std::string nextAction;
 
 	bool gameOver = false;
+	bool gameStarted = false;
 	SDL_Texture* diedIMG;
+	SDL_Texture* startIMG;
+	SDL_Texture* endIMG;
+	Entity* mainMenu = NULL;
+	Entity* endScreen = NULL;
 	Entity* loseBox = NULL;
 	Entity* loseText = NULL;
 	void showLoseScreen();
 	void hideLoseScreen();
+	
 	
 
 };

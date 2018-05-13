@@ -6,8 +6,11 @@ Scene::~Scene() {
 	DialogueSystem::cleanup();
 	UIDesignSystem::cleanup();
 	SDL_DestroyTexture(diedIMG);
+	SDL_DestroyTexture(startIMG);
+	SDL_DestroyTexture(endIMG);
 	if (loseBox) delete loseBox;
 	if (loseText) delete loseText;
+	if(endScreen) delete endScreen;
 }
 
 void Scene::update(float deltaTime) {
@@ -41,6 +44,8 @@ Scene::Scene(SDL_Renderer * renderer, Graphics * graphics) {
 	DialogueSystem::setup(graphics, renderer);
 	UIDesignSystem::setup(renderer, graphics);
 	diedIMG = IMG_LoadTexture(renderer, ASSET_DIR UI_DIR "death.png");
+	startIMG = IMG_LoadTexture(renderer, ASSET_DIR "titleScreen.png");
+	endIMG = IMG_LoadTexture(renderer, ASSET_DIR "tbc.png");
 }
 
 void Scene::createPlayer(int globalPosX, int globalPosY, PlayerAnimator::LookDirection lookDirection) {
@@ -84,4 +89,37 @@ void Scene::hideLoseScreen() {
 		
 		
 	}
+}
+
+void Scene::startScene() {
+	gameStarted = true;
+	hideStartScreen();
+	wait(1, "intro text");
+}
+
+void Scene::showStartScreen() {
+	if (gameStarted) return;
+	mainMenu = new Entity();
+	Transform* t = new Transform(mainMenu, Globals::SCREEN_WIDTH, Globals::SCREEN_HEIGHT, CameraSystem::posX, CameraSystem::posY);
+	mainMenu->addComponent(t);
+	Drawable* drw = new Drawable(mainMenu, startIMG, "startmenu", Globals::UI);
+	mainMenu->addComponent(drw);
+	graphics->addToDraw(mainMenu);
+}
+
+void Scene::hideStartScreen() {
+	graphics->removeFromDraw(mainMenu);
+	delete mainMenu;
+	mainMenu = NULL;
+	SDL_DestroyTexture(startIMG);
+	startIMG = NULL;
+}
+
+void Scene::showEndScreen() {
+	endScreen = new Entity();
+	Transform* t = new Transform(endScreen, Globals::SCREEN_WIDTH, Globals::SCREEN_HEIGHT, CameraSystem::posX, CameraSystem::posY);
+	endScreen->addComponent(t);
+	Drawable* drw = new Drawable(endScreen, endIMG, "endscreen", Globals::UI);
+	endScreen->addComponent(drw);
+	graphics->addToDraw(endScreen);
 }

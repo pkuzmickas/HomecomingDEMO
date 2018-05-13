@@ -19,7 +19,7 @@ void EncounterScene::setup() {
 	elly = IMG_LoadTexture(renderer, ASSET_DIR CHARACTER_DIR "elly.png");
 	Entity* oldmanEntity = NPCSystem::createBoss(270, 700, 48, 48, Globals::Layers::PLAYER, oldman, "oldman", renderer, graphics);
 	Entity* soldierEntity = NPCSystem::createSoldier(130, 700, 48, 48, Globals::Layers::PLAYER, zoro, "soldier1", renderer, graphics, 300, 400); //zoro
-	Entity* soldier2Entity = NPCSystem::createSoldier(340, 700, 48, 48, Globals::Layers::PLAYER, soldier, "soldier2", renderer, graphics, 50, 200);
+	Entity* soldier2Entity = NPCSystem::createSoldier(340, 700, 48, 48, Globals::Layers::PLAYER, soldier, "soldier2", renderer, graphics, 100, 200);
 	Entity* ellyEntity = NPCSystem::createDefaultNPC(200, 700, 48, 48, Globals::Layers::PLAYER, elly, "elly");
 	Collider* ec = (Collider*)ellyEntity->findComponent(ComponentType::COLLIDER);
 	CollisionSystem::removeCollider(ec);
@@ -115,7 +115,7 @@ void EncounterScene::setup() {
 	anim->addAnimation(rainAnim);
 	rain->addComponent(anim);
 	anim->playAnimation("raining", true);
-	graphics->addToDraw(rain);
+	//graphics->addToDraw(rain);
 	graphics->addToDraw(blackBox1);
 	graphics->addToDraw(blackBox2);
 	entities.push_back(blackBox1);
@@ -125,7 +125,7 @@ void EncounterScene::setup() {
 
 	//for testing
 	
-	graphics->removeFromDraw(player);
+	/*graphics->removeFromDraw(player);
 	curAction = "restart";
 	Transform* solt = (Transform*)(oldmanEntity->findComponent(ComponentType::TRANSFORM));
 	solt->globalPosX = 1180;
@@ -268,7 +268,7 @@ void EncounterScene::preFightScenario(float deltaTime) {
 			PlayerSystem::enableMovement();
 			curAction = "fighting soldiers";
 			soldier2AI->attack(player);
-			UIDesignSystem::showPlayerHealth(player);
+			UIDesignSystem::showPlayerUI(player);
 			boundary1 = SceneDesignSystem::createBoundary(CameraSystem::posX, CameraSystem::posY, Globals::TILE_SIZE, Globals::SCREEN_HEIGHT);
 			boundary2 = SceneDesignSystem::createBoundary(CameraSystem::posX + Globals::SCREEN_WIDTH - Globals::TILE_SIZE, CameraSystem::posY, Globals::TILE_SIZE, Globals::SCREEN_HEIGHT);
 			CameraSystem::detachCamera();
@@ -343,17 +343,20 @@ void EncounterScene::preFightScenario(float deltaTime) {
 	}
 	if (curAction == "open dialogue fight2") {
 		if (!DialogueSystem::isOpen()) {
-			soldierAI->attack(player);
+			
 			Transform* ot = (Transform*)oldmanAI->owner->findComponent(ComponentType::TRANSFORM);
+			CameraSystem::detachCamera();
 			CameraSystem::moveCamera(ot->globalPosX + 100, ot->globalPosY - Globals::SCREEN_HEIGHT / 2, 400);
-			PlayerSystem::enableMovement();
-			CameraSystem::allowedToMove = false;
+			
 			curAction = "camera moving 5";
 		}
 	}
 	if (curAction == "camera moving 5") {
 		if (!CameraSystem::isCameraMoving()) {
-			CameraSystem::detachCamera();
+			PlayerSystem::enableMovement();
+			CameraSystem::allowedToMove = false;
+			soldierAI->attack(player);
+			
 			graphics->addToDraw(boundary1);
 			graphics->addToDraw(boundary2);
 			Collider* c1 = (Collider*)boundary1->findComponent(ComponentType::COLLIDER);
@@ -418,7 +421,7 @@ void EncounterScene::preFightScenario(float deltaTime) {
 			panim->direction = PlayerAnimator::LookDirection::LEFT;
 			panim->update(deltaTime);
 			PlayerSystem::disableMovement();
-			UIDesignSystem::hidePlayerHealth();
+			UIDesignSystem::hidePlayerUI();
 			wait(1, "open dialogue ending");
 		}
 	}
@@ -428,7 +431,7 @@ void EncounterScene::preFightScenario(float deltaTime) {
 	}
 	if (curAction == "end") {
 		if (!DialogueSystem::isOpen()) {
-			cout << "loaded end screen" << endl;
+			showEndScreen();
 			curAction = "";
 		}
 	}
@@ -517,7 +520,7 @@ void EncounterScene::update(float deltaTime) {
 		et->globalPosX = 1110;
 		et->globalPosY = 700;
 		
-		UIDesignSystem::showPlayerHealth(player);
+		UIDesignSystem::showPlayerUI(player);
 
 		Drawable* soldierDrw = (Drawable*)soldierAI->owner->findComponent(ComponentType::DRAWABLE);
 		soldierDrw->srcRect->y = Animator::LookDirection::RIGHT * soldierDrw->srcRect->h;
