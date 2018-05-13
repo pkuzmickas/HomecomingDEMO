@@ -5,7 +5,9 @@ AIComponent::AIComponent(Entity * owner) : Component(owner, true) {
 	animator = (Animator*)owner->findComponent(ComponentType::ANIMATOR);
 	transform = (Transform*)owner->findComponent(ComponentType::TRANSFORM);
 	collider = (Collider*)owner->findComponent(ComponentType::COLLIDER);
-	stats = (Stats*)owner->findComponent(ComponentType::STATS);
+	if (owner->hasComponent(ComponentType::STATS)) {
+		stats = (Stats*)owner->findComponent(ComponentType::STATS);
+	}
 	type = AI;
 }
 

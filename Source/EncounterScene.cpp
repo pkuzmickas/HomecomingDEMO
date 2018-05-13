@@ -16,18 +16,25 @@ void EncounterScene::setup() {
 	oldman = IMG_LoadTexture(renderer, ASSET_DIR CHARACTER_DIR "oldman.png");
 	soldier = IMG_LoadTexture(renderer, ASSET_DIR CHARACTER_DIR "soldier.png");
 	zoro = IMG_LoadTexture(renderer, ASSET_DIR CHARACTER_DIR "zoro.png");
+	elly = IMG_LoadTexture(renderer, ASSET_DIR CHARACTER_DIR "elly.png");
 	Entity* oldmanEntity = NPCSystem::createBoss(270, 700, 48, 48, Globals::Layers::PLAYER, oldman, "oldman", renderer, graphics);
-	Entity* soldierEntity = NPCSystem::createSoldier(200, 700, 48, 48, Globals::Layers::PLAYER, zoro, "soldier1", renderer, graphics, 300, 400); //zoro
+	Entity* soldierEntity = NPCSystem::createSoldier(130, 700, 48, 48, Globals::Layers::PLAYER, zoro, "soldier1", renderer, graphics, 300, 400); //zoro
 	Entity* soldier2Entity = NPCSystem::createSoldier(340, 700, 48, 48, Globals::Layers::PLAYER, soldier, "soldier2", renderer, graphics, 50, 200);
+	Entity* ellyEntity = NPCSystem::createDefaultNPC(200, 700, 48, 48, Globals::Layers::PLAYER, elly, "elly");
+	Collider* ec = (Collider*)ellyEntity->findComponent(ComponentType::COLLIDER);
+	CollisionSystem::removeCollider(ec);
 	oldmanAI = (AIBoss*)oldmanEntity->findComponent(ComponentType::AI);
 	soldierAI = (AISoldier*)soldierEntity->findComponent(ComponentType::AI);
 	soldier2AI = (AISoldier*)soldier2Entity->findComponent(ComponentType::AI);
+	ellyAI = (AIComponent*)ellyEntity->findComponent(ComponentType::AI);
 	graphics->addToDraw(oldmanEntity);
 	graphics->addToDraw(soldierEntity);
 	graphics->addToDraw(soldier2Entity);
+	graphics->addToDraw(ellyEntity);
 	entities.push_back(oldmanEntity);
 	entities.push_back(soldierEntity);
 	entities.push_back(soldier2Entity);
+	entities.push_back(ellyEntity);
 
 	createPlayer(1800, 700, Animator::LookDirection::LEFT);
 	PlayerSystem::disableMovement();
@@ -92,6 +99,23 @@ void EncounterScene::setup() {
 	Entity* blackBox2 = SceneDesignSystem::createRect(CameraSystem::posX, CameraSystem::posY + Globals::SCREEN_HEIGHT / 2, Globals::SCREEN_WIDTH + 10, Globals::SCREEN_HEIGHT / 2, Globals::Layers::UI, true);
 	blackBox1T = (Transform*)blackBox1->findComponent(ComponentType::TRANSFORM);
 	blackBox2T = (Transform*)blackBox2->findComponent(ComponentType::TRANSFORM);
+	rainIMG = IMG_LoadTexture(renderer, ASSET_DIR LEVEL_DESIGN_DIR "rain.png");
+	Entity* rain = new Entity();
+	rainT = new Transform(rain, Globals::SCREEN_WIDTH, Globals::SCREEN_HEIGHT, CameraSystem::posX, CameraSystem::posY);
+	rain->addComponent(rainT);
+	SDL_Rect* srcRect = new SDL_Rect();
+	srcRect->h = 240;
+	srcRect->w = 256;
+	srcRect->x = 0;
+	srcRect->y = 0;
+	Drawable* drw = new Drawable(rain, rainIMG, "rain", Globals::Layers::UI, srcRect);
+	rain->addComponent(drw);
+	Animator* anim = new Animator(rain);
+	Animator::Animation rainAnim("raining", { 0, 1, 2, 3 }, 50);
+	anim->addAnimation(rainAnim);
+	rain->addComponent(anim);
+	anim->playAnimation("raining", true);
+	graphics->addToDraw(rain);
 	graphics->addToDraw(blackBox1);
 	graphics->addToDraw(blackBox2);
 	entities.push_back(blackBox1);
@@ -176,7 +200,8 @@ void EncounterScene::preFightScenario(float deltaTime) {
 		Transform* oldmanT = (Transform*)oldmanAI->owner->findComponent(ComponentType::TRANSFORM);
 		soldier2AI->walkTo(1250, 700, 80);
 		oldmanAI->walkTo(1180, 700, 80);
-		soldierAI->walkTo(1110, 700, 80);
+		ellyAI->walkTo(1110, 700, 80);
+		soldierAI->walkTo(1040, 700, 80);
 		curAction = "npcs walking";
 	}
 	if (curAction == "npcs walking") {
@@ -381,6 +406,29 @@ void EncounterScene::preFightScenario(float deltaTime) {
 			CameraSystem::allowedToMove = true;
 
 			oldmanAI->attack(player);
+			curAction = "fighting oldman";
+		}
+	}
+	if (curAction == "fighting oldman") {
+		if (oldmanAI->state == AIBoss::State::DEAD) {
+			PlayerAbilities* pa = (PlayerAbilities*)player->findComponent(ComponentType::ABILITIES);
+			Transform* et = (Transform*)ellyAI->owner->findComponent(ComponentType::TRANSFORM);
+			pa->dashMove(et->globalPosX + 110 - CameraSystem::posX, et->globalPosY - CameraSystem::posY + et->height / 2);
+			PlayerAnimator* panim = (PlayerAnimator*)player->findComponent(ComponentType::ANIMATOR);
+			panim->direction = PlayerAnimator::LookDirection::LEFT;
+			panim->update(deltaTime);
+			PlayerSystem::disableMovement();
+			UIDesignSystem::hidePlayerHealth();
+			wait(1, "open dialogue ending");
+		}
+	}
+	if (curAction == "open dialogue ending") {
+		DialogueSystem::openDialogueBox("ending");
+		curAction = "end";
+	}
+	if (curAction == "end") {
+		if (!DialogueSystem::isOpen()) {
+			cout << "loaded end screen" << endl;
 			curAction = "";
 		}
 	}
@@ -389,6 +437,10 @@ void EncounterScene::preFightScenario(float deltaTime) {
 void EncounterScene::update(float deltaTime) {
 	
 	Scene::update(deltaTime);
+
+	rainT->globalPosX = CameraSystem::posX;
+	rainT->globalPosY = CameraSystem::posY;
+	rainT->owner->update(deltaTime);
 
 	for (int i = 0; i < (int)entities.size(); i++) {
 		Entity* ent = entities[i];
@@ -453,7 +505,7 @@ void EncounterScene::update(float deltaTime) {
 		//CameraSystem::follow(&playerTransform->globalPosX, &playerTransform->globalPosY);
 		PlayerSystem::enableMovement();
 		Transform* solt = (Transform*)(soldierAI->owner->findComponent(ComponentType::TRANSFORM));
-		solt->globalPosX = 1110;
+		solt->globalPosX = 1040;
 		solt->globalPosY = 700;
 		Transform* solt2 = (Transform*)(soldier2AI->owner->findComponent(ComponentType::TRANSFORM));
 		solt2->globalPosX = 1250;
@@ -461,6 +513,9 @@ void EncounterScene::update(float deltaTime) {
 		Transform* ot = (Transform*)(oldmanAI->owner->findComponent(ComponentType::TRANSFORM));
 		ot->globalPosX = 1180;
 		ot->globalPosY = 700;
+		Transform* et = (Transform*)(ellyAI->owner->findComponent(ComponentType::TRANSFORM));
+		et->globalPosX = 1110;
+		et->globalPosY = 700;
 		
 		UIDesignSystem::showPlayerHealth(player);
 
@@ -536,6 +591,8 @@ EncounterScene::~EncounterScene() {
 	SDL_DestroyTexture(oldman);
 	SDL_DestroyTexture(soldier);
 	SDL_DestroyTexture(zoro);
+	SDL_DestroyTexture(rainIMG);
+	SDL_DestroyTexture(elly);
 	if (boundary1) {
 		delete boundary1;
 		delete boundary2;
@@ -545,6 +602,7 @@ EncounterScene::~EncounterScene() {
 	for (auto tree : entities) {
 		delete tree;
 	}
+	delete rainT->owner;
 }
 
 

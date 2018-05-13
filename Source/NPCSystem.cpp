@@ -66,3 +66,10 @@ Entity * NPCSystem::createBoss(int posX, int posY, int width, int height, Global
 	return boss;
 	
 }
+
+Entity * NPCSystem::createDefaultNPC(int posX, int posY, int width, int height, Globals::Layers layer, SDL_Texture * texture, std::string spriteName, std::string * speakerID) {
+	Entity* defaultNPC = createNPC(posX, posY, width, height, layer, texture, spriteName, speakerID);
+	AIComponent* ai = new AIComponent(defaultNPC);
+	defaultNPC->addComponent(ai);
+	return defaultNPC;
+}

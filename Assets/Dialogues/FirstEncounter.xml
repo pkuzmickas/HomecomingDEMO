@@ -2,20 +2,26 @@
         <actor id="morgan" img="Assets/Characters/Portraits/Morgan.png" name="Morgan" />
         <actor id="oldman" img="Assets/Characters/Portraits/OldMan.png" name="Old Man" />
         <actor id="soldier" img="Assets/Characters/Portraits/Soldier.png" name="Soldier" />
+		<actor id="elly" img="Assets/Characters/Portraits/Elly.png" name="Elly" />
 </actors>
 <dialogue id="pre-fight">
 	<text speaker="soldier">You there! Move out of the way!</text>
 	<text speaker="morgan">It's been a while, old man.</text>
-	<text speaker="oldman">Am I supposed to know you?</text>
+	<text speaker="oldman">And who are you supposed to be?</text>
+	<text speaker="morgan">Someone from the past... Elly how you holding up?</text>
 	<text speaker="soldier">I repeat, move out of the way or there will be consequences.</text>
-	<text speaker="morgan">5 years ago you took everything from me.</text>
+	<text speaker="morgan">What did they do to you Elly?</text>
+	<text speaker="elly">Who.. Who are you?</text>
+	<text speaker="morgan">An old friend... It truly was a beautiful summer wasn't it. </text>
+	<text speaker="elly">M.. Morr.. Morgan???</text>
 	<text speaker="oldman">...</text>
-	<text speaker="morgan">What did you do to Elly, old man?</text>
-	<text speaker="oldman">I have had enough of this, kill him!</text>
+	<text speaker="morgan">I have come to take you home Elly.</text>
+	<text speaker="elly">*Sobs* Wha.. Oh my god... Thank god you are still alive... But no! Please, you have to run away. They will kill you Morgan!!</text>
+	<text speaker="oldman">What foolishness. Arrest him!</text>
 </dialogue>
 <dialogue id="fight1">
-	<text speaker="morgan">Oak village massacre, do you remember it?</text>
-	<text speaker="oldman">Oh! Hahaha. So you are a survivor of the village then? And so you have come for revenge.</text>
+	<text speaker="morgan">Oak village massacre, old man. Do you remember it?</text>
+	<text speaker="oldman">Oh! Hahaha. So you are a survivor of the village then? And you think you have a chance of saving the princess. Don't make me laugh!</text>
 	<text speaker="morgan">I will make sure you pay for what you have done.</text>
 	<text speaker="oldman">Don't get so cocky!</text>
 </dialogue>
@@ -24,4 +30,10 @@
 </dialogue>
 <dialogue id="fight3">
 	<text speaker="morgan">Prepare to die, old man.</text>
+</dialogue>
+<dialogue id="ending">
+	<text speaker="morgan">It's over Elly.</text>
+	<text speaker="elly">I.. I.. *sobs* Thank you so much... *sobs*</text>
+	<text speaker="morgan">Are you okay? Did they hurt you?</text>
+	<text speaker="elly">Yes... I am mostly okay *sobs*. But what's going to happen to the kingdom, to the village, to everyone we love?...</text>
 </dialogue>

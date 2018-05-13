@@ -215,7 +215,7 @@ void AIBoss::smashUpdates(float deltaTime) {
 		smashTransform->globalPosY = transform->globalPosY + transform->height / 2 - width * 2 / 3;
 	}
 
-	Collider* smashCollision = CollisionSystem::isCollidingWithObjects(smashCollider, {});
+	Collider* smashCollision = CollisionSystem::isCollidingWithObjects(smashCollider, {"slashAttack"});
 	if (smashCollider->enabled && smashCollision) {
 		Drawable* draw = (Drawable*)smashCollision->owner->findComponent(ComponentType::DRAWABLE);
 		Transform* trans = (Transform*)smashCollision->owner->findComponent(ComponentType::TRANSFORM);

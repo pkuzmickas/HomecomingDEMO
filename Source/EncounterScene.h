@@ -12,11 +12,15 @@ private:
 	SDL_Texture* oldman;
 	SDL_Texture* soldier;
 	SDL_Texture* zoro;
+	SDL_Texture* elly;
+	SDL_Texture* rainIMG;
+	AIComponent* ellyAI;
 	AIBoss* oldmanAI;
 	AISoldier* soldierAI;
 	AISoldier* soldier2AI;
 	Transform* blackBox1T;
 	Transform* blackBox2T;
+	Transform* rainT;
 	std::vector<Entity*> entities;
 	std::string introText = "I WILL COME BACK FOR YOU";
 	int textProgress = 1;
