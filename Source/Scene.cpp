@@ -8,9 +8,11 @@ Scene::~Scene() {
 	SDL_DestroyTexture(diedIMG);
 	SDL_DestroyTexture(startIMG);
 	SDL_DestroyTexture(endIMG);
+	SDL_DestroyTexture(infoIMG);
 	if (loseBox) delete loseBox;
 	if (loseText) delete loseText;
 	if(endScreen) delete endScreen;
+	if (controlsScreen) delete controlsScreen;
 }
 
 void Scene::update(float deltaTime) {
@@ -46,6 +48,7 @@ Scene::Scene(SDL_Renderer * renderer, Graphics * graphics) {
 	diedIMG = IMG_LoadTexture(renderer, ASSET_DIR UI_DIR "death.png");
 	startIMG = IMG_LoadTexture(renderer, ASSET_DIR "titleScreen.png");
 	endIMG = IMG_LoadTexture(renderer, ASSET_DIR "tbc.png");
+	infoIMG = IMG_LoadTexture(renderer, ASSET_DIR "controls.png");
 }
 
 void Scene::createPlayer(int globalPosX, int globalPosY, PlayerAnimator::LookDirection lookDirection) {
@@ -89,6 +92,26 @@ void Scene::hideLoseScreen() {
 		
 		
 	}
+}
+
+void Scene::showControlsScreen() {
+	if (controlsWindowOn) return;
+	controlsWindowOn = true;
+	controlsScreen = new Entity();
+	Transform* t = new Transform(controlsScreen, Globals::SCREEN_WIDTH, Globals::SCREEN_HEIGHT, CameraSystem::posX, CameraSystem::posY);
+	controlsScreen->addComponent(t);
+	Drawable* drw = new Drawable(controlsScreen, infoIMG, "infoscreen", Globals::UI);
+	controlsScreen->addComponent(drw);
+	graphics->addToDraw(controlsScreen);
+}
+
+void Scene::hideControlsScreen() {
+	controlsWindowOn = false;
+	graphics->removeFromDraw(controlsScreen);
+	delete controlsScreen;
+	controlsScreen = NULL;
+	SDL_DestroyTexture(infoIMG);
+	infoIMG = NULL;
 }
 
 void Scene::startScene() {

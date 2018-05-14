@@ -51,8 +51,11 @@ void Director::getInput() {
 						curScene->loadAction("restart");
 					}
 					if (!curScene->isGameStarted()) {
-						//curScene->startScene();
-						curScene->loadAction("restart");
+						curScene->startScene();
+						//curScene->loadAction("restart");
+					}
+					if (curScene->isControlsWindowOn()) {
+						curScene->hideControlsScreen();
 					}
 				}
 				break;

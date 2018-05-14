@@ -265,19 +265,25 @@ void EncounterScene::preFightScenario(float deltaTime) {
 		if (!CameraSystem::isCameraMoving()) {
 			Transform* playerTransform = (Transform*)(player->findComponent(ComponentType::TRANSFORM));
 			CameraSystem::follow(&playerTransform->globalPosX, &playerTransform->globalPosY);
-			PlayerSystem::enableMovement();
+			
 			curAction = "fighting soldiers";
-			soldier2AI->attack(player);
+			
 			UIDesignSystem::showPlayerUI(player);
 			boundary1 = SceneDesignSystem::createBoundary(CameraSystem::posX, CameraSystem::posY, Globals::TILE_SIZE, Globals::SCREEN_HEIGHT);
 			boundary2 = SceneDesignSystem::createBoundary(CameraSystem::posX + Globals::SCREEN_WIDTH - Globals::TILE_SIZE, CameraSystem::posY, Globals::TILE_SIZE, Globals::SCREEN_HEIGHT);
 			CameraSystem::detachCamera();
 			graphics->addToDraw(boundary1);
 			graphics->addToDraw(boundary2);
+			
+			showControlsScreen();
 		}
 	}
 	if (curAction == "fighting soldiers") {
 		CameraSystem::allowedToMove = false;
+		if (!controlsWindowOn && soldier2AI->state == AISoldier::State::NORMAL) {
+			soldier2AI->attack(player);
+			PlayerSystem::enableMovement();
+		}
 		if (soldier2AI->state == AISoldier::DEAD) {
 			graphics->removeFromDraw(boundary1);
 			graphics->removeFromDraw(boundary2);
