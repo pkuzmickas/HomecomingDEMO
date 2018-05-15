@@ -28,7 +28,7 @@ bool Graphics::removeFromDraw(Entity * entity) {
 			return true;
 		}
 	}
-	cout << "COULD NOT REMOVE FROM DRAW" << endl;
+	//cout << "COULD NOT REMOVE FROM DRAW" << endl;
 	return false;
 }
 

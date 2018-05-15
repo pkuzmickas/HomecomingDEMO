@@ -7,7 +7,7 @@ Director::Director(SDL_Renderer* renderer) {
 	graphics = new Graphics(renderer);
 	
 	curScene = new EncounterScene(renderer, graphics);
-	//curScene->loadAction("restart");
+
 	// Starts to calculate the running time of the game to create the deltaTime (time passed since last frame)
 	runTime = SDL_GetTicks();
 }
@@ -18,17 +18,21 @@ Director::~Director() {
 	delete curScene;
 }
 
+// The function which starts the game
 void Director::startGame() {
+	// Shows the start screen
 	curScene->showStartScreen();
+	// The main game loop
 	while (gameRunning) {
-		getInput();
-		update();
-		graphics->render();
+		getInput(); // Gets all of the input
+		update(); // Updates everything that is updatable
+		graphics->render(); // Renders everything that is inside a Drawing Queue onto the screen
 	}
 }
 
 void Director::getInput() {
 	SDL_Event e;
+	// Gets all of the events and pushes them onto a vector so that those events can be accessed from anywhere
 	while (SDL_PollEvent(&e) != 0) {
 		Globals::GetFrameEvents().push_back(e);
 	}
@@ -50,7 +54,7 @@ void Director::getInput() {
 					if (curScene->isGameOver()) {
 						curScene->loadAction("restart");
 					}
-					if (!curScene->isGameStarted()) {
+					if (!curScene->isGameStarted() && !curScene->isControlsWindowOn()) {
 						curScene->startScene();
 						//curScene->loadAction("restart");
 					}
@@ -66,16 +70,18 @@ void Director::getInput() {
 }
 
 void Director::update() {
+	// Calculates the time passed since last frame
 	deltaTime = SDL_GetTicks() - runTime;
 	deltaTimeInSeconds = (float)deltaTime / 1000;
 	//cout << deltaTimeInSeconds << endl;
 	runTime += deltaTime;
 
-	
+	// Updates all of the needed systems and scenes
 	curScene->update(deltaTimeInSeconds);
 	CameraSystem::update(deltaTimeInSeconds);
 	UIDesignSystem::update(deltaTime);
 
+	// Resets the input vector
 	Globals::GetFrameEvents().clear();
 }
 

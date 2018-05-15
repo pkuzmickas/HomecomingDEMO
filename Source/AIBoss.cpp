@@ -6,6 +6,9 @@ AIBoss::AIBoss(Entity * owner, SDL_Renderer * renderer, Graphics * graphics) : A
 	slashAttackIMG = IMG_LoadTexture(renderer, ASSET_DIR ATTACKS_DIR "enemyFlyingSlash.png");
 	smashAttackIMG = IMG_LoadTexture(renderer, ASSET_DIR ATTACKS_DIR "enemySlash.png");
 
+	//OBJECT POOLING
+	
+	// I create slash objects that are pushed to the pool at the start of the object
 	for (int i = 0; i < 3; i++) {
 		SlashObject so;
 		so.entity = new Entity();
@@ -37,8 +40,11 @@ AIBoss::AIBoss(Entity * owner, SDL_Renderer * renderer, Graphics * graphics) : A
 
 		slashPool.push_back(so);
 	}
+
+	// OBJECT POOLING
 }
 
+// The launching of the slash attack
 void AIBoss::slashAttack(int localPosX, int localPosY) {
 	if (slashPool.size() == 0) {
 		return;
@@ -46,7 +52,9 @@ void AIBoss::slashAttack(int localPosX, int localPosY) {
 	float dx = localPosX - (transform->globalPosX + transform->width / 2 - CameraSystem::posX);
 	float dy = localPosY - (transform->globalPosY + transform->height / 2 - CameraSystem::posY);
 	float angle = atan2(dy, dx) * 180 / M_PI;
+	// Gets the slash object from the OBJECT POOL
 	SlashObject so = slashPool[slashPool.size() - 1];
+	// Sets the required position
 	so.transform->globalPosX = transform->globalPosX + 20 * cos(angle * M_PI / 180);
 	so.transform->globalPosY = transform->globalPosY - transform->height / 2 + 20 * sin(angle * M_PI / 180);
 	int width;
@@ -62,7 +70,9 @@ void AIBoss::slashAttack(int localPosX, int localPosY) {
 	so.movement->velY = slashFlySpeed * sin(angle * M_PI / 180);
 	graphics->addToDraw(so.entity);
 	so.slashDir = (Animator::LookDirection)walkingDir;
+	// Removes the slash object from the OBJECT POOl
 	slashPool.pop_back();
+
 	slashesInUse.push_back(so);
 }
 
@@ -103,7 +113,6 @@ void AIBoss::smashAttack() {
 
 	smashAnimator = new Animator(smashEntity);
 	int slashSpeed = 30;
-	// playerAnimator->direction * 4 + 0 + 1 + 2 + 3
 	int dir = walkingDir * 4;
 	if (walkingDir == Animator::LookDirection::UP) {
 		dir = 24;
@@ -121,6 +130,7 @@ void AIBoss::smashAttack() {
 	graphics->addToDraw(smashEntity);
 }
 
+// Flying Slash updates (includes OBJECT POOLING)
 void AIBoss::slashUpdates(float deltaTime) {
 	for(int i=0; i<(int)slashesInUse.size(); i++) {
 		SlashObject slash = slashesInUse[i];
@@ -135,14 +145,7 @@ void AIBoss::slashUpdates(float deltaTime) {
 		if (collision2 || collision1) {
 			if (collision1) {
 				Drawable* colDrw = (Drawable*)collision1->owner->findComponent(ComponentType::DRAWABLE);
-				/*if (colDrw->ID == "soldier1" || colDrw->ID == "soldier2" || colDrw->ID == "oldman") {
-					AIComponent* ai = (AIComponent*)collision->owner->findComponent(ComponentType::AI);
-					Stats* enemyStats = (Stats*)collision->owner->findComponent(ComponentType::STATS);
-					PlayerStats* playerStats = (PlayerStats*)->findComponent(ComponentType::STATS);
-					enemyStats->curHealth -= playerStats->fSlashAttackDmg;
-					Drawable* fslashDrawable = (Drawable*)fSlashEntity->findComponent(ComponentType::DRAWABLE);
-					ai->knockBack(200, 500, fSlashDir, fslashDrawable->ID);
-				}*/
+				
 				if (colDrw->ID == "tree") {
 					Animator* anim = (Animator*)collision1->owner->findComponent(ComponentType::ANIMATOR);
 					Stats* treeStats = (Stats*)collision1->owner->findComponent(ComponentType::STATS);
@@ -159,11 +162,15 @@ void AIBoss::slashUpdates(float deltaTime) {
 						collision1->owner->active = false;
 					}
 				}
-				if (colDrw->ID == "player") { // can use substrings to know type (soldier)
+				// If the slash object collides with the player, the object is returned to the OBJECT POOL 
+				if (colDrw->ID == "player") { 
 					CollisionSystem::removeCollider(slash.collider);
 					graphics->removeFromDraw(slash.entity);
 					iter_swap(slashesInUse.begin() + i, slashesInUse.begin() + slashesInUse.size() - 1);
+
+					// The slash object is returned to the OBJECT POOL
 					slashPool.push_back(slashesInUse[slashesInUse.size() - 1]);
+
 					slashesInUse.pop_back();
 					Stats* enemyStats = (Stats*)owner->findComponent(ComponentType::STATS);
 					PlayerStats* playerStats = (PlayerStats*)colDrw->owner->findComponent(ComponentType::STATS);
@@ -173,10 +180,12 @@ void AIBoss::slashUpdates(float deltaTime) {
 					pa->knockBack(100, 300, (Animator::LookDirection)walkingDir, "slashAttack");
 				}
 			}
+			// If the slash object collides with the environment, the object is returned to the OBJECT POOL
 			if (collision2) {
 				CollisionSystem::removeCollider(slash.collider);
 				graphics->removeFromDraw(slash.entity);
 				iter_swap(slashesInUse.begin() + i, slashesInUse.begin() + slashesInUse.size() - 1);
+				// The slash object is returned to the OBJECT POOL
 				slashPool.push_back(slashesInUse[slashesInUse.size() - 1]);
 				slashesInUse.pop_back();
 
@@ -185,7 +194,7 @@ void AIBoss::slashUpdates(float deltaTime) {
 		}
 	}
 }
-
+// The smash attack functionality
 void AIBoss::smashUpdates(float deltaTime) {
 	smashEntity->update(deltaTime);
 
@@ -244,7 +253,6 @@ void AIBoss::smashUpdates(float deltaTime) {
 }
 
 
-
 AIBoss::~AIBoss() {
 	SDL_DestroyTexture(slashAttackIMG);
 	SDL_DestroyTexture(smashAttackIMG);
@@ -256,6 +264,7 @@ AIBoss::~AIBoss() {
 	}
 }
 
+// Different states are handled here
 void AIBoss::update(float deltaTime) {
 	AIComponent::update(deltaTime);
 	if (slashesInUse.size()>0) {
@@ -264,6 +273,7 @@ void AIBoss::update(float deltaTime) {
 	if (smashing) {
 		smashUpdates(deltaTime);
 	}
+	// If the AI is dead, remove all of the slashes that might be in the air
 	if (state == DEAD) {
 		if (smashing) {
 
@@ -279,6 +289,7 @@ void AIBoss::update(float deltaTime) {
 			CollisionSystem::removeCollider(slash.collider);
 		}
 	}
+	// If the AI is not attacking, remove any unwanted content from the previous fight
 	if (state == NORMAL) {
 		
 		if (smashing) {
@@ -291,8 +302,10 @@ void AIBoss::update(float deltaTime) {
 			smashEntity = NULL;
 		}
 	}
+	// If the AI is attacking
 	if (state == ATTACKING) {
 		int chaseSpeed = stats->speed;
+		// If there is no substate, then find start finding the players location and creating a path to it using A star pathfinding algorithm
 		if (subState == NONE) {
 			stopWalking();
 			subState = FINDING;
@@ -300,6 +313,7 @@ void AIBoss::update(float deltaTime) {
 				walkTo(targetTransform->globalPosX, targetTransform->globalPosY, chaseSpeed);
 			}
 		}
+		// If the current substate is FINDING the player, the keep finding it until the range is less than 16 tiles
 		if (subState == FINDING) {
 			if (!walking && !isKnocked()) {
 				walkTo(targetTransform->globalPosX, targetTransform->globalPosY, chaseSpeed);
@@ -307,11 +321,14 @@ void AIBoss::update(float deltaTime) {
 			if (curPathIndex <= path.size() - 6) {
 				calculatePath(targetTransform->globalPosX, targetTransform->globalPosY);
 			}
+			// If range is less than 16 tiles, start attacking the player
 			if (path.size() <= 16) {
 				stopWalking();
 				subState = SLASHING;
 			}
 		}
+		
+		// If the substate is SLASHING, attack the player if it is less than 10 tiles away with melee, long range attack if less than 16 and find a new path if more than 16
 		if (subState == SLASHING) {
 			if (!walking || curPathIndex <= path.size() - 3) {
 				calculatePath(targetTransform->globalPosX, targetTransform->globalPosY);

@@ -4,6 +4,7 @@
 #include "CameraSystem.h"
 #include <iostream>
 
+// Enumerator which holds different component types and binary values associated with them for the mask
 enum ComponentType {
 	NONE = 0,
 	INPUT = 1 << 0,
@@ -19,17 +20,21 @@ enum ComponentType {
 };
 
 class Entity;
-
+// The base component class which all components inherit
 class Component {
 public:
 	ComponentType type;
 	bool enabled;
 	bool updatable;
+	// A virtual update function in case the derived class will need an update function
 	virtual void update(float deltaTime) { std::cout << "Component's update function was not defined! TYPE:" << type << std::endl; };
 	Entity* owner;
+	// The standard constructor
 	Component(Entity* owner, bool updatable = false) { this->owner = owner; enabled = true; this->updatable = updatable; }
 	virtual ~Component() {};
 };
+
+// Simple main components 
 
 class Transform : public Component {
 public:

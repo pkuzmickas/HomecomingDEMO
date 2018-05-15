@@ -19,7 +19,7 @@ void EncounterScene::setup() {
 	elly = IMG_LoadTexture(renderer, ASSET_DIR CHARACTER_DIR "elly.png");
 	Entity* oldmanEntity = NPCSystem::createBoss(270, 700, 48, 48, Globals::Layers::PLAYER, oldman, "oldman", renderer, graphics);
 	Entity* soldierEntity = NPCSystem::createSoldier(130, 700, 48, 48, Globals::Layers::PLAYER, zoro, "soldier1", renderer, graphics, 300, 400); //zoro
-	Entity* soldier2Entity = NPCSystem::createSoldier(340, 700, 48, 48, Globals::Layers::PLAYER, soldier, "soldier2", renderer, graphics, 100, 200);
+	Entity* soldier2Entity = NPCSystem::createSoldier(340, 700, 48, 48, Globals::Layers::PLAYER, soldier, "soldier2", renderer, graphics, 200, 200);
 	Entity* ellyEntity = NPCSystem::createDefaultNPC(200, 700, 48, 48, Globals::Layers::PLAYER, elly, "elly");
 	Collider* ec = (Collider*)ellyEntity->findComponent(ComponentType::COLLIDER);
 	CollisionSystem::removeCollider(ec);
@@ -500,6 +500,7 @@ void EncounterScene::update(float deltaTime) {
 	if (curAction == "restart") {
 		curAction = "fighting soldiers";
 		hideLoseScreen();
+		
 		PlayerSystem::resetPlayer();
 		graphics->addToDraw(player);
 		Transform* playerTransform = (Transform*)(player->findComponent(ComponentType::TRANSFORM));
@@ -512,7 +513,7 @@ void EncounterScene::update(float deltaTime) {
 		oldmanAI->state = AIComponent::State::NORMAL;
 		oldmanAI->subState = AIBoss::subStates::NONE;
 		//CameraSystem::follow(&playerTransform->globalPosX, &playerTransform->globalPosY);
-		PlayerSystem::enableMovement();
+		//PlayerSystem::enableMovement();
 		Transform* solt = (Transform*)(soldierAI->owner->findComponent(ComponentType::TRANSFORM));
 		solt->globalPosX = 1040;
 		solt->globalPosY = 700;
@@ -579,7 +580,7 @@ void EncounterScene::update(float deltaTime) {
 			*drw->srcRect = drw->startingSrcRect;
 		}
 		affectedEntities.clear();
-		soldier2AI->attack(player);
+		//soldier2AI->attack(player);
 		CameraSystem::detachCamera();
 		CameraSystem::posX = playerTransform->globalPosX - Globals::SCREEN_WIDTH / 2;
 		CameraSystem::posY = playerTransform->globalPosY - Globals::SCREEN_HEIGHT / 2;
@@ -591,7 +592,9 @@ void EncounterScene::update(float deltaTime) {
 			graphics->addToDraw(boundary2);
 			
 		}
+		showControlsScreen();
 	}
+	
 
 }
 
